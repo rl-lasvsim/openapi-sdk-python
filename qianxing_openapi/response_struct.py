@@ -62,6 +62,8 @@ class LaneNav:
     nav = dict[int, str]
 
     def __init__(self, data: dict) -> None:
+        if data == None:
+            return
         self.__dict__ = data
 
 
@@ -352,7 +354,7 @@ class TrafficLight:
     cycle: int
     offset: int
     is_yellow: bool
-    movement_signals: TrafficLight_MovementSignal
+    movement_signals: dict[str, TrafficLight_MovementSignal]
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -360,7 +362,9 @@ class TrafficLight:
         movement_signals = data.pop("movement_signals", None)
 
         self.__dict__ = data
-        self.movement_signals = TrafficLight_MovementSignal(movement_signals)
+        self.movement_signals = {
+            key: TrafficLight_MovementSignal(value) for key, value in movement_signals
+        }
 
 
 class TrafficSign:
@@ -485,9 +489,8 @@ class GetSignalPlanRes_Stage(object):
     movement_ids: list[str]
     duration: int
 
-    def __init__(self):
-        self.movement_ids = None
-        self.duration = None
+    def __init__(self, data: dict) -> None:
+        self.__dict__ = data
 
 
 class GetSignalPlanRes(object):
