@@ -11,8 +11,8 @@ class SimulatorConfig(object):
         scenario_version: str = None,
         record_id: int = None,
     ):
-        self.scenario_id = scenario_id
-        self.scenario_version = scenario_version
+        self.scen_id = scenario_id
+        self.scen_ver = scenario_version
         self.record_id = record_id
 
 
@@ -181,7 +181,7 @@ class Simulator(object):
             "/cosim/v2/simulation/vehicle/navigation/get",
             {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id},
         )
-        response_struct.GetVehicleNavigationInfoRes(resp)
+        return response_struct.GetVehicleNavigationInfoRes(resp)
 
     # 根据车辆ID检测车辆是否发生碰撞
     def get_vehicle_collision_status(
@@ -341,7 +341,7 @@ class Simulator(object):
             "/cosim/v2/simulation/ped/base_info/get",
             {"simulation_id": self.simulation_id, "ped_id_list": ped_id_list},
         )
-        response_struct.GetPedBaseInfoRes(resp)
+        return response_struct.GetPedBaseInfoRes(resp)
 
     # 修改行人点位信息{x,y,z}, 航向角Phi
     def set_ped_position(
@@ -387,6 +387,6 @@ class Simulator(object):
             req_data["phi"] = phi
 
         resp = self.client.post("/cosim/v2/simulation/nmv/position/set", req_data)
-        response_struct.SetNMVPositionRes(resp)
+        return response_struct.SetNMVPositionRes(resp)
 
     # /task/record_ids/get && /cosim/v2/scenario/map/get FIXME:？
