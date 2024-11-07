@@ -626,7 +626,7 @@ class GetVehicleBaseInfoRes:
     def __init__(self, data: dict) -> None:
         if data == None:
             return
-        info_dict = data.pop("info_dict", None)
+        info_dict = data.pop("info_dict", {})
         # self.__dict__ = data
         self.info_dict = {
             key: GetVehicleBaseInfoRes_VehicleBaseInfo(value)
@@ -641,7 +641,7 @@ class GetVehiclePositionRes:
     def __init__(self, data: dict) -> None:
         if data == None:
             return
-        position_dict = data.pop("position_dict", None)
+        position_dict = data.pop("position_dict", {})
 
         # self.__dict__ = data
         self.position_dict = {
@@ -656,7 +656,7 @@ class GetVehicleMovingInfoRes:
     def __init__(self, data: dict) -> None:
         if data == None:
             return
-        moving_info_dict = data.pop("moving_info_dict", None)
+        moving_info_dict = data.pop("moving_info_dict", {})
 
         # self.__dict__ = data
         self.moving_info_dict = {
@@ -671,7 +671,7 @@ class GetVehicleControlInfoRes:
     def __init__(self, data: dict) -> None:
         if data == None:
             return
-        control_info_dict = data.pop("control_info_dict", None)
+        control_info_dict = data.pop("control_info_dict", {})
 
         # self.__dict__ = data
         self.control_info_dict = {
@@ -849,7 +849,7 @@ class GetPedBaseInfoRes:
     def __init__(self, data: dict) -> None:
         if data == None:
             return
-        base_info_dict = data.pop("base_info_dict", None)
+        base_info_dict = data.pop("base_info_dict", {})
 
         # self.__dict__ = data
         self.base_info_dict = {
@@ -882,7 +882,7 @@ class GetNMVBaseInfoRes:
     def __init__(self, data: dict) -> None:
         if data == None:
             return
-        base_info_dict = data.pop("base_info_dict", None)
+        base_info_dict = data.pop("base_info_dict", {})
 
         # self.__dict__ = data
         self.base_info_dict = {
