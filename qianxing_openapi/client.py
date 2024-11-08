@@ -2,6 +2,7 @@
 
 from simulator import Simulator, SimulatorConfig
 from http_client import HttpConfig
+from train_task import TrainTask
 
 
 class Client(object):
@@ -10,3 +11,6 @@ class Client(object):
 
     def InitSimulator(self, sim_config: SimulatorConfig):
         return Simulator(self.config, sim_config)
+
+    def InitTrainTask(self):
+        return TrainTask(self.config)
