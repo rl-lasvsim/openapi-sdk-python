@@ -1,12 +1,14 @@
-from http_client import HttpConfig, HttpClient
+from http_client import HttpClient
 import response_struct
 
 
 class TrainTask:
-    def __init__(self, http_config: HttpConfig):
-        client = HttpClient(http_config, {})
+    client: HttpClient
+
+    def __init__(self, client: HttpClient):
         self.client = client
 
     def get_scene_id_list(self, task_id: int):
-        resp = self.client.get("/train_task/{}/scene_id_list".format(task_id), {})
+        resp = self.client.get(
+            "/train_task/{}/scene_id_list".format(task_id), {})
         return response_struct.GetSceneIdListRes(resp)

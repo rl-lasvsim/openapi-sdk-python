@@ -235,7 +235,6 @@ print(f"停止仿真器:{res}\n")
 simulator_instance = api_client.init_simulator_from_config(
     SimulatorConfig(scenario_id="58821406023938", scenario_version="1")
 )
-train_task_instance = api_client.init_train_task()
 
-res = train_task_instance.get_scene_id_list(395)
+res = api_client.train_task.get_scene_id_list(395)
 print(f"训练任务获取场景列表:{res}\n")
