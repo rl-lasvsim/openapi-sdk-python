@@ -89,7 +89,7 @@ api_client = Client(
     )
 )
 
-simulator_instance = api_client.InitSimulator(
+simulator_instance = api_client.init_simulator_from_config(
     SimulatorConfig(scenario_id="58821406023938", scenario_version="1")
 )
 
@@ -167,7 +167,8 @@ print(f"修改车辆点位信息:{res}\n")
 res = simulator_instance.get_vehicle_position(["测试车辆1", "环境车辆1", "环境车辆2"])
 print(f"根据车辆ID列表获取车辆位置信息的结果:{res}\n")
 
-res = simulator_instance.set_vehicle_moving_info(vehicle_id="测试车辆1", u=1.1, v=1.2)
+res = simulator_instance.set_vehicle_moving_info(
+    vehicle_id="测试车辆1", u=1.1, v=1.2)
 print(f"修改车辆运动信息:{res}\n")
 
 res = simulator_instance.get_vehicle_moving_info(
@@ -207,7 +208,8 @@ print(f"修改车辆终点:{res}\n")
 res = simulator_instance.get_ped_id_list()
 print(f"获取行人ID列表:{res}\n")
 
-res = simulator_instance.get_ped_base_info(ped_id_list=["ped280", "ped100", "ped182"])
+res = simulator_instance.get_ped_base_info(
+    ped_id_list=["ped280", "ped100", "ped182"])
 print(f"获取行人基础信息:{res}\n")
 
 res = simulator_instance.set_ped_position(
@@ -218,7 +220,8 @@ print(f"修改行人点位信息, 航向角Phi:{res}\n")
 res = simulator_instance.get_nmv_id_list()
 print(f"获取非机动车ID列表:{res}\n")
 
-res = simulator_instance.get_nmv_base_info(nmv_id_list=["ped280", "ped100", "ped182"])
+res = simulator_instance.get_nmv_base_info(
+    nmv_id_list=["ped280", "ped100", "ped182"])
 print(f"获取非机动车基础信息:{res}\n")
 
 res = simulator_instance.set_ped_position(
@@ -229,10 +232,10 @@ res = simulator_instance.stop()
 print(f"停止仿真器:{res}\n")
 
 # ---------------------------
-simulator_instance = api_client.InitSimulator(
+simulator_instance = api_client.init_simulator_from_config(
     SimulatorConfig(scenario_id="58821406023938", scenario_version="1")
 )
-train_task_instance = api_client.InitTrainTask()
+train_task_instance = api_client.init_train_task()
 
 res = train_task_instance.get_scene_id_list(395)
 print(f"训练任务获取场景列表:{res}\n")
