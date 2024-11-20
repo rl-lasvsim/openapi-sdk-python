@@ -66,47 +66,58 @@ simulator.set_vehicle_position(
 simulator.stop()
 ```
 
-## Features
+## Available APIs
 
-- Easy-to-use client interface
-- Comprehensive simulation control
-- Vehicle state monitoring and control
-- Support for pedestrians and non-motorized vehicles
-- Training task management
-- Map resource handling
+### Simulator APIs
 
-## Main Components
-
-- `Client`: Main entry point for the SDK
-- `HttpConfig`: Configuration for API endpoints and authentication
-- `SimulatorConfig`: Configuration for simulation scenarios
-- `Simulator`: Core simulation control interface
-- `TrainTask`: Training task management
-- `Resources`: Map and resource handling
-
-## Available Methods
-
-### Simulation Control
+#### Simulation Control
+- `init_from_config(sim_config)`: Initialize simulator from configuration
+- `init_from_sim(simulation_id, addr)`: Initialize simulator from existing simulation
 - `step()`: Advance simulation by one step
 - `stop()`: Stop the simulation
+- `reset()`: Reset the simulation to initial state
 
-### Vehicle Control
+#### Vehicle APIs
 - `get_vehicle_id_list()`: Get all vehicle IDs
-- `get_vehicle_position()`: Get vehicle positions
-- `set_vehicle_position()`: Set vehicle position
-- `set_vehicle_control_info()`: Set vehicle control parameters
-- `set_vehicle_moving_info()`: Set vehicle movement parameters
-- `get_vehicle_base_info()`: Get vehicle basic information
+- `get_test_vehicle_id_list()`: Get test vehicle IDs
+- `get_vehicle_base_info(id_list)`: Get vehicle basic information
+- `get_vehicle_position(id_list)`: Get vehicle positions
+- `get_vehicle_moving_info(id_list)`: Get vehicle movement information
+- `get_vehicle_control_info(id_list)`: Get vehicle control parameters
+- `get_vehicle_perception_info(vehicle_id)`: Get vehicle perception information
+- `get_vehicle_reference_lines(vehicle_id)`: Get available reference lines
+- `get_vehicle_planning_info(vehicle_id)`: Get vehicle planning information
+- `get_vehicle_navigation_info(vehicle_id)`: Get vehicle navigation information
+- `get_vehicle_collision_status(vehicle_id)`: Check vehicle collision status
+- `set_vehicle_position(vehicle_id, point, phi)`: Set vehicle position and heading angle
+- `set_vehicle_control_info(vehicle_id, ste_wheel, lon_acc)`: Set vehicle control parameters
+- `set_vehicle_planning_info(vehicle_id, planning_path)`: Set vehicle planning path
+- `set_vehicle_moving_info(vehicle_id, u, v, w, u_acc, v_acc, w_acc)`: Set vehicle movement parameters
+- `set_vehicle_base_info(vehicle_id, base_info)`: Set vehicle basic information
+- `set_vehicle_link_nav(vehicle_id, link_nav)`: Set vehicle link navigation information
+- `set_vehicle_destination(vehicle_id, destination)`: Set vehicle destination point
 
-### Pedestrian Control
+#### Traffic Light APIs
+- `get_current_stage(junction_id)`: Get current traffic light stage
+- `get_movement_signal(movement_id)`: Get movement signal light color
+- `get_signal_plan(junction_id)`: Get traffic light timing plan
+- `get_movement_list(junction_id)`: Get movement list for junction
+
+#### Pedestrian APIs
 - `get_ped_id_list()`: Get all pedestrian IDs
-- `get_ped_base_info()`: Get pedestrian information
-- `set_ped_position()`: Set pedestrian position
+- `get_ped_base_info(ped_id_list)`: Get pedestrian basic information
+- `set_ped_position(ped_id, point, phi)`: Set pedestrian position and heading angle
 
-### Non-motorized Vehicle Control
+#### Non-motorized Vehicle APIs
 - `get_nmv_id_list()`: Get all non-motorized vehicle IDs
-- `get_nmv_base_info()`: Get non-motorized vehicle information
-- `set_nmv_position()`: Set non-motorized vehicle position
+- `get_nmv_base_info(nmv_id_list)`: Get non-motorized vehicle basic information
+- `set_nmv_position(nmv_id, point, phi)`: Set non-motorized vehicle position and heading angle
+
+### Training Task APIs
+- `get_scene_id_list(task_id)`: Get list of available scenes for a training task
+
+### Resource APIs
+- `get_map(asset_id, asset_version)`: Get map data for a specific asset
 
 ## Requirements
 
