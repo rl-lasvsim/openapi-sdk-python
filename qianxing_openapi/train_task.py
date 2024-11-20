@@ -1,5 +1,5 @@
-from http_client import HttpClient
-import response_model
+from qianxing_openapi.http_client import HttpClient
+from qianxing_openapi.response_model import GetSceneIdListRes
 
 
 class TrainTask:
@@ -11,4 +11,4 @@ class TrainTask:
     def get_scene_id_list(self, task_id: int):
         resp = self.client.get(
             "/train_task/{}/scene_id_list".format(task_id), {})
-        return response_model.GetSceneIdListRes(resp)
+        return GetSceneIdListRes(resp)

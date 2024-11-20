@@ -1,4 +1,4 @@
-import response_model
+from qianxing_openapi import response_model
 from dataclasses import dataclass
 
 
@@ -21,7 +21,8 @@ class Header:
 
         self.__dict__ = data
         self.center_point = (
-            None if center_point == None else response_model.Point(center_point)
+            None if center_point == None else response_model.Point(
+                center_point)
         )
 
 
@@ -252,15 +253,19 @@ class Lane:
         self.__dict__ = data
         self.lane_turn = None if lane_turn == None else LaneTurn(lane_turn)
         self.speed_limits = (
-            None if speed_limits == None else [SpeedLimit(sl) for sl in speed_limits]
+            None if speed_limits == None else [
+                SpeedLimit(sl) for sl in speed_limits]
         )
         self.stopline = None if stopline == None else Stopline(stopline)
-        self.widths = None if widths == None else [Width(width) for width in widths]
+        self.widths = None if widths == None else [
+            Width(width) for width in widths]
         self.center_line = (
-            None if center_line == None else [CenterPoint(cl) for cl in center_line]
+            None if center_line == None else [
+                CenterPoint(cl) for cl in center_line]
         )
         self.left_lane_marks = (
-            None if left_lane_marks == None else [LaneMark(l) for l in left_lane_marks]
+            None if left_lane_marks == None else [
+                LaneMark(l) for l in left_lane_marks]
         )
         self.right_lane_marks = (
             None
@@ -321,9 +326,11 @@ class Link:
         right_boundary = data.pop("right_boundary", None)
 
         self.__dict__ = data
-        self.widths = None if widths == None else [Width(width) for width in widths]
+        self.widths = None if widths == None else [
+            Width(width) for width in widths]
         self.ordered_lanes = (
-            None if ordered_lanes == None else [Lane(ol) for ol in ordered_lanes]
+            None if ordered_lanes == None else [
+                Lane(ol) for ol in ordered_lanes]
         )
         self.reference_line = (
             None
@@ -432,9 +439,11 @@ class Junction:
 
         self.__dict__ = data
         self.shape = None if shape == None else Polygon(shape)
-        self.movements = None if movements == None else [Movement(m) for m in movements]
+        self.movements = None if movements == None else [
+            Movement(m) for m in movements]
         self.connections = (
-            None if connections == None else [Connection(c) for c in connections]
+            None if connections == None else [
+                Connection(c) for c in connections]
         )
         self.crosswalks = (
             None if crosswalks == None else [Crosswalk(c) for c in crosswalks]
@@ -446,7 +455,8 @@ class Junction:
             None if roundabout == None else [Link(wa) for wa in roundabout]
         )
         self.links = None if links == None else [Link(l) for l in links]
-        self.signal_plan = None if signal_plan == None else SignalPlan(signal_plan)
+        self.signal_plan = None if signal_plan == None else SignalPlan(
+            signal_plan)
 
 
 @dataclass
@@ -486,10 +496,12 @@ class Segment:
 
         self.__dict__ = data
         self.ordered_links = (
-            None if ordered_links == None else [Link(ol) for ol in ordered_links]
+            None if ordered_links == None else [
+                Link(ol) for ol in ordered_links]
         )
         self.traffic_signs = (
-            None if traffic_signs == None else [TrafficSign(ts) for ts in traffic_signs]
+            None if traffic_signs == None else [
+                TrafficSign(ts) for ts in traffic_signs]
         )
 
 
@@ -587,7 +599,8 @@ class Road:
             if reference_line == None
             else [ReferencePoint(n) for n in reference_line]
         )
-        self.sections = None if sections == None else [Section(s) for s in sections]
+        self.sections = None if sections == None else [
+            Section(s) for s in sections]
         self.junction_positions = (
             None
             if junction_positions == None
@@ -702,10 +715,14 @@ class Qxmap:
 
         self.__dict__ = data
         self.header = None if header == None else Header(header)
-        self.junctions = None if junctions == None else [Junction(j) for j in junctions]
-        self.segments = None if segments == None else [Segment(s) for s in segments]
+        self.junctions = None if junctions == None else [
+            Junction(j) for j in junctions]
+        self.segments = None if segments == None else [
+            Segment(s) for s in segments]
         self.roads = None if roads == None else [Road(r) for r in roads]
-        self.mappers = None if mappers == None else [Mapper(m) for m in mappers]
-        self.buildings = None if buildings == None else [Building(m) for m in buildings]
+        self.mappers = None if mappers == None else [
+            Mapper(m) for m in mappers]
+        self.buildings = None if buildings == None else [
+            Building(m) for m in buildings]
         self.trees = None if trees == None else [Tree(t) for t in trees]
         self.lamps = None if lamps == None else [Lamp(l) for l in lamps]

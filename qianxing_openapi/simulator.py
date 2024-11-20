@@ -1,8 +1,6 @@
-from http_client import HttpConfig, HttpClient
-from request_model import Point
-from request_model import ObjBaseInfo
-import response_model
-from qxmap_model import Qxmap
+from qianxing_openapi.http_client import HttpConfig, HttpClient
+from qianxing_openapi.request_model import Point, ObjBaseInfo
+from qianxing_openapi import response_model
 
 
 class SimulatorConfig(object):
@@ -24,7 +22,8 @@ class Simulator(object):
         # self.simulation_id = res.get("simulation_id")
 
     def init_from_config(self, sim_config: SimulatorConfig):
-        res = self.client.post("/cosim/v2/simulation/init", sim_config.__dict__)
+        res = self.client.post(
+            "/cosim/v2/simulation/init", sim_config.__dict__)
         self.client.headers["simulation_id"] = res.get("simulation_id")
         self.client.headers["x-md-rl-direct-addr"] = res.get("simulation_addr")
         self.simulation_id = res.get("simulation_id")
@@ -227,28 +226,32 @@ class Simulator(object):
         ste_wheel: float = None,
         lon_acc: float = None,
     ) -> response_model.SetVehicleControlInfoRes:
-        req_data = {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id}
+        req_data = {"simulation_id": self.simulation_id,
+                    "vehicle_id": vehicle_id}
 
         if ste_wheel is not None:
             req_data["ste_wheel"] = ste_wheel
         if lon_acc is not None:
             req_data["lon_acc"] = lon_acc
 
-        resp = self.client.post("/cosim/v2/simulation/vehicle/control/set", req_data)
+        resp = self.client.post(
+            "/cosim/v2/simulation/vehicle/control/set", req_data)
         return response_model.SetVehicleControlInfoRes(resp)
 
     # 修改车辆点位信息{x,y,z}, phi
     def set_vehicle_position(
         self, vehicle_id: str, point: Point = None, phi: float = None
     ) -> response_model.SetVehiclePositionRes:
-        req_data = {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id}
+        req_data = {"simulation_id": self.simulation_id,
+                    "vehicle_id": vehicle_id}
 
         if point is not None:
             req_data["point"] = point.to_dict()
         if phi is not None:
             req_data["phi"] = phi
 
-        resp = self.client.post("/cosim/v2/simulation/vehicle/position/set", req_data)
+        resp = self.client.post(
+            "/cosim/v2/simulation/vehicle/position/set", req_data)
         return response_model.SetVehiclePositionRes(resp)
 
     # 修改车辆运动信息
@@ -262,7 +265,8 @@ class Simulator(object):
         v_acc: float = None,
         w_acc: float = None,
     ) -> response_model.SetVehicleMovingInfoRes:
-        req_data = {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id}
+        req_data = {"simulation_id": self.simulation_id,
+                    "vehicle_id": vehicle_id}
 
         if u is not None:
             req_data["u"] = u
@@ -286,12 +290,14 @@ class Simulator(object):
     def set_vehicle_base_info(
         self, vehicle_id: str, base_info: ObjBaseInfo = None
     ) -> response_model.SetVehicleBaseInfoRes:
-        req_data = {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id}
+        req_data = {"simulation_id": self.simulation_id,
+                    "vehicle_id": vehicle_id}
 
         if base_info is not None:
             req_data["base_info"] = base_info.to_dict()
 
-        resp = self.client.post("/cosim/v2/simulation/vehicle/base_info/set", req_data)
+        resp = self.client.post(
+            "/cosim/v2/simulation/vehicle/base_info/set", req_data)
         return response_model.SetVehicleBaseInfoRes(resp)
 
     # # 修改车辆路段导航信息(暂不支持)
@@ -324,7 +330,8 @@ class Simulator(object):
     def set_vehicle_destination(
         self, vehicle_id: str, destination: Point = None
     ) -> response_model.SetVehicleDestinationRes:
-        req_data = {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id}
+        req_data = {"simulation_id": self.simulation_id,
+                    "vehicle_id": vehicle_id}
 
         if destination is not None:
             req_data["destination"] = destination.to_dict()
@@ -363,7 +370,8 @@ class Simulator(object):
         if phi is not None:
             req_data["phi"] = phi
 
-        resp = self.client.post("/cosim/v2/simulation/ped/position/set", req_data)
+        resp = self.client.post(
+            "/cosim/v2/simulation/ped/position/set", req_data)
         return response_model.SetPedPositionRes(resp)
 
     # 获取非机动车ID列表
@@ -395,7 +403,8 @@ class Simulator(object):
         if phi is not None:
             req_data["phi"] = phi
 
-        resp = self.client.post("/cosim/v2/simulation/nmv/position/set", req_data)
+        resp = self.client.post(
+            "/cosim/v2/simulation/nmv/position/set", req_data)
         return response_model.SetNMVPositionRes(resp)
 
     # 直接给仿真器发post请求

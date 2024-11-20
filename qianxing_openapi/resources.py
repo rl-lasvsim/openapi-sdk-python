@@ -1,5 +1,5 @@
-from http_client import HttpClient
-from qxmap_model import Qxmap
+from qianxing_openapi.http_client import HttpClient
+from qianxing_openapi.qxmap_model import Qxmap
 
 
 class Resources:
