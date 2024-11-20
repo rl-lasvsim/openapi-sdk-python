@@ -14,6 +14,6 @@ class Resources:
         asset_version: str = None,
     ) -> Qxmap:
         req_data = {"asset_id": asset_id, "asset_version": asset_version}
-        resp = self.client.post("/resource/v2/scenario/map/get", req_data)
+        resp = self.client.post("/openapi/resource/v2/scenario/map/get", req_data)
 
         return Qxmap(resp["data"])

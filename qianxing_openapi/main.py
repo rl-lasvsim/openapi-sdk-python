@@ -11,6 +11,7 @@ from qianxing_openapi.request_model import Point, ObjBaseInfo
 from typing import List
 from qianxing_openapi.train_task import TrainTask
 from qianxing_openapi.qxmap_model import Qxmap
+
 # data = {
 #     'id': 23,
 #     'config': {
@@ -89,7 +90,7 @@ from qianxing_openapi.qxmap_model import Qxmap
 api_client = Client(
     HttpConfig(
         token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQ5LCJvaWQiOjI2LCJuYW1lIjoi5ZGo5YWr5Y-q6IO955yL5Zy65pmv5ZWK5ZWKIiwiaWRlbnRpdHkiOiJub3JtYWwiLCJwZXJtaXNzaW9ucyI6W10sImlzcyI6InVzZXIiLCJzdWIiOiJMYXNWU2ltIiwiZXhwIjoxNzMyMjY2Njc3LCJuYmYiOjE3MzE2NjE4NzcsImlhdCI6MTczMTY2MTg3NywianRpIjoiNDkifQ.FBHIDAe9H0aK0RrKyMOpR_gZhaqXlCXdQLuTAKIApI0",
-        endpoint="http://8.146.201.197:30080/dev/openapi",
+        endpoint="http://8.146.201.197:30080/dev",
     )
 )
 
@@ -281,7 +282,9 @@ for i in range(10):
     res = simulator_instance.get_vehicle_base_info([])
     print(f"根据车辆ID列表获取车辆基本信息的结果:{res}\n")
 
-    res = simulator_instance.get_vehicle_position(["测试车辆1", "环境车辆1", "环境车辆2"])
+    res = simulator_instance.get_vehicle_position(
+        ["测试车辆1", "环境车辆1", "环境车辆2"]
+    )
     print(f"根据车辆ID列表获取车辆位置信息的结果:{res}\n")
 
     res = simulator_instance.get_vehicle_moving_info(
@@ -334,11 +337,14 @@ for i in range(10):
     )
     print(f"修改车辆点位信息:{res}\n")
 
-    res = simulator_instance.get_vehicle_position(["测试车辆1", "环境车辆1", "环境车辆2"])
+    res = simulator_instance.get_vehicle_position(
+        ["测试车辆1", "环境车辆1", "环境车辆2"]
+    )
     print(f"根据车辆ID列表获取车辆位置信息的结果:{res}\n")
 
     res = simulator_instance.set_vehicle_moving_info(
-        vehicle_id="测试车辆1", u=1.1, v=1.2)
+        vehicle_id="测试车辆1", u=1.1, v=1.2
+    )
     print(f"修改车辆运动信息:{res}\n")
 
     res = simulator_instance.get_vehicle_moving_info(
@@ -377,7 +383,8 @@ for i in range(10):
     print(f"获取行人ID列表:{res}\n")
 
     res = simulator_instance.get_ped_base_info(
-        ped_id_list=["ped280", "ped100", "ped182"])
+        ped_id_list=["ped280", "ped100", "ped182"]
+    )
     print(f"获取行人基础信息:{res}\n")
 
     # res = simulator_instance.set_ped_position(

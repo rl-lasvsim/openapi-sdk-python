@@ -10,5 +10,6 @@ class TrainTask:
 
     def get_scene_id_list(self, task_id: int):
         resp = self.client.get(
-            "/train_task/{}/scene_id_list".format(task_id), {})
+            "/openapi/train_task/{}/scene_id_list".format(task_id), {}
+        )
         return GetSceneIdListRes(resp)
