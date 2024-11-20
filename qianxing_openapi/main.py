@@ -2,11 +2,10 @@ from client import Client
 from http_client import HttpConfig, HttpClient
 from simulator import SimulatorConfig
 from dataclasses import dataclass
-from request_struct import Point, ObjBaseInfo
+from request_model import Point, ObjBaseInfo
 
 from train_task import TrainTask
-from qxmap_struct import Qxmap
-
+from qxmap_model import Qxmap
 # data = {
 #     'id': 23,
 #     'config': {
@@ -335,7 +334,8 @@ print(f"修改车辆点位信息:{res}\n")
 res = simulator_instance.get_vehicle_position(["测试车辆1", "环境车辆1", "环境车辆2"])
 print(f"根据车辆ID列表获取车辆位置信息的结果:{res}\n")
 
-res = simulator_instance.set_vehicle_moving_info(vehicle_id="测试车辆1", u=1.1, v=1.2)
+res = simulator_instance.set_vehicle_moving_info(
+    vehicle_id="测试车辆1", u=1.1, v=1.2)
 print(f"修改车辆运动信息:{res}\n")
 
 res = simulator_instance.get_vehicle_moving_info(
@@ -375,7 +375,8 @@ print(f"获取车辆导航信息的结果:{res}\n")
 res = simulator_instance.get_ped_id_list()
 print(f"获取行人ID列表:{res}\n")
 
-res = simulator_instance.get_ped_base_info(ped_id_list=["ped280", "ped100", "ped182"])
+res = simulator_instance.get_ped_base_info(
+    ped_id_list=["ped280", "ped100", "ped182"])
 print(f"获取行人基础信息:{res}\n")
 
 # res = simulator_instance.set_ped_position(

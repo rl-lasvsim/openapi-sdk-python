@@ -1,4 +1,4 @@
-import response_struct
+import response_model
 from dataclasses import dataclass
 
 
@@ -8,7 +8,7 @@ class Header:
     south: float = None
     east: float = None
     west: float = None
-    center_point: response_struct.Point = None
+    center_point: response_model.Point = None
     version: str = None
     zone: float = None
     use_bias: bool = None
@@ -21,13 +21,13 @@ class Header:
 
         self.__dict__ = data
         self.center_point = (
-            None if center_point == None else response_struct.Point(center_point)
+            None if center_point == None else response_model.Point(center_point)
         )
 
 
 @dataclass
 class Polygon:
-    points: list[response_struct.Point] = None
+    points: list[response_model.Point] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -37,13 +37,13 @@ class Polygon:
         self.points = (
             None
             if points == None
-            else [response_struct.Point(point) for point in points]
+            else [response_model.Point(point) for point in points]
         )
 
 
 @dataclass
 class LineString:
-    points: list[response_struct.Point] = None
+    points: list[response_model.Point] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -53,7 +53,7 @@ class LineString:
         self.points = (
             None
             if points == None
-            else [response_struct.Point(point) for point in points]
+            else [response_model.Point(point) for point in points]
         )
 
 
@@ -124,7 +124,7 @@ class Width:
 
 @dataclass
 class DirectedPoint:
-    point: response_struct.Point = None
+    point: response_model.Point = None
     heading: float = None
     roll: float = None
     patch: float = None
@@ -135,7 +135,7 @@ class DirectedPoint:
         point = data.pop("point", None)
 
         self.__dict__ = data
-        self.point = response_struct.Point(point)
+        self.point = response_model.Point(point)
 
 
 @dataclass
@@ -188,7 +188,7 @@ class CenterPoint:
     heading: float = None
     left_width: float = None
     right_width: float = None
-    point: response_struct.Point = None
+    point: response_model.Point = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -196,7 +196,7 @@ class CenterPoint:
         point = data.pop("point", None)
 
         self.__dict__ = data
-        self.point = response_struct.Point(point)
+        self.point = response_model.Point(point)
 
 
 @dataclass
@@ -279,7 +279,7 @@ class Lane:
 class ReferencePoint:
     s: float = None
     heading: float = None
-    point: response_struct.Point = None
+    point: response_model.Point = None
     height: float = None
     cross_slope: float = None
 
@@ -289,7 +289,7 @@ class ReferencePoint:
         point = data.pop("point", None)
 
         self.__dict__ = data
-        self.point = None if point == None else response_struct.Point(point)
+        self.point = None if point == None else response_model.Point(point)
 
 
 @dataclass
@@ -508,7 +508,7 @@ class RoadPosition:
 @dataclass
 class ControlPoint:
     id: str = None
-    point: response_struct.Point = None
+    point: response_model.Point = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -516,7 +516,7 @@ class ControlPoint:
         point = data.pop("point", None)
 
         self.__dict__ = data
-        self.point = None if point == None else response_struct.Point(point)
+        self.point = None if point == None else response_model.Point(point)
 
 
 @dataclass
@@ -615,7 +615,7 @@ class Mapper:
 @dataclass
 class Building:
     id: str = None
-    pos: response_struct.Point = None
+    pos: response_model.Point = None
     shape: Polygon = None
     heading: float = None
     height: float = None
@@ -631,14 +631,14 @@ class Building:
         shape = data.pop("shape", None)
 
         self.__dict__ = data
-        self.pos = None if pos == None else response_struct.Point(pos)
+        self.pos = None if pos == None else response_model.Point(pos)
         self.shape = None if shape == None else Polygon(shape)
 
 
 @dataclass
 class Tree:
     id: str = None
-    pos: response_struct.Point = None
+    pos: response_model.Point = None
     heading: float = None
     height: float = None
     width: float = None
@@ -652,13 +652,13 @@ class Tree:
         pos = data.pop("pos", None)
 
         self.__dict__ = data
-        self.pos = None if pos == None else response_struct.Point(pos)
+        self.pos = None if pos == None else response_model.Point(pos)
 
 
 @dataclass
 class Lamp:
     id: str = None
-    pos: response_struct.Point = None
+    pos: response_model.Point = None
     heading: float = None
     height: float = None
     width: float = None
@@ -672,7 +672,7 @@ class Lamp:
         pos = data.pop("pos", None)
 
         self.__dict__ = data
-        self.pos = None if pos == None else response_struct.Point(pos)
+        self.pos = None if pos == None else response_model.Point(pos)
 
 
 @dataclass

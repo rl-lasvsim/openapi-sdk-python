@@ -1,5 +1,5 @@
 from http_client import HttpClient
-from qxmap_struct import Qxmap
+from qxmap_model import Qxmap
 
 
 class Resources:
