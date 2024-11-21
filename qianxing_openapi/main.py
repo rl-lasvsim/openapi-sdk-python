@@ -266,141 +266,153 @@ print(f"初始化成功过后的仿真器id：{simulator_instance.simulation_id}
 
 print("rrrrrrrrr", simulator_instance.client.headers)
 
+res = simulator_instance.get_vehicle_base_info(["测试车辆1"])
+print(f"获取车辆基础信息:{res}\n")
+res = simulator_instance.get_vehicle_target_speed("测试车辆1")
+print(f"获取车辆目标速度:{res}\n")
 for i in range(10):
     step_res = simulator_instance.step()
-    print(f"执行第{i}步的结果:{step_res}")  # FIXME: 第一步就执行结束了
+    print(f"执行第{i}步的结果:{step_res}")
+# res = simulator_instance.reset()
+# print(f"重置仿真器:{res}\n")
+res = simulator_instance.stop()
+print(f"停止仿真器:{res}\n")
 
-    # stop_res = simulator_instance.stop()
-    # print(f"停止仿真器的结果:{stop_res}\n")
+# for i in range(10):
+#     step_res = simulator_instance.step()
+#     print(f"执行第{i}步的结果:{step_res}")  # FIXME: 第一步就执行结束了
 
-    res = simulator_instance.get_vehicle_id_list()
-    print(f"获取所有车辆ID列表的结果:{res}\n")
+#     # stop_res = simulator_instance.stop()
+#     # print(f"停止仿真器的结果:{stop_res}\n")
 
-    res = simulator_instance.get_test_vehicle_id_list()  # FIXME: 401
-    print(f"获取测试车辆ID列表的结果:{res}\n")
+#     res = simulator_instance.get_vehicle_id_list()
+#     print(f"获取所有车辆ID列表的结果:{res}\n")
 
-    res = simulator_instance.get_vehicle_base_info([])
-    print(f"根据车辆ID列表获取车辆基本信息的结果:{res}\n")
+#     res = simulator_instance.get_test_vehicle_id_list()  # FIXME: 401
+#     print(f"获取测试车辆ID列表的结果:{res}\n")
 
-    res = simulator_instance.get_vehicle_position(
-        ["测试车辆1", "环境车辆1", "环境车辆2"]
-    )
-    print(f"根据车辆ID列表获取车辆位置信息的结果:{res}\n")
+#     res = simulator_instance.get_vehicle_base_info([])
+#     print(f"根据车辆ID列表获取车辆基本信息的结果:{res}\n")
 
-    res = simulator_instance.get_vehicle_moving_info(
-        ["测试车辆1", "环境车辆1", "环境车辆2"]
-    )
-    print(f"根据车辆ID列表获取车辆运动信息的结果:{res}\n")
+#     res = simulator_instance.get_vehicle_position(
+#         ["测试车辆1", "环境车辆1", "环境车辆2"]
+#     )
+#     print(f"根据车辆ID列表获取车辆位置信息的结果:{res}\n")
 
-    res = simulator_instance.get_vehicle_control_info(
-        ["测试车辆1", "环境车辆1", "环境车辆2"]
-    )
-    print(f"根据车辆ID列表获取车辆控制参数信息的结果:{res}\n")
+#     res = simulator_instance.get_vehicle_moving_info(
+#         ["测试车辆1", "环境车辆1", "环境车辆2"]
+#     )
+#     print(f"根据车辆ID列表获取车辆运动信息的结果:{res}\n")
 
-    res = simulator_instance.get_vehicle_perception_info("测试车辆1")
-    print(f"根据车辆ID获取车辆感知信息的结果:{res}\n")
+#     res = simulator_instance.get_vehicle_control_info(
+#         ["测试车辆1", "环境车辆1", "环境车辆2"]
+#     )
+#     print(f"根据车辆ID列表获取车辆控制参数信息的结果:{res}\n")
 
-    res = simulator_instance.get_vehicle_planning_info("测试车辆1")
-    print(f"获取车辆规划路径的结果:{res}\n")
+#     res = simulator_instance.get_vehicle_perception_info("测试车辆1")
+#     print(f"根据车辆ID获取车辆感知信息的结果:{res}\n")
 
-    res = simulator_instance.get_vehicle_navigation_info("测试车辆1")
-    print(f"获取车辆导航信息的结果:{res}\n")
+#     res = simulator_instance.get_vehicle_planning_info("测试车辆1")
+#     print(f"获取车辆规划路径的结果:{res}\n")
 
-    res = simulator_instance.get_vehicle_collision_status("测试车辆1")
-    print(f"根据车辆ID获取车辆碰撞状态的结果:{res}\n")
+#     res = simulator_instance.get_vehicle_navigation_info("测试车辆1")
+#     print(f"获取车辆导航信息的结果:{res}\n")
 
-    res = simulator_instance.set_vehicle_planning_info(
-        vehicle_id="测试车辆1",
-        planning_path=[
-            Point(x=-8.75, y=-537.0316, z=0),
-            Point(x=-8.75, y=-537.5316, z=0),
-            Point(x=-8.75, y=-538.0316, z=0),
-            Point(x=-8.75, y=-538.5316, z=0),
-        ],
-    )
-    print(f"修改车辆规划路径的结果:{res}\n")
+#     res = simulator_instance.get_vehicle_collision_status("测试车辆1")
+#     print(f"根据车辆ID获取车辆碰撞状态的结果:{res}\n")
 
-    res = simulator_instance.get_vehicle_planning_info("测试车辆1")
-    print(f"获取车辆规划路径的结果:{res}\n")
+#     res = simulator_instance.set_vehicle_planning_info(
+#         vehicle_id="测试车辆1",
+#         planning_path=[
+#             Point(x=-8.75, y=-537.0316, z=0),
+#             Point(x=-8.75, y=-537.5316, z=0),
+#             Point(x=-8.75, y=-538.0316, z=0),
+#             Point(x=-8.75, y=-538.5316, z=0),
+#         ],
+#     )
+#     print(f"修改车辆规划路径的结果:{res}\n")
 
-    res = simulator_instance.set_vehicle_control_info(
-        vehicle_id="测试车辆1", ste_wheel=1.2, lon_acc=1.1
-    )
-    print(f"修改车辆控制参数:{res}\n")
-    res = simulator_instance.get_vehicle_control_info(
-        ["测试车辆1", "环境车辆1", "环境车辆2"]
-    )
-    print(f"根据车辆ID列表获取车辆控制参数信息的结果:{res}\n")
+#     res = simulator_instance.get_vehicle_planning_info("测试车辆1")
+#     print(f"获取车辆规划路径的结果:{res}\n")
 
-    res = simulator_instance.set_vehicle_position(
-        vehicle_id="测试车辆1", point=Point(x=-8.75, y=-537.0316, z=0)
-    )
-    print(f"修改车辆点位信息:{res}\n")
+#     res = simulator_instance.set_vehicle_control_info(
+#         vehicle_id="测试车辆1", ste_wheel=1.2, lon_acc=1.1
+#     )
+#     print(f"修改车辆控制参数:{res}\n")
+#     res = simulator_instance.get_vehicle_control_info(
+#         ["测试车辆1", "环境车辆1", "环境车辆2"]
+#     )
+#     print(f"根据车辆ID列表获取车辆控制参数信息的结果:{res}\n")
 
-    res = simulator_instance.get_vehicle_position(
-        ["测试车辆1", "环境车辆1", "环境车辆2"]
-    )
-    print(f"根据车辆ID列表获取车辆位置信息的结果:{res}\n")
+#     res = simulator_instance.set_vehicle_position(
+#         vehicle_id="测试车辆1", point=Point(x=-8.75, y=-537.0316, z=0)
+#     )
+#     print(f"修改车辆点位信息:{res}\n")
 
-    res = simulator_instance.set_vehicle_moving_info(
-        vehicle_id="测试车辆1", u=1.1, v=1.2
-    )
-    print(f"修改车辆运动信息:{res}\n")
+#     res = simulator_instance.get_vehicle_position(
+#         ["测试车辆1", "环境车辆1", "环境车辆2"]
+#     )
+#     print(f"根据车辆ID列表获取车辆位置信息的结果:{res}\n")
 
-    res = simulator_instance.get_vehicle_moving_info(
-        ["测试车辆1", "环境车辆1", "环境车辆2"]
-    )
-    print(f"根据车辆ID列表获取车辆运动信息的结果:{res}\n")
+#     res = simulator_instance.set_vehicle_moving_info(
+#         vehicle_id="测试车辆1", u=1.1, v=1.2
+#     )
+#     print(f"修改车辆运动信息:{res}\n")
 
-    # res = simulator_instance.get_movement_list(junction_id="f")
-    # print(f"根据junctionId获取对应movement列表:{res}\n")
-    res = simulator_instance.set_vehicle_base_info(
-        vehicle_id="测试车辆1",
-        base_info=ObjBaseInfo(
-            1,
-            2,
-            3,
-            4,
-        ),
-    )
-    print(f"修改车辆基础信息,:{res}\n")
+#     res = simulator_instance.get_vehicle_moving_info(
+#         ["测试车辆1", "环境车辆1", "环境车辆2"]
+#     )
+#     print(f"根据车辆ID列表获取车辆运动信息的结果:{res}\n")
 
-    res = simulator_instance.get_vehicle_base_info(["测试车辆1"])
-    print(f"根据车辆ID列表获取车辆基本信息的结果:{res}\n")
+#     # res = simulator_instance.get_movement_list(junction_id="f")
+#     # print(f"根据junctionId获取对应movement列表:{res}\n")
+#     res = simulator_instance.set_vehicle_base_info(
+#         vehicle_id="测试车辆1",
+#         base_info=ObjBaseInfo(
+#             1,
+#             2,
+#             3,
+#             4,
+#         ),
+#     )
+#     print(f"修改车辆基础信息,:{res}\n")
 
-    # res = simulator_instance.set_vehicle_link_nav(
-    #     vehicle_id="测试车辆1", link_nav=["sg7_lk0"]
-    # )
-    # print(f"修改车辆子路段导航信息:{res}\n")
+#     res = simulator_instance.get_vehicle_base_info(["测试车辆1"])
+#     print(f"根据车辆ID列表获取车辆基本信息的结果:{res}\n")
 
-    res = simulator_instance.get_vehicle_navigation_info("测试车辆1")
-    print(f"获取车辆导航信息的结果:{res}\n")
+#     # res = simulator_instance.set_vehicle_link_nav(
+#     #     vehicle_id="测试车辆1", link_nav=["sg7_lk0"]
+#     # )
+#     # print(f"修改车辆子路段导航信息:{res}\n")
 
-    # res = simulator_instance.set_vehicle_destination(vehicle_id="测试车辆1")
-    # print(f"修改车辆终点:{res}\n")
+#     res = simulator_instance.get_vehicle_navigation_info("测试车辆1")
+#     print(f"获取车辆导航信息的结果:{res}\n")
 
-    res = simulator_instance.get_ped_id_list()
-    print(f"获取行人ID列表:{res}\n")
+#     # res = simulator_instance.set_vehicle_destination(vehicle_id="测试车辆1")
+#     # print(f"修改车辆终点:{res}\n")
 
-    res = simulator_instance.get_ped_base_info(
-        ped_id_list=["ped280", "ped100", "ped182"]
-    )
-    print(f"获取行人基础信息:{res}\n")
+#     res = simulator_instance.get_ped_id_list()
+#     print(f"获取行人ID列表:{res}\n")
 
-    # res = simulator_instance.set_ped_position(
-    #     ped_id="ped280", point=Point(x=-8.75, y=-538.5316, z=0)
-    # )
-    # print(f"修改行人点位信息, 航向角Phi:{res}\n")
+#     res = simulator_instance.get_ped_base_info(
+#         ped_id_list=["ped280", "ped100", "ped182"]
+#     )
+#     print(f"获取行人基础信息:{res}\n")
 
-    res = simulator_instance.get_nmv_id_list()
-    print(f"获取非机动车ID列表:{res}\n")
+#     # res = simulator_instance.set_ped_position(
+#     #     ped_id="ped280", point=Point(x=-8.75, y=-538.5316, z=0)
+#     # )
+#     # print(f"修改行人点位信息, 航向角Phi:{res}\n")
 
-    # res = simulator_instance.get_nmv_base_info(nmv_id_list=["ped280", "ped100", "ped182"])
-    # print(f"获取非机动车基础信息:{res}\n")
+#     res = simulator_instance.get_nmv_id_list()
+#     print(f"获取非机动车ID列表:{res}\n")
 
-    # res = simulator_instance.set_ped_position(
-    #     ped_id="ped280", point=Point(x=-8.75, y=-538.5316, z=0), phi=1.2
-    # )
-    # print(f"修改非机动车点位信息, 航向角Phi:{res}\n")
-    res = simulator_instance.stop()
-    print(f"停止仿真器:{res}\n")
+#     # res = simulator_instance.get_nmv_base_info(nmv_id_list=["ped280", "ped100", "ped182"])
+#     # print(f"获取非机动车基础信息:{res}\n")
+
+#     # res = simulator_instance.set_ped_position(
+#     #     ped_id="ped280", point=Point(x=-8.75, y=-538.5316, z=0), phi=1.2
+#     # )
+#     # print(f"修改非机动车点位信息, 航向角Phi:{res}\n")
+#     res = simulator_instance.stop()
+#     print(f"停止仿真器:{res}\n")

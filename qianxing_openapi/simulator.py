@@ -406,6 +406,17 @@ class Simulator(object):
         )
         return response_model.SetNMVPositionRes(resp)
 
+    # 获取车辆目标速度
+    def get_vehicle_target_speed(
+        self, vehicle_id: str
+    ) -> response_model.GetVehicleTargetSpeedRes:
+        req_data = {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id}
+
+        resp = self.client.post(
+            "/openapi/cosim/v2/simulation/vehicle/target_speed/get", req_data
+        )
+        return response_model.GetVehicleTargetSpeedRes(resp)
+
     # 直接给仿真器发post请求
     def do_post(self, path: str, data: dict):
         return self.client.post(path, data)

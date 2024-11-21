@@ -645,14 +645,18 @@ class GetTestVehicleIdListRes:
 @dataclass
 class GetVehicleBaseInfoRes_VehicleBaseInfo:
     base_info: ObjBaseInfo = None
+    dynamic_info: DynamicInfo = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
             return
         base_info = data.pop("base_info", None)
+        dynamic_info = data.pop("dynamic_info", None)
         # self.__dict__ = data
+        # base_info
         self.base_info = None if base_info == None else ObjBaseInfo(base_info)
-        # dynamic_info先不实现
+        # dynamic_info
+        self.dynamic_info = None if dynamic_info == None else DynamicInfo(dynamic_info)
 
 
 @dataclass
@@ -961,6 +965,16 @@ class SetNMVPositionRes:
 class GetSceneIdListRes:
     scene_id_list: list[str] = None
     scene_version_list: list[str] = None
+
+    def __init__(self, data: dict):
+        if data == None:
+            return
+        self.__dict__ = data
+
+
+@dataclass
+class GetVehicleTargetSpeedRes:
+    target_speed: float
 
     def __init__(self, data: dict):
         if data == None:
