@@ -46,9 +46,13 @@ class Simulator(object):
         return response_model.StopRes(resp)
 
     # 重置仿真器
-    def reset(self) -> response_model.ResetRes:
+    def reset(self, reset_traffic_flow=False) -> response_model.ResetRes:
         resp = self.client.post(
-            "/openapi/cosim/v2/simulation/reset", {"simulation_id": self.simulation_id}
+            "/openapi/cosim/v2/simulation/reset",
+            {
+                "simulation_id": self.simulation_id,
+                "reset_traffic_flow": reset_traffic_flow,
+            },
         )
         return response_model.ResetRes(resp)
 
