@@ -31,18 +31,22 @@ class HttpClient(object):
 
     def get(self, path: str, params: dict):
         response = requests.get(
-            self.config.endpoint + path, params, headers=self.headers)
+            self.config.endpoint + path, params, headers=self.headers
+        )
         if response.status_code != 200:
-            raise APIError(response.status_code,
-                           tryParseResponse(response), response.url)
+            raise APIError(
+                response.status_code, tryParseResponse(response), response.url
+            )
         return response.json()
 
     def post(self, path: str, data: dict):
         response = requests.post(
-            self.config.endpoint + path, json=data, headers=self.headers)
+            self.config.endpoint + path, json=data, headers=self.headers
+        )
         if response.status_code != 200:
-            raise APIError(response.status_code,
-                           tryParseResponse(response), response.url)
+            raise APIError(
+                response.status_code, tryParseResponse(response), response.url
+            )
         return response.json()
 
 
