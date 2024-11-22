@@ -89,8 +89,8 @@ from qianxing_openapi.qxmap_model import Qxmap
 
 api_client = Client(
     HttpConfig(
-        token="",
-        endpoint="",
+        token=os.getenv("QX_TOKEN"),
+        endpoint=os.getenv("QX_ENDPOINT"),
     )
 )
 
