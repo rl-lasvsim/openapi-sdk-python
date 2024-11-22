@@ -127,8 +127,6 @@ simulator.stop()
 
 ## License
 
-This project is licensed under the terms of the MIT license.
-
 ## Support
 
 For bug reports and feature requests, please use the [GitHub Issues](https://github.com/risenlighten-qianxing/openapi-sdk-python/issues) page.

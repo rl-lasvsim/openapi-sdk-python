@@ -126,8 +126,6 @@ simulator.stop()
 
 ## 许可证
 
-本项目采用MIT许可证条款。
-
 ## 支持
 
 如需报告错误或请求新功能，请使用[GitHub Issues](https://github.com/risenlighten-qianxing/openapi-sdk-python/issues)页面。

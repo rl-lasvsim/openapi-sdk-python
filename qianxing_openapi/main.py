@@ -75,8 +75,8 @@ from qianxing_openapi.qxmap_model import Qxmap
 # print(haha.config.to_dict())
 # hclient = HttpClient(
 #     config=HttpConfig(
-#         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjE3LCJvaWQiOjI1LCJuYW1lIjoiYWRtaW4iLCJpZGVudGl0eSI6ImFkbWluIiwicGVybWlzc2lvbnMiOltdLCJpc3MiOiJ1c2VyIiwic3ViIjoiTGFzVlNpbSIsImV4cCI6MTczMDc4NzUyNSwibmJmIjoxNzMwMTgyNzI1LCJpYXQiOjE3MzAxODI3MjUsImp0aSI6IjE3In0.Z_eRvOqBIkpJrteM0L4jb9JSmtoa5bFkSz9RLMptcCQ",
-#         "http://8.146.201.197:30080",
+#         "",
+#         "",
 #     ),
 #     headers={},
 # )
@@ -89,8 +89,8 @@ from qianxing_openapi.qxmap_model import Qxmap
 
 api_client = Client(
     HttpConfig(
-        token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQ5LCJvaWQiOjI2LCJuYW1lIjoi5ZGo5YWr5Y-q6IO955yL5Zy65pmv5ZWK5ZWKIiwiaWRlbnRpdHkiOiJub3JtYWwiLCJwZXJtaXNzaW9ucyI6W10sImlzcyI6InVzZXIiLCJzdWIiOiJMYXNWU2ltIiwiZXhwIjoxNzMyMjY2Njc3LCJuYmYiOjE3MzE2NjE4NzcsImlhdCI6MTczMTY2MTg3NywianRpIjoiNDkifQ.FBHIDAe9H0aK0RrKyMOpR_gZhaqXlCXdQLuTAKIApI0",
-        endpoint="http://8.146.201.197:30080/dev",
+        token=os.getenv("QX_TOKEN"),
+        endpoint=os.getenv("QX_ENDPOINT"),
     )
 )
 
