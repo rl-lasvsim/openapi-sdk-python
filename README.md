@@ -75,7 +75,7 @@ simulator.stop()
 - `init_from_sim(simulation_id, addr)`: Initialize simulator from existing simulation
 - `step()`: Advance simulation by one step
 - `stop()`: Stop the simulation
-- `reset()`: Reset the simulation to initial state
+- `reset(reset_traffic_flow)`: Reset the simulation to initial state, optionally reset traffic flow
 
 #### Vehicle APIs
 - `get_vehicle_id_list()`: Get all vehicle IDs
@@ -89,6 +89,7 @@ simulator.stop()
 - `get_vehicle_planning_info(vehicle_id)`: Get vehicle planning information
 - `get_vehicle_navigation_info(vehicle_id)`: Get vehicle navigation information
 - `get_vehicle_collision_status(vehicle_id)`: Check vehicle collision status
+- `get_vehicle_target_speed(vehicle_id)`: Get vehicle target speed
 - `set_vehicle_position(vehicle_id, point, phi)`: Set vehicle position and heading angle
 - `set_vehicle_control_info(vehicle_id, ste_wheel, lon_acc)`: Set vehicle control parameters
 - `set_vehicle_planning_info(vehicle_id, planning_path)`: Set vehicle planning path
