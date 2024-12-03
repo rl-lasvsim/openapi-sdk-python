@@ -1,5 +1,5 @@
 from qianxing_openapi.http_client import HttpClient
-from qianxing_openapi.response_model import GetSceneIdListRes
+from dataclasses import dataclass
 
 
 class TrainTask:
@@ -13,3 +13,14 @@ class TrainTask:
             "/openapi/train_task/{}/scene_id_list".format(task_id), {}
         )
         return GetSceneIdListRes(resp)
+
+
+@dataclass
+class GetSceneIdListRes:
+    scene_id_list: list[str] = None
+    scene_version_list: list[str] = None
+
+    def __init__(self, data: dict):
+        if data == None:
+            return
+        self.__dict__ = data
