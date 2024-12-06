@@ -6,13 +6,13 @@ from qianxing_openapi import response_model
 class SimulatorConfig(object):
     def __init__(
         self,
-        scenario_id: str = None,
-        scenario_version: str = None,
-        record_id: int = None,
+        scen_id: str = None,
+        scen_ver: str = None,
+        sim_record_id: int = None,
     ):
-        self.scen_id = scenario_id
-        self.scen_ver = scenario_version
-        self.record_id = record_id
+        self.scen_id = scen_id
+        self.scen_ver = scen_ver
+        self.sim_record_id = sim_record_id
 
 
 class Simulator(object):

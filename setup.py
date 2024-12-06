@@ -15,7 +15,7 @@ def parse_requirements(filename):
 
 setup(
     name="qianxing-openapi",
-    version="0.1.5",
+    version="0.1.7",
     description="Qianxing OpenAPI SDK for Python - A client library for accessing Qianxing's simulation platform",
     long_description=long_description,
     long_description_content_type="text/markdown",

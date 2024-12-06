@@ -10,10 +10,10 @@ class Resources:
 
     def get_map(
         self,
-        asset_id: str = None,
-        asset_version: str = None,
+        scen_id: str = None,
+        scen_ver: str = None,
     ) -> Qxmap:
-        req_data = {"asset_id": asset_id, "asset_version": asset_version}
+        req_data = {"scen_id": scen_id, "scen_ver": scen_ver}
         resp = self.client.post("/openapi/resource/v2/scenario/map/get", req_data)
 
         return Qxmap(resp["data"])

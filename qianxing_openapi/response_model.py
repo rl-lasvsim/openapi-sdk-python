@@ -962,17 +962,6 @@ class SetNMVPositionRes:
 
 
 @dataclass
-class GetSceneIdListRes:
-    scene_id_list: list[str] = None
-    scene_version_list: list[str] = None
-
-    def __init__(self, data: dict):
-        if data == None:
-            return
-        self.__dict__ = data
-
-
-@dataclass
 class GetVehicleTargetSpeedRes:
     target_speed: float
 
