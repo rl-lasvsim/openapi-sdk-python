@@ -1,5 +1,5 @@
-from qianxing_openapi.http_client import HttpClient
-from qianxing_openapi.qxmap_model import Qxmap
+from lasvsim_openapi.http_client import HttpClient
+from lasvsim_openapi.qxmap_model import Qxmap
 
 
 class Resources:
@@ -14,6 +14,7 @@ class Resources:
         scen_ver: str = None,
     ) -> Qxmap:
         req_data = {"scen_id": scen_id, "scen_ver": scen_ver}
-        resp = self.client.post("/openapi/resource/v2/scenario/map/get", req_data)
+        resp = self.client.post(
+            "/openapi/resource/v2/scenario/map/get", req_data)
 
         return Qxmap(resp["data"])

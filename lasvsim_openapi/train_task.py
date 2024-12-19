@@ -1,4 +1,4 @@
-from qianxing_openapi.http_client import HttpClient
+from lasvsim_openapi.http_client import HttpClient
 from dataclasses import dataclass
 
 

@@ -1,5 +1,5 @@
-from qianxing_openapi.http_client import HttpClient
-from qianxing_openapi import sim_record_model
+from lasvsim_openapi.http_client import HttpClient
+from lasvsim_openapi import sim_record_model
 
 
 class SimRecord:

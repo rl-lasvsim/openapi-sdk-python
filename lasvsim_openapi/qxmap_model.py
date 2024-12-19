@@ -1,4 +1,4 @@
-from qianxing_openapi import response_model
+from lasvsim_openapi import response_model
 from dataclasses import dataclass
 
 

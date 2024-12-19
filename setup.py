@@ -16,12 +16,12 @@ def parse_requirements(filename):
 setup(
     name="lasvsim-openapi",
     version="0.1.8",
-    description="Qianxing OpenAPI SDK for Python - A client library for accessing Qianxing's simulation platform",
+    description="Lasvsim OpenAPI SDK for Python - A client library for accessing Lasvsim's simulation platform",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Zhihong Luo",
     author_email="luozhihong@risenlighten.com",
-    url="https://github.com/risenlighten-qianxing/openapi-sdk-python",
+    url="https://github.com/rl-lasvsim/openapi-sdk-python",
     packages=find_packages(),
     install_requires=[
         "requests>=2.25.0",
@@ -42,7 +42,7 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     project_urls={
-        "Source": "https://github.com/risenlighten-qianxing/openapi-sdk-python",
-        "Bug Reports": "https://github.com/risenlighten-qianxing/openapi-sdk-python/issues",
+        "Source": "https://github.com/rl-lasvsim/openapi-sdk-python",
+        "Bug Reports": "https://github.com/rl-lasvsim/openapi-sdk-python/issues",
     },
 )

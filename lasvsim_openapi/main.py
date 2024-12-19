@@ -3,14 +3,14 @@
 
 import os
 import sys
-from qianxing_openapi.client import Client
-from qianxing_openapi.http_client import HttpConfig, HttpClient
-from qianxing_openapi.simulator import SimulatorConfig
+from lasvsim_openapi.client import Client
+from lasvsim_openapi.http_client import HttpConfig, HttpClient
+from lasvsim_openapi.simulator import SimulatorConfig
 from dataclasses import dataclass
-from qianxing_openapi.request_model import Point, ObjBaseInfo
+from lasvsim_openapi.request_model import Point, ObjBaseInfo
 from typing import List
-from qianxing_openapi.train_task import TrainTask
-from qianxing_openapi.qxmap_model import Qxmap
+from lasvsim_openapi.train_task import TrainTask
+from lasvsim_openapi.qxmap_model import Qxmap
 
 # data = {
 #     'id': 23,
