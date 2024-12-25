@@ -20,10 +20,10 @@ grep -rl 'qianxing_openapi' ./src | xargs sed -i '' 's/qianxing_openapi/lasvsim_
 以下是SDK使用的简单示例：
 
 ```python
-from lasvsim.client import Client
-from lasvsim.http_client import HttpConfig
-from lasvsim.simulator import SimulatorConfig
-from lasvsim.request_model import Point
+from lasvsim_openapi.client import Client
+from lasvsim_openapi.http_client import HttpConfig
+from lasvsim_openapi.simulator import SimulatorConfig
+from lasvsim_openapi.request_model import Point
 
 # 初始化客户端
 client = Client(
