@@ -14,8 +14,7 @@ class ProcessTask:
         record_id: int = None,
     ) -> process_task_model.CopyRecordRes:
         req_data = {"task_id": task_id, "record_id": record_id}
-        resp = self.client.post(
-            "/openapi/process_task/v2/record/copy", req_data)
+        resp = self.client.post("/openapi/process_task/v2/record/copy", req_data)
 
         return process_task_model.CopyRecordRes(resp)
 
@@ -36,8 +35,5 @@ class ProcessTask:
         task_id: int = None,
     ) -> process_task_model.GetTaskRecordIdsRes:
         req_data = {"task_id": task_id}
-        print("rr", req_data)
-        resp = self.client.post(
-            "/openapi/process_task/v2/record/id_list", req_data)
-        print("eeee", resp)
+        resp = self.client.post("/openapi/process_task/v2/record/id_list", req_data)
         return process_task_model.GetTaskRecordIdsRes(resp)

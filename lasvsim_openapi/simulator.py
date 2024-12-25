@@ -1,6 +1,7 @@
 from lasvsim_openapi.http_client import HttpConfig, HttpClient
 from lasvsim_openapi.request_model import Point, ObjBaseInfo
 from lasvsim_openapi import response_model
+from typing import List
 
 
 class SimulatorConfig(object):
@@ -22,8 +23,7 @@ class Simulator(object):
         # self.simulation_id = res.get("simulation_id")
 
     def init_from_config(self, sim_config: SimulatorConfig):
-        res = self.client.post(
-            "/openapi/cosim/v2/simulation/init", sim_config.__dict__)
+        res = self.client.post("/openapi/cosim/v2/simulation/init", sim_config.__dict__)
         self.client.headers["simulation_id"] = res.get("simulation_id")
         self.client.headers["x-md-rl-direct-addr"] = res.get("simulation_addr")
         self.simulation_id = res.get("simulation_id")
@@ -35,16 +35,14 @@ class Simulator(object):
 
     def step(self) -> response_model.StepRes:
         resp = self.client.post(
-            "/openapi/cosim/v2/simulation/step", {
-                "simulation_id": self.simulation_id}
+            "/openapi/cosim/v2/simulation/step", {"simulation_id": self.simulation_id}
         )
         return response_model.StepRes(resp)
 
     # 停止仿真器
     def stop(self) -> response_model.StopRes:
         resp = self.client.post(
-            "/openapi/cosim/v2/simulation/stop", {
-                "simulation_id": self.simulation_id}
+            "/openapi/cosim/v2/simulation/stop", {"simulation_id": self.simulation_id}
         )
         return response_model.StopRes(resp)
 
@@ -118,7 +116,7 @@ class Simulator(object):
 
     # 根据车辆ID列表获取车辆基本信息
     def get_vehicle_base_info(
-        self, id_list: list[str]
+        self, id_list: List[str]
     ) -> response_model.GetVehicleBaseInfoRes:
         resp = self.client.post(
             "/openapi/cosim/v2/simulation/vehicle/base_info/get",
@@ -128,7 +126,7 @@ class Simulator(object):
 
     # 根据车辆ID列表获取车辆位置信息
     def get_vehicle_position(
-        self, id_list: list[str]
+        self, id_list: List[str]
     ) -> response_model.GetVehiclePositionRes:
         resp = self.client.post(
             "/openapi/cosim/v2/simulation/vehicle/position/get",
@@ -138,7 +136,7 @@ class Simulator(object):
 
     # 根据车辆ID列表获取车辆运动信息
     def get_vehicle_moving_info(
-        self, id_list: list[str]
+        self, id_list: List[str]
     ) -> response_model.GetVehicleMovingInfoRes:
         resp = self.client.post(
             "/openapi/cosim/v2/simulation/vehicle/moving_info/get",
@@ -148,7 +146,7 @@ class Simulator(object):
 
     # 根据车辆ID列表获取车辆控制参数信息
     def get_vehicle_control_info(
-        self, id_list: list[str]
+        self, id_list: List[str]
     ) -> response_model.GetVehicleControlInfoRes:
         resp = self.client.post(
             "/openapi/cosim/v2/simulation/vehicle/control/get",
@@ -210,7 +208,7 @@ class Simulator(object):
 
     # 修改车辆规划路径
     def set_vehicle_planning_info(
-        self, vehicle_id: str, planning_path: list[Point]
+        self, vehicle_id: str, planning_path: List[Point]
     ) -> response_model.SetVehiclePlanningInfoRes:
         # FIXME: ？
         points_json = [point.to_dict() for point in planning_path]
@@ -232,8 +230,7 @@ class Simulator(object):
         ste_wheel: float = None,
         lon_acc: float = None,
     ) -> response_model.SetVehicleControlInfoRes:
-        req_data = {"simulation_id": self.simulation_id,
-                    "vehicle_id": vehicle_id}
+        req_data = {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id}
 
         if ste_wheel is not None:
             req_data["ste_wheel"] = ste_wheel
@@ -249,8 +246,7 @@ class Simulator(object):
     def set_vehicle_position(
         self, vehicle_id: str, point: Point = None, phi: float = None
     ) -> response_model.SetVehiclePositionRes:
-        req_data = {"simulation_id": self.simulation_id,
-                    "vehicle_id": vehicle_id}
+        req_data = {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id}
 
         if point is not None:
             req_data["point"] = point.to_dict()
@@ -273,8 +269,7 @@ class Simulator(object):
         v_acc: float = None,
         w_acc: float = None,
     ) -> response_model.SetVehicleMovingInfoRes:
-        req_data = {"simulation_id": self.simulation_id,
-                    "vehicle_id": vehicle_id}
+        req_data = {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id}
 
         if u is not None:
             req_data["u"] = u
@@ -298,8 +293,7 @@ class Simulator(object):
     def set_vehicle_base_info(
         self, vehicle_id: str, base_info: ObjBaseInfo = None
     ) -> response_model.SetVehicleBaseInfoRes:
-        req_data = {"simulation_id": self.simulation_id,
-                    "vehicle_id": vehicle_id}
+        req_data = {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id}
 
         if base_info is not None:
             req_data["base_info"] = base_info.to_dict()
@@ -322,7 +316,7 @@ class Simulator(object):
 
     # 修改车辆子路段导航信息
     def set_vehicle_link_nav(
-        self, vehicle_id: str, link_nav: list[str]
+        self, vehicle_id: str, link_nav: List[str]
     ) -> response_model.SetVehicleLinkNavRes:
         resp = self.client.post(
             "/openapi/cosim/v2/simulation/vehicle/link_nav/set",
@@ -339,8 +333,7 @@ class Simulator(object):
     def set_vehicle_destination(
         self, vehicle_id: str, destination: Point = None
     ) -> response_model.SetVehicleDestinationRes:
-        req_data = {"simulation_id": self.simulation_id,
-                    "vehicle_id": vehicle_id}
+        req_data = {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id}
 
         if destination is not None:
             req_data["destination"] = destination.to_dict()
@@ -360,7 +353,7 @@ class Simulator(object):
 
     # 获取行人基础信息
     def get_ped_base_info(
-        self, ped_id_list: list[str]
+        self, ped_id_list: List[str]
     ) -> response_model.GetPedBaseInfoRes:
         resp = self.client.post(
             "/openapi/cosim/v2/simulation/ped/base_info/get",
@@ -394,7 +387,7 @@ class Simulator(object):
 
     # 获取非机动车基础信息
     def get_nmv_base_info(
-        self, nmv_id_list: list[str]
+        self, nmv_id_list: List[str]
     ) -> response_model.GetNMVBaseInfoRes:
         resp = self.client.post(
             "/openapi/cosim/v2/simulation/nmv/base_info/get",
@@ -422,8 +415,7 @@ class Simulator(object):
     def get_vehicle_target_speed(
         self, vehicle_id: str
     ) -> response_model.GetVehicleTargetSpeedRes:
-        req_data = {"simulation_id": self.simulation_id,
-                    "vehicle_id": vehicle_id}
+        req_data = {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id}
 
         resp = self.client.post(
             "/openapi/cosim/v2/simulation/vehicle/target_speed/get", req_data

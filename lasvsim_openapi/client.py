@@ -15,7 +15,6 @@ class Client(object):
     sim_record: SimRecord
 
     def __init__(self, config: HttpConfig):
-        print('>>>>>')
         self.config = config
         self.init_common_client(config)
 

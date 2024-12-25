@@ -1,10 +1,12 @@
 from dataclasses import dataclass
+from typing import List
+from typing import Dict
 
 
 # ----record_id----
 @dataclass
 class GetRecordIdsResp:
-    ids: list[str] = None
+    ids: List[str] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -49,7 +51,7 @@ class TrackResult:
 
 @dataclass
 class GetTrackResultsResp:
-    data: list[TrackResult] = None
+    data: List[TrackResult] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -95,7 +97,7 @@ class SensorResult:
     record_id: str = None
     obj_id: str = None
     timestamp: int = None
-    result: list[SensorObj] = None
+    result: List[SensorObj] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -109,7 +111,7 @@ class SensorResult:
 
 @dataclass
 class GetSensorResultsResp:
-    data: list[TrackResult] = None
+    data: List[TrackResult] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -161,7 +163,7 @@ class StepResult:
 
 @dataclass
 class GetStepResultsResp:
-    data: list[StepResult] = None
+    data: List[StepResult] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -189,7 +191,7 @@ class PathPoint:
 
 @dataclass
 class Path:
-    point: list[PathPoint] = None
+    point: List[PathPoint] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -206,7 +208,7 @@ class PathResult:
     record_id: str = None
     obj_id: str = None
     timestamp: int = None
-    result: list[Path] = None
+    result: List[Path] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -220,7 +222,7 @@ class PathResult:
 
 @dataclass
 class GetPathResultsResp:
-    data: list[PathResult] = None
+    data: List[PathResult] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -235,10 +237,10 @@ class GetPathResultsResp:
 # ------ReferenceLineResult---------
 @dataclass
 class ReferenceLine:
-    points: list[PathPoint] = None
-    line_ids: list[str] = None
-    line_types: list[str] = None
-    line_idxs: list[int] = None
+    points: List[PathPoint] = None
+    line_ids: List[str] = None
+    line_types: List[str] = None
+    line_idxs: List[int] = None
     opposite: bool = None
 
     def __init__(self, data: dict) -> None:
@@ -256,7 +258,7 @@ class ReferenceLineResult:
     record_id: str = None
     obj_id: str = None
     timestamp: int = None
-    result: list[ReferenceLine] = None
+    result: List[ReferenceLine] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -270,7 +272,7 @@ class ReferenceLineResult:
 
 @dataclass
 class GetReferenceLineResultsResp:
-    data: list[ReferenceLineResult] = None
+    data: List[ReferenceLineResult] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:

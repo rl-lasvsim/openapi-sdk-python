@@ -65,8 +65,7 @@ class NavigationInfo:
         destination = data.pop("destination", None)
 
         self.__dict__ = data
-        self.destination = None if destination == None else Position(
-            destination)
+        self.destination = None if destination == None else Position(destination)
 
 
 @dataclass
@@ -81,10 +80,10 @@ class LaneNav:
 
 @dataclass
 class ReferenceLine:
-    lane_ids: list[str] = None
-    lane_types: list[str] = None
-    points: list[Point] = None
-    lane_idxes: list[int] = None
+    lane_ids: List[str] = None
+    lane_types: List[str] = None
+    points: List[Point] = None
+    lane_idxes: List[int] = None
     opposite: bool = None
 
     def __init__(self, data: dict) -> None:
@@ -93,8 +92,7 @@ class ReferenceLine:
         points = data.pop("points", None)
 
         self.__dict__ = data
-        self.points = None if points == None else [
-            Point(point) for point in points]
+        self.points = None if points == None else [Point(point) for point in points]
 
 
 @dataclass
@@ -114,8 +112,7 @@ class Header:
         center_point = data.pop("center_point", None)
 
         self.__dict__ = data
-        self.center_point = None if center_point == None else Point(
-            center_point)
+        self.center_point = None if center_point == None else Point(center_point)
 
 
 @dataclass
@@ -124,11 +121,11 @@ class Junction:
     junction_id: str = None
     name: str = None
     type: str = None
-    link_ids: list[str] = None
-    shape: list[Point] = None
+    link_ids: List[str] = None
+    shape: List[Point] = None
     traffic_light_id: str = None
-    in_segment_ids: list[str] = None
-    out_segment_ids: list[str] = None
+    in_segment_ids: List[str] = None
+    out_segment_ids: List[str] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -136,8 +133,7 @@ class Junction:
         shape = data.pop("shape", None)
 
         self.__dict__ = data
-        self.shape = None if shape == None else [
-            Point(point) for point in shape]
+        self.shape = None if shape == None else [Point(point) for point in shape]
 
 
 @dataclass
@@ -145,7 +141,7 @@ class Segment:
     map_id: int = None
     segment_id: str = None
     name: str = None
-    ordered_link_ids: list[str] = None
+    ordered_link_ids: List[str] = None
     start_junction_id: str = None
     end_junction_id: str = None
     length: float = None
@@ -165,7 +161,7 @@ class Link:
     link_id: str = None
     pair_id: str = None
     width: float = None
-    ordered_lane_ids: list[str] = None
+    ordered_lane_ids: List[str] = None
     lane_num: int = None
     start_point: Point = None
     end_point: Point = None
@@ -175,8 +171,8 @@ class Link:
     type: str = None
     heading: float = None
     link_order: int = None
-    left_boundary: list[Point] = None
-    right_boundary: list[Point] = None
+    left_boundary: List[Point] = None
+    right_boundary: List[Point] = None
     road_type: str = None
     s_offset: float = None
 
@@ -192,8 +188,7 @@ class Link:
         self.start_point = None if start_point == None else Point(start_point)
         self.end_point = None if end_point == None else Point(end_point)
         self.left_boundary = (
-            None if left_boundary == None else [
-                Point(point) for point in left_boundary]
+            None if left_boundary == None else [Point(point) for point in left_boundary]
         )
         self.right_boundary = (
             None
@@ -222,7 +217,7 @@ class DirectionPoint:
 class Turn:
     direction_point: DirectionPoint = None
     turn: str = None
-    turn_mapping: dict[str, str] = None
+    turn_mapping: Dict[str, str] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -231,8 +226,7 @@ class Turn:
 
         self.__dict__ = data
         self.direction_point = (
-            None if direction_point == None else DirectionPoint(
-                direction_point)
+            None if direction_point == None else DirectionPoint(direction_point)
         )
 
 
@@ -268,8 +262,8 @@ class LaneMarkAttribution:
 
 @dataclass
 class LaneMark:
-    shape: list[Point] = None
-    lane_mark_attrs: list[LaneMarkAttribution] = None
+    shape: List[Point] = None
+    lane_mark_attrs: List[LaneMarkAttribution] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -278,8 +272,7 @@ class LaneMark:
         lane_mark_attrs = data.pop("lane_mark_attrs", None)
 
         self.__dict__ = data
-        self.shape = None if shape == None else [
-            Point(point) for point in shape]
+        self.shape = None if shape == None else [Point(point) for point in shape]
         self.lane_mark_attrs = (
             None
             if lane_mark_attrs == None
@@ -295,16 +288,16 @@ class Lane:
     lane_offset: int = None
     link_id: str = None
     turn: Turn = None
-    speeds: list[Speed] = None
+    speeds: List[Speed] = None
     stopline_id: str = None
     width: float = None
-    center_line: list[Point] = None
-    connect_link_ids: list[str] = None
+    center_line: List[Point] = None
+    connect_link_ids: List[str] = None
     left_lane_mark: LaneMark = None
     right_lane_mark: LaneMark = None
-    upstream_link_ids: list[str] = None
-    downstream_link_ids: list[str] = None
-    cut_s_list: list[float] = None
+    upstream_link_ids: List[str] = None
+    downstream_link_ids: List[str] = None
+    cut_s_list: List[float] = None
     length: float = None
 
     def __init__(self, data: dict) -> None:
@@ -318,11 +311,9 @@ class Lane:
 
         self.__dict__ = data
         self.turn = None if turn == None else Turn(turn)
-        self.speeds = None if speeds == None else [
-            Speed(speed) for speed in speeds]
+        self.speeds = None if speeds == None else [Speed(speed) for speed in speeds]
         self.center_line = (
-            None if center_line == None else [
-                Point(point) for point in center_line]
+            None if center_line == None else [Point(point) for point in center_line]
         )
         self.left_lane_mark = (
             None if left_lane_mark == None else LaneMark(left_lane_mark)
@@ -336,7 +327,7 @@ class Lane:
 class Turn:
     direction_point: DirectionPoint = None
     turn: str = None
-    turn_mapping: dict[str, str] = None
+    turn_mapping: Dict[str, str] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -345,8 +336,7 @@ class Turn:
 
         self.__dict__ = data
         self.direction_point = (
-            None if direction_point == None else DirectionPoint(
-                direction_point)
+            None if direction_point == None else DirectionPoint(direction_point)
         )
 
 
@@ -355,7 +345,7 @@ class Crosswalk:
     map_id: int = None
     crosswalk_id: str = None
     heading: float = None
-    shape: list[Point] = None
+    shape: List[Point] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -363,15 +353,14 @@ class Crosswalk:
         shape = data.pop("shape", None)
 
         self.__dict__ = data
-        self.shape = None if shape == None else [
-            Point(point) for point in shape]
+        self.shape = None if shape == None else [Point(point) for point in shape]
 
 
 @dataclass
 class Stopline:
     map_id: int = None
     stopline_id: str = None
-    shape: list[Point] = None
+    shape: List[Point] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -379,8 +368,7 @@ class Stopline:
         shape = data.pop("shape", None)
 
         self.__dict__ = data
-        self.shape = None if shape == None else [
-            Point(point) for point in shape]
+        self.shape = None if shape == None else [Point(point) for point in shape]
 
 
 @dataclass
@@ -400,7 +388,7 @@ class TrafficLight_MovementSignal_SignalOfGreen:
 class TrafficLight_MovementSignal:
     movement_id: str = None
     traffic_light_pole_id: str = None
-    signal_of_green: list[TrafficLight_MovementSignal_SignalOfGreen] = None
+    signal_of_green: List[TrafficLight_MovementSignal_SignalOfGreen] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -426,7 +414,7 @@ class TrafficLight:
     cycle: int = None
     offset: int = None
     is_yellow: bool = None
-    movement_signals: dict[str, TrafficLight_MovementSignal] = None
+    movement_signals: Dict[str, TrafficLight_MovementSignal] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -458,8 +446,7 @@ class TrafficSign:
 
         self.__dict__ = data
         self.direction_point = (
-            None if direction_point == None else DirectionPoint(
-                direction_point)
+            None if direction_point == None else DirectionPoint(direction_point)
         )
 
 
@@ -471,7 +458,7 @@ class Connection:
     movement_id: str = None
     upstream_lane_id: str = None
     downstream_lane_id: str = None
-    path: list[Point] = None
+    path: List[Point] = None
     flow_direction: str = None
     upstream_link_id: str = None
     downstream_link_id: str = None
@@ -574,7 +561,7 @@ class ResetRes(object):
 
 @dataclass
 class GetCurrentStageRes(object):
-    movement_ids: list[str] = None
+    movement_ids: List[str] = None
     countdown: int = None
 
     def __init__(self, data: dict) -> None:
@@ -596,7 +583,7 @@ class GetMovementSignalRes(object):
 
 @dataclass
 class GetSignalPlanRes_Stage(object):
-    movement_ids: list[str] = None
+    movement_ids: List[str] = None
     duration: int = None
 
     def __init__(self, data: dict) -> None:
@@ -610,7 +597,7 @@ class GetSignalPlanRes(object):
     junction_id: str = None
     cycle: int = None
     offset: int = None
-    stages: list[GetSignalPlanRes_Stage] = None
+    stages: List[GetSignalPlanRes_Stage] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -627,20 +614,19 @@ class GetSignalPlanRes(object):
 
 @dataclass
 class GetMovementListRes:
-    list: list[Movement]  # type: ignore
+    list: List[Movement]  # type: ignore
 
     def __init__(self, data: dict) -> None:
         if data == None:
             return
         list = data.pop("list", None)
 
-        self.list = None if list == None else [
-            Movement[movement] for movement in list]
+        self.list = None if list == None else [Movement[movement] for movement in list]
 
 
 @dataclass
 class GetVehicleIdListRes:
-    list: list[str]  # type: ignore
+    list: List[str]  # type: ignore
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -650,7 +636,7 @@ class GetVehicleIdListRes:
 
 @dataclass
 class GetTestVehicleIdListRes:
-    list: list[str]  # type: ignore
+    list: List[str]  # type: ignore
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -673,13 +659,12 @@ class GetVehicleBaseInfoRes_VehicleBaseInfo:
         # base_info
         self.base_info = None if base_info == None else ObjBaseInfo(base_info)
         # dynamic_info
-        self.dynamic_info = None if dynamic_info == None else DynamicInfo(
-            dynamic_info)
+        self.dynamic_info = None if dynamic_info == None else DynamicInfo(dynamic_info)
 
 
 @dataclass
 class GetVehicleBaseInfoRes:
-    info_dict: dict[str:GetVehicleBaseInfoRes_VehicleBaseInfo] = None
+    info_dict: Dict[str, GetVehicleBaseInfoRes_VehicleBaseInfo] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -698,7 +683,7 @@ class GetVehicleBaseInfoRes:
 
 @dataclass
 class GetVehiclePositionRes:
-    position_dict: dict[str, Position] = None
+    position_dict: Dict[str, Position] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -715,7 +700,7 @@ class GetVehiclePositionRes:
 
 @dataclass
 class GetVehicleMovingInfoRes:
-    moving_info_dict: dict[str, ObjMovingInfo] = None
+    moving_info_dict: Dict[str, ObjMovingInfo] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -731,7 +716,7 @@ class GetVehicleMovingInfoRes:
 
 @dataclass
 class GetVehicleControlInfoRes:
-    control_info_dict: dict[str, ControlInfo] = None
+    control_info_dict: Dict[str, ControlInfo] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -763,14 +748,13 @@ class GetVehiclePerceptionInfoRes_PerceptionObj:
 
         self.__dict__ = data
         self.base_info = None if base_info == None else ObjBaseInfo(base_info)
-        self.moving_info = None if moving_info == None else ObjMovingInfo(
-            moving_info)
+        self.moving_info = None if moving_info == None else ObjMovingInfo(moving_info)
         self.position = None if position == None else Position(position)
 
 
 @dataclass
 class GetVehiclePerceptionInfoRes:
-    list: list[GetVehiclePerceptionInfoRes_PerceptionObj]  # type: ignore
+    list: List[GetVehiclePerceptionInfoRes_PerceptionObj]  # type: ignore
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -786,7 +770,7 @@ class GetVehiclePerceptionInfoRes:
 
 @dataclass
 class GetVehicleReferenceLinesRes:
-    reference_lines: list[ReferenceLine] = None
+    reference_lines: List[ReferenceLine] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -802,7 +786,7 @@ class GetVehicleReferenceLinesRes:
 
 @dataclass
 class GetVehiclePlanningInfoRes:
-    planning_path: list[Point] = None
+    planning_path: List[Point] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -810,8 +794,7 @@ class GetVehiclePlanningInfoRes:
         planning_path = data.pop("planning_path", None)
 
         self.planning_path = (
-            None if planning_path == None else [
-                Point(path) for path in planning_path]
+            None if planning_path == None else [Point(path) for path in planning_path]
         )
 
 
@@ -825,8 +808,7 @@ class GetVehicleNavigationInfoRes:
         navigation_info = data.pop("navigation_info", None)
 
         self.navigation_info = (
-            None if navigation_info == None else NavigationInfo(
-                navigation_info)
+            None if navigation_info == None else NavigationInfo(navigation_info)
         )
 
 
@@ -914,7 +896,7 @@ class SetVehicleDestinationRes:
 
 @dataclass
 class GetPedIdListRes:
-    list: list[str]  # type: ignore
+    list: List[str]  # type: ignore
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -924,7 +906,7 @@ class GetPedIdListRes:
 
 @dataclass
 class GetPedBaseInfoRes:
-    base_info_dict: dict[str, ObjBaseInfo] = None
+    base_info_dict: Dict[str, ObjBaseInfo] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -949,7 +931,7 @@ class SetPedPositionRes:
 
 @dataclass
 class GetNMVIdListRes:
-    list: list[str]  # type: ignore
+    list: List[str]  # type: ignore
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -959,7 +941,7 @@ class GetNMVIdListRes:
 
 @dataclass
 class GetNMVBaseInfoRes:
-    base_info_dict: dict[str, ObjBaseInfo] = None
+    base_info_dict: Dict[str, ObjBaseInfo] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:

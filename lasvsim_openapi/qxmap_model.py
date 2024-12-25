@@ -1,5 +1,7 @@
 from lasvsim_openapi import response_model
 from dataclasses import dataclass
+from typing import List
+from typing import Dict
 
 
 @dataclass
@@ -21,14 +23,13 @@ class Header:
 
         self.__dict__ = data
         self.center_point = (
-            None if center_point == None else response_model.Point(
-                center_point)
+            None if center_point == None else response_model.Point(center_point)
         )
 
 
 @dataclass
 class Polygon:
-    points: list[response_model.Point] = None
+    points: List[response_model.Point] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -44,7 +45,7 @@ class Polygon:
 
 @dataclass
 class LineString:
-    points: list[response_model.Point] = None
+    points: List[response_model.Point] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -208,8 +209,8 @@ class LaneMark:
     style: int = None
     color: int = None
     width: float = None
-    styles: list[int] = None
-    colors: list[int] = None
+    styles: List[int] = None
+    colors: List[int] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -224,15 +225,15 @@ class Lane:
     lane_num: int = None
     link_id: int = None
     lane_turn: LaneTurn = None
-    speed_limits: list[SpeedLimit] = None
+    speed_limits: List[SpeedLimit] = None
     stopline: Stopline = None
-    widths: list[Width] = None
-    center_line: list[CenterPoint] = None
-    upstream_lane_ids: list[str] = None
-    downstream_lane_ids: list[str] = None
+    widths: List[Width] = None
+    center_line: List[CenterPoint] = None
+    upstream_lane_ids: List[str] = None
+    downstream_lane_ids: List[str] = None
     length: float = None
-    left_lane_marks: list[LaneMark] = None
-    right_lane_marks: list[LaneMark] = None
+    left_lane_marks: List[LaneMark] = None
+    right_lane_marks: List[LaneMark] = None
     left_boundary: LineString = None
     right_boundary: LineString = None
     width: float = None
@@ -253,19 +254,15 @@ class Lane:
         self.__dict__ = data
         self.lane_turn = None if lane_turn == None else LaneTurn(lane_turn)
         self.speed_limits = (
-            None if speed_limits == None else [
-                SpeedLimit(sl) for sl in speed_limits]
+            None if speed_limits == None else [SpeedLimit(sl) for sl in speed_limits]
         )
         self.stopline = None if stopline == None else Stopline(stopline)
-        self.widths = None if widths == None else [
-            Width(width) for width in widths]
+        self.widths = None if widths == None else [Width(width) for width in widths]
         self.center_line = (
-            None if center_line == None else [
-                CenterPoint(cl) for cl in center_line]
+            None if center_line == None else [CenterPoint(cl) for cl in center_line]
         )
         self.left_lane_marks = (
-            None if left_lane_marks == None else [
-                LaneMark(l) for l in left_lane_marks]
+            None if left_lane_marks == None else [LaneMark(l) for l in left_lane_marks]
         )
         self.right_lane_marks = (
             None
@@ -303,16 +300,16 @@ class Link:
     map_id: int = None
     name: str = None
     type: int = None
-    pair_ids: list[str] = None
-    widths: list[Width] = None
-    ordered_lanes: list[Lane] = None
+    pair_ids: List[str] = None
+    widths: List[Width] = None
+    ordered_lanes: List[Lane] = None
     length: float = None
     s_offset: float = None
     link_num: int = None
     parent_id: str = None
-    reference_line: list[ReferencePoint] = None
-    upstream_link_ids: list[str] = None
-    downstream_link_ids: list[str] = None
+    reference_line: List[ReferencePoint] = None
+    upstream_link_ids: List[str] = None
+    downstream_link_ids: List[str] = None
     left_boundary: LineString = None
     right_boundary: LineString = None
 
@@ -326,11 +323,9 @@ class Link:
         right_boundary = data.pop("right_boundary", None)
 
         self.__dict__ = data
-        self.widths = None if widths == None else [
-            Width(width) for width in widths]
+        self.widths = None if widths == None else [Width(width) for width in widths]
         self.ordered_lanes = (
-            None if ordered_lanes == None else [
-                Lane(ol) for ol in ordered_lanes]
+            None if ordered_lanes == None else [Lane(ol) for ol in ordered_lanes]
         )
         self.reference_line = (
             None
@@ -363,7 +358,7 @@ class SignalPlan_MovementSignal:
     movement_id: str = None
     traffic_light_pole_id: str = None
     position: DirectedPoint = None
-    signal_of_green: list[TrafficLight_MovementSignal_SignalOfGreen] = None
+    signal_of_green: List[TrafficLight_MovementSignal_SignalOfGreen] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -390,7 +385,7 @@ class SignalPlan:
     cycle: int = None
     offset: int = None
     is_yellow: bool = None
-    movement_signals: dict[str, SignalPlan_MovementSignal] = None
+    movement_signals: Dict[str, SignalPlan_MovementSignal] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -415,14 +410,14 @@ class Junction:
     name: str = None
     type: int = None
     shape: Polygon = None
-    upstream_segment_ids: list[str] = None
-    downstream_segment_ids: list[str] = None
-    movements: list[Movement] = None
-    connections: list[Connection] = None
-    crosswalks: list[Crosswalk] = None
-    wait_areas: list[Link] = None
-    roundabout: list[Link] = None
-    links: list[Link] = None
+    upstream_segment_ids: List[str] = None
+    downstream_segment_ids: List[str] = None
+    movements: List[Movement] = None
+    connections: List[Connection] = None
+    crosswalks: List[Crosswalk] = None
+    wait_areas: List[Link] = None
+    roundabout: List[Link] = None
+    links: List[Link] = None
     signal_plan: SignalPlan = None
 
     def __init__(self, data: dict) -> None:
@@ -439,11 +434,9 @@ class Junction:
 
         self.__dict__ = data
         self.shape = None if shape == None else Polygon(shape)
-        self.movements = None if movements == None else [
-            Movement(m) for m in movements]
+        self.movements = None if movements == None else [Movement(m) for m in movements]
         self.connections = (
-            None if connections == None else [
-                Connection(c) for c in connections]
+            None if connections == None else [Connection(c) for c in connections]
         )
         self.crosswalks = (
             None if crosswalks == None else [Crosswalk(c) for c in crosswalks]
@@ -455,8 +448,7 @@ class Junction:
             None if roundabout == None else [Link(wa) for wa in roundabout]
         )
         self.links = None if links == None else [Link(l) for l in links]
-        self.signal_plan = None if signal_plan == None else SignalPlan(
-            signal_plan)
+        self.signal_plan = None if signal_plan == None else SignalPlan(signal_plan)
 
 
 @dataclass
@@ -481,12 +473,12 @@ class Segment:
     name: str = None
     start_junction_id: str = None
     end_junction_id: str = None
-    pair_segment_ids: list[str] = None
+    pair_segment_ids: List[str] = None
     s_offset: float = None
     road_id: str = None
     length: float = None
-    ordered_links: list[Link] = None
-    traffic_signs: list[TrafficSign] = None
+    ordered_links: List[Link] = None
+    traffic_signs: List[TrafficSign] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -496,12 +488,10 @@ class Segment:
 
         self.__dict__ = data
         self.ordered_links = (
-            None if ordered_links == None else [
-                Link(ol) for ol in ordered_links]
+            None if ordered_links == None else [Link(ol) for ol in ordered_links]
         )
         self.traffic_signs = (
-            None if traffic_signs == None else [
-                TrafficSign(ts) for ts in traffic_signs]
+            None if traffic_signs == None else [TrafficSign(ts) for ts in traffic_signs]
         )
 
 
@@ -569,11 +559,11 @@ class Road:
     name: str = None
     type: int = None
     length: float = None
-    neighbors: list[RoadPosition] = None
-    control_points: list[ControlPoint] = None
-    reference_line: list[ReferencePoint] = None
-    sections: list[Section] = None
-    junction_positions: list[JunctionPosition] = None
+    neighbors: List[RoadPosition] = None
+    control_points: List[ControlPoint] = None
+    reference_line: List[ReferencePoint] = None
+    sections: List[Section] = None
+    junction_positions: List[JunctionPosition] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -599,8 +589,7 @@ class Road:
             if reference_line == None
             else [ReferencePoint(n) for n in reference_line]
         )
-        self.sections = None if sections == None else [
-            Section(s) for s in sections]
+        self.sections = None if sections == None else [Section(s) for s in sections]
         self.junction_positions = (
             None
             if junction_positions == None
@@ -693,13 +682,13 @@ class Qxmap:
     id: str = None
     digest: str = None
     header: Header = None
-    junctions: list[Junction] = None
-    segments: list[Segment] = None
-    roads: list[Road] = None
-    mappers: list[Mapper] = None
-    buildings: list[Building] = None
-    trees: list[Tree] = None
-    lamps: list[Lamp] = None
+    junctions: List[Junction] = None
+    segments: List[Segment] = None
+    roads: List[Road] = None
+    mappers: List[Mapper] = None
+    buildings: List[Building] = None
+    trees: List[Tree] = None
+    lamps: List[Lamp] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -715,14 +704,10 @@ class Qxmap:
 
         self.__dict__ = data
         self.header = None if header == None else Header(header)
-        self.junctions = None if junctions == None else [
-            Junction(j) for j in junctions]
-        self.segments = None if segments == None else [
-            Segment(s) for s in segments]
+        self.junctions = None if junctions == None else [Junction(j) for j in junctions]
+        self.segments = None if segments == None else [Segment(s) for s in segments]
         self.roads = None if roads == None else [Road(r) for r in roads]
-        self.mappers = None if mappers == None else [
-            Mapper(m) for m in mappers]
-        self.buildings = None if buildings == None else [
-            Building(m) for m in buildings]
+        self.mappers = None if mappers == None else [Mapper(m) for m in mappers]
+        self.buildings = None if buildings == None else [Building(m) for m in buildings]
         self.trees = None if trees == None else [Tree(t) for t in trees]
         self.lamps = None if lamps == None else [Lamp(l) for l in lamps]
