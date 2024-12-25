@@ -1,7 +1,10 @@
 from dataclasses import dataclass
-
+from typing import List
+from typing import Dict
 
 # -----------------------------地图相关结构--------------------------------
+
+
 @dataclass
 class Movement:
     map_id: int = None
@@ -53,7 +56,7 @@ class Position:
 
 @dataclass
 class NavigationInfo:
-    link_nav: list[str] = None
+    link_nav: List[str] = None
     destination: Position = None
 
     def __init__(self, data: dict) -> None:
@@ -62,12 +65,13 @@ class NavigationInfo:
         destination = data.pop("destination", None)
 
         self.__dict__ = data
-        self.destination = None if destination == None else Position(destination)
+        self.destination = None if destination == None else Position(
+            destination)
 
 
 @dataclass
 class LaneNav:
-    nav: dict[int, str] = None
+    nav: Dict[int, str] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -89,7 +93,8 @@ class ReferenceLine:
         points = data.pop("points", None)
 
         self.__dict__ = data
-        self.points = None if points == None else [Point(point) for point in points]
+        self.points = None if points == None else [
+            Point(point) for point in points]
 
 
 @dataclass
@@ -109,7 +114,8 @@ class Header:
         center_point = data.pop("center_point", None)
 
         self.__dict__ = data
-        self.center_point = None if center_point == None else Point(center_point)
+        self.center_point = None if center_point == None else Point(
+            center_point)
 
 
 @dataclass
@@ -130,7 +136,8 @@ class Junction:
         shape = data.pop("shape", None)
 
         self.__dict__ = data
-        self.shape = None if shape == None else [Point(point) for point in shape]
+        self.shape = None if shape == None else [
+            Point(point) for point in shape]
 
 
 @dataclass
@@ -185,7 +192,8 @@ class Link:
         self.start_point = None if start_point == None else Point(start_point)
         self.end_point = None if end_point == None else Point(end_point)
         self.left_boundary = (
-            None if left_boundary == None else [Point(point) for point in left_boundary]
+            None if left_boundary == None else [
+                Point(point) for point in left_boundary]
         )
         self.right_boundary = (
             None
@@ -223,7 +231,8 @@ class Turn:
 
         self.__dict__ = data
         self.direction_point = (
-            None if direction_point == None else DirectionPoint(direction_point)
+            None if direction_point == None else DirectionPoint(
+                direction_point)
         )
 
 
@@ -269,7 +278,8 @@ class LaneMark:
         lane_mark_attrs = data.pop("lane_mark_attrs", None)
 
         self.__dict__ = data
-        self.shape = None if shape == None else [Point(point) for point in shape]
+        self.shape = None if shape == None else [
+            Point(point) for point in shape]
         self.lane_mark_attrs = (
             None
             if lane_mark_attrs == None
@@ -308,9 +318,11 @@ class Lane:
 
         self.__dict__ = data
         self.turn = None if turn == None else Turn(turn)
-        self.speeds = None if speeds == None else [Speed(speed) for speed in speeds]
+        self.speeds = None if speeds == None else [
+            Speed(speed) for speed in speeds]
         self.center_line = (
-            None if center_line == None else [Point(point) for point in center_line]
+            None if center_line == None else [
+                Point(point) for point in center_line]
         )
         self.left_lane_mark = (
             None if left_lane_mark == None else LaneMark(left_lane_mark)
@@ -333,7 +345,8 @@ class Turn:
 
         self.__dict__ = data
         self.direction_point = (
-            None if direction_point == None else DirectionPoint(direction_point)
+            None if direction_point == None else DirectionPoint(
+                direction_point)
         )
 
 
@@ -350,7 +363,8 @@ class Crosswalk:
         shape = data.pop("shape", None)
 
         self.__dict__ = data
-        self.shape = None if shape == None else [Point(point) for point in shape]
+        self.shape = None if shape == None else [
+            Point(point) for point in shape]
 
 
 @dataclass
@@ -365,7 +379,8 @@ class Stopline:
         shape = data.pop("shape", None)
 
         self.__dict__ = data
-        self.shape = None if shape == None else [Point(point) for point in shape]
+        self.shape = None if shape == None else [
+            Point(point) for point in shape]
 
 
 @dataclass
@@ -443,7 +458,8 @@ class TrafficSign:
 
         self.__dict__ = data
         self.direction_point = (
-            None if direction_point == None else DirectionPoint(direction_point)
+            None if direction_point == None else DirectionPoint(
+                direction_point)
         )
 
 
@@ -618,7 +634,8 @@ class GetMovementListRes:
             return
         list = data.pop("list", None)
 
-        self.list = None if list == None else [Movement[movement] for movement in list]
+        self.list = None if list == None else [
+            Movement[movement] for movement in list]
 
 
 @dataclass
@@ -656,7 +673,8 @@ class GetVehicleBaseInfoRes_VehicleBaseInfo:
         # base_info
         self.base_info = None if base_info == None else ObjBaseInfo(base_info)
         # dynamic_info
-        self.dynamic_info = None if dynamic_info == None else DynamicInfo(dynamic_info)
+        self.dynamic_info = None if dynamic_info == None else DynamicInfo(
+            dynamic_info)
 
 
 @dataclass
@@ -745,7 +763,8 @@ class GetVehiclePerceptionInfoRes_PerceptionObj:
 
         self.__dict__ = data
         self.base_info = None if base_info == None else ObjBaseInfo(base_info)
-        self.moving_info = None if moving_info == None else ObjMovingInfo(moving_info)
+        self.moving_info = None if moving_info == None else ObjMovingInfo(
+            moving_info)
         self.position = None if position == None else Position(position)
 
 
@@ -791,7 +810,8 @@ class GetVehiclePlanningInfoRes:
         planning_path = data.pop("planning_path", None)
 
         self.planning_path = (
-            None if planning_path == None else [Point(path) for path in planning_path]
+            None if planning_path == None else [
+                Point(path) for path in planning_path]
         )
 
 
@@ -805,7 +825,8 @@ class GetVehicleNavigationInfoRes:
         navigation_info = data.pop("navigation_info", None)
 
         self.navigation_info = (
-            None if navigation_info == None else NavigationInfo(navigation_info)
+            None if navigation_info == None else NavigationInfo(
+                navigation_info)
         )
 
 
