@@ -110,7 +110,7 @@ class SensorResult:
 
 @dataclass
 class GetSensorResultsResp:
-    data: List[TrackResult] = None
+    data: List[SensorResult] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
