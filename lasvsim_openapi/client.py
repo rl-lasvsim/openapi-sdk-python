@@ -29,3 +29,8 @@ class Client(object):
         simulator = Simulator(self.config)
         simulator.init_from_config(sim_config)
         return simulator
+
+    def init_simulator_from_sim(self, sim_id: str, addr: str):
+        simulator = Simulator(self.config)
+        simulator.init_from_sim(sim_id, addr)
+        return simulator
