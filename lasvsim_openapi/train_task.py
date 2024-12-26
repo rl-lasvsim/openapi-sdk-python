@@ -1,5 +1,6 @@
-from qianxing_openapi.http_client import HttpClient
+from lasvsim_openapi.http_client import HttpClient
 from dataclasses import dataclass
+from typing import List
 
 
 class TrainTask:
@@ -17,8 +18,8 @@ class TrainTask:
 
 @dataclass
 class GetSceneIdListRes:
-    scene_id_list: list[str] = None
-    scene_version_list: list[str] = None
+    scene_id_list: List[str] = None
+    scene_version_list: List[str] = None
 
     def __init__(self, data: dict):
         if data == None:

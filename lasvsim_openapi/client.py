@@ -1,11 +1,11 @@
 # 包含仿真器等功能的客户端
 
-from qianxing_openapi.simulator import Simulator, SimulatorConfig
-from qianxing_openapi.http_client import HttpConfig, HttpClient
-from qianxing_openapi.train_task import TrainTask
-from qianxing_openapi.resources import Resources
-from qianxing_openapi.process_task import ProcessTask
-from qianxing_openapi.sim_record import SimRecord
+from lasvsim_openapi.simulator import Simulator, SimulatorConfig
+from lasvsim_openapi.http_client import HttpConfig, HttpClient
+from lasvsim_openapi.train_task import TrainTask
+from lasvsim_openapi.resources import Resources
+from lasvsim_openapi.process_task import ProcessTask
+from lasvsim_openapi.sim_record import SimRecord
 
 
 class Client(object):

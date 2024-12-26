@@ -1,4 +1,4 @@
-# Qianxing OpenAPI SDK for Python
+# Lasvsim OpenAPI SDK for Python
 
 千行仿真平台的Python SDK。提供了一种简单直观的方式来控制和获取自动驾驶场景的仿真。
 
@@ -7,18 +7,23 @@
 您可以直接从PyPI安装该软件包：
 
 ```bash
-pip install qianxing-openapi
+pip install lasvsim-openapi
 ```
 
+## 迁移
+执行下面命令修改包名，其中./src为代码目录。修改完成后使用git检查改动。
+```bash
+grep -rl 'qianxing_openapi' ./src | xargs sed -i '' 's/qianxing_openapi/lasvsim_openapi/g'
+```
 ## 快速开始
 
 以下是SDK使用的简单示例：
 
 ```python
-from qianxing_openapi.client import Client
-from qianxing_openapi.http_client import HttpConfig
-from qianxing_openapi.simulator import SimulatorConfig
-from qianxing_openapi.request_model import Point
+from lasvsim_openapi.client import Client
+from lasvsim_openapi.http_client import HttpConfig
+from lasvsim_openapi.simulator import SimulatorConfig
+from lasvsim_openapi.request_model import Point
 
 # 初始化客户端
 client = Client(

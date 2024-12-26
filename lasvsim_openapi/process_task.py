@@ -1,5 +1,5 @@
-from qianxing_openapi.http_client import HttpClient
-from qianxing_openapi import process_task_model
+from lasvsim_openapi.http_client import HttpClient
+from lasvsim_openapi import process_task_model
 
 
 class ProcessTask:
@@ -35,7 +35,5 @@ class ProcessTask:
         task_id: int = None,
     ) -> process_task_model.GetTaskRecordIdsRes:
         req_data = {"task_id": task_id}
-        print("rr", req_data)
         resp = self.client.post("/openapi/process_task/v2/record/id_list", req_data)
-        print("eeee", resp)
         return process_task_model.GetTaskRecordIdsRes(resp)

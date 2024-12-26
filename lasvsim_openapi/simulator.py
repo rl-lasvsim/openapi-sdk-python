@@ -1,6 +1,7 @@
-from qianxing_openapi.http_client import HttpConfig, HttpClient
-from qianxing_openapi.request_model import Point, ObjBaseInfo
-from qianxing_openapi import response_model
+from lasvsim_openapi.http_client import HttpConfig, HttpClient
+from lasvsim_openapi.request_model import Point, ObjBaseInfo
+from lasvsim_openapi import response_model
+from typing import List
 
 
 class SimulatorConfig(object):
@@ -115,7 +116,7 @@ class Simulator(object):
 
     # 根据车辆ID列表获取车辆基本信息
     def get_vehicle_base_info(
-        self, id_list: list[str]
+        self, id_list: List[str]
     ) -> response_model.GetVehicleBaseInfoRes:
         resp = self.client.post(
             "/openapi/cosim/v2/simulation/vehicle/base_info/get",
@@ -125,7 +126,7 @@ class Simulator(object):
 
     # 根据车辆ID列表获取车辆位置信息
     def get_vehicle_position(
-        self, id_list: list[str]
+        self, id_list: List[str]
     ) -> response_model.GetVehiclePositionRes:
         resp = self.client.post(
             "/openapi/cosim/v2/simulation/vehicle/position/get",
@@ -135,7 +136,7 @@ class Simulator(object):
 
     # 根据车辆ID列表获取车辆运动信息
     def get_vehicle_moving_info(
-        self, id_list: list[str]
+        self, id_list: List[str]
     ) -> response_model.GetVehicleMovingInfoRes:
         resp = self.client.post(
             "/openapi/cosim/v2/simulation/vehicle/moving_info/get",
@@ -145,7 +146,7 @@ class Simulator(object):
 
     # 根据车辆ID列表获取车辆控制参数信息
     def get_vehicle_control_info(
-        self, id_list: list[str]
+        self, id_list: List[str]
     ) -> response_model.GetVehicleControlInfoRes:
         resp = self.client.post(
             "/openapi/cosim/v2/simulation/vehicle/control/get",
@@ -207,7 +208,7 @@ class Simulator(object):
 
     # 修改车辆规划路径
     def set_vehicle_planning_info(
-        self, vehicle_id: str, planning_path: list[Point]
+        self, vehicle_id: str, planning_path: List[Point]
     ) -> response_model.SetVehiclePlanningInfoRes:
         # FIXME: ？
         points_json = [point.to_dict() for point in planning_path]
@@ -315,7 +316,7 @@ class Simulator(object):
 
     # 修改车辆子路段导航信息
     def set_vehicle_link_nav(
-        self, vehicle_id: str, link_nav: list[str]
+        self, vehicle_id: str, link_nav: List[str]
     ) -> response_model.SetVehicleLinkNavRes:
         resp = self.client.post(
             "/openapi/cosim/v2/simulation/vehicle/link_nav/set",
@@ -352,7 +353,7 @@ class Simulator(object):
 
     # 获取行人基础信息
     def get_ped_base_info(
-        self, ped_id_list: list[str]
+        self, ped_id_list: List[str]
     ) -> response_model.GetPedBaseInfoRes:
         resp = self.client.post(
             "/openapi/cosim/v2/simulation/ped/base_info/get",
@@ -386,7 +387,7 @@ class Simulator(object):
 
     # 获取非机动车基础信息
     def get_nmv_base_info(
-        self, nmv_id_list: list[str]
+        self, nmv_id_list: List[str]
     ) -> response_model.GetNMVBaseInfoRes:
         resp = self.client.post(
             "/openapi/cosim/v2/simulation/nmv/base_info/get",

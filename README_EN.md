@@ -7,7 +7,7 @@ A Python SDK for interacting with Qianxing's simulation platform. This package p
 You can install the package directly from PyPI:
 
 ```bash
-pip install qianxing-openapi
+pip install lasvsim-openapi
 ```
 
 ## Quick Start
@@ -15,10 +15,10 @@ pip install qianxing-openapi
 Here's a simple example of how to use the SDK:
 
 ```python
-from qianxing_openapi.client import Client
-from qianxing_openapi.http_client import HttpConfig
-from qianxing_openapi.simulator import SimulatorConfig
-from qianxing_openapi.request_model import Point
+from lasvsim_openapi.client import Client
+from lasvsim_openapi.http_client import HttpConfig
+from lasvsim_openapi.simulator import SimulatorConfig
+from lasvsim_openapi.request_model import Point
 
 # Initialize the client
 client = Client(

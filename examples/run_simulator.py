@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from qianxing_openapi.client import Client
-from qianxing_openapi.http_client import HttpConfig
-from qianxing_openapi.simulator import SimulatorConfig
-from qianxing_openapi.request_model import Point, ObjBaseInfo
+from lasvsim_openapi.client import Client
+from lasvsim_openapi.http_client import HttpConfig
+from lasvsim_openapi.simulator import SimulatorConfig
+from lasvsim_openapi.request_model import Point, ObjBaseInfo
+import os
+
 
 def main():
     # Initialize the client
     api_client = Client(
         HttpConfig(
-            token="your_token_here",
-            endpoint="your_endpoint_here",
+            token="XXX",
+            endpoint=os.getenv("QX_ENDPOINT"),
         )
     )
 
@@ -27,7 +29,8 @@ def main():
         )
     )
 
-    print(f"Initialized simulator with ID: {simulator_instance.simulation_id}\n")
+    print(
+        f"Initialized simulator with ID: {simulator_instance.simulation_id}\n")
 
     # Run simulation steps
     for i in range(10):
@@ -41,6 +44,7 @@ def main():
     # Stop simulation
     res = simulator_instance.stop()
     print(f"Stopped simulator: {res}\n")
+
 
 if __name__ == "__main__":
     main()

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 
 # -----------------------------仿真结构结构--------------------------------
@@ -30,7 +31,7 @@ class GetRecordScenarioRes:
 
 @dataclass
 class GetTaskRecordIdsRes:
-    record_ids: list[int] = None
+    record_ids: List[int] = None
 
     def __init__(self, data: dict) -> None:
         if data == None:
