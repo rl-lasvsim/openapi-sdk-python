@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from typing import List
-from typing import Dict
 
 
 # ----record_id----
@@ -18,12 +17,12 @@ class GetRecordIdsResp:
 # ----GetTrackResultsResp----
 @dataclass
 class Track:
-    x: float = None
-    y: float = None
-    z: float = None
-    phi: float = None
-    lane_id: str = None
-    position_type: str = None
+    x: float = 0.0
+    y: float = 0.0
+    z: float = 0.0
+    phi: float = 0.0
+    lane_id: str = ""
+    position_type: str = ""
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -34,9 +33,9 @@ class Track:
 
 @dataclass
 class TrackResult:
-    record_id: str = None
-    obj_id: str = None
-    timestamp: int = None
+    record_id: str = ""
+    obj_id: str = ""
+    timestamp: int = 0
     result: Track = None
 
     def __init__(self, data: dict) -> None:
@@ -66,24 +65,24 @@ class GetTrackResultsResp:
 # ----GetSensorResultsResp----
 @dataclass
 class SensorObj:
-    id: str = None
-    speed: float = None
-    x: float = None
-    y: float = None
-    z: float = None
-    length: float = None
-    width: float = None
-    height: float = None
-    phi: float = None
-    exterior_light: str = None
-    risk_2_ego: int = None
-    lon_acc: float = None
-    v: float = None
-    lat_acc: float = None
-    w: float = None
-    w_acc: float = None
-    lane_id: str = None
-    position_type: str = None
+    id: str = ""
+    speed: float = 0.0
+    x: float = 0.0
+    y: float = 0.0
+    z: float = 0.0
+    length: float = 0.0
+    width: float = 0.0
+    height: float = 0.0
+    phi: float = 0.0
+    exterior_light: str = ""
+    risk_2_ego: int = 0
+    lon_acc: float = 0.0
+    v: float = 0.0
+    lat_acc: float = 0.0
+    w: float = 0.0
+    w_acc: float = 0.0
+    lane_id: str = ""
+    position_type: str = ""
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -94,9 +93,9 @@ class SensorObj:
 
 @dataclass
 class SensorResult:
-    record_id: str = None
-    obj_id: str = None
-    timestamp: int = None
+    record_id: str = ""
+    obj_id: str = ""
+    timestamp: int = 0
     result: List[SensorObj] = None
 
     def __init__(self, data: dict) -> None:
@@ -126,16 +125,16 @@ class GetSensorResultsResp:
 # ----GetStepResultsResp----
 @dataclass
 class Step:
-    speed: float = None
-    acc: float = None
-    mileage: float = None
-    ste_wheel: float = None
-    turn_signal: str = None
-    v: float = None
-    lat_acc: float = None
-    w: float = None
-    wcc: float = None
-    reference_speed: float = None
+    speed: float = 0.0
+    acc: float = 0.0
+    mileage: float = 0.0
+    ste_wheel: float = 0.0
+    turn_signal: str = ""
+    v: float = 0.0
+    lat_acc: float = 0.0
+    w: float = 0.0
+    wcc: float = 0.0
+    reference_speed: float = 0.0
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -146,9 +145,9 @@ class Step:
 
 @dataclass
 class StepResult:
-    record_id: str = None
-    obj_id: str = None
-    timestamp: int = None
+    record_id: str = ""
+    obj_id: str = ""
+    timestamp: int = 0
     result: Step = None
 
     def __init__(self, data: dict) -> None:
@@ -178,9 +177,9 @@ class GetStepResultsResp:
 # ----GetPathResultsResp----
 @dataclass
 class PathPoint:
-    x: float = None
-    y: float = None
-    z: float = None
+    x: float = 0.0
+    y: float = 0.0
+    z: float = 0.0
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -205,9 +204,9 @@ class Path:
 
 @dataclass
 class PathResult:
-    record_id: str = None
-    obj_id: str = None
-    timestamp: int = None
+    record_id: str = ""
+    obj_id: str = ""
+    timestamp: int = 0
     result: List[Path] = None
 
     def __init__(self, data: dict) -> None:
@@ -241,7 +240,7 @@ class ReferenceLine:
     line_ids: List[str] = None
     line_types: List[str] = None
     line_idxs: List[int] = None
-    opposite: bool = None
+    opposite: bool = False
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -255,9 +254,9 @@ class ReferenceLine:
 
 @dataclass
 class ReferenceLineResult:
-    record_id: str = None
-    obj_id: str = None
-    timestamp: int = None
+    record_id: str = ""
+    obj_id: str = ""
+    timestamp: int = 0
     result: List[ReferenceLine] = None
 
     def __init__(self, data: dict) -> None:
