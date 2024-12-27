@@ -6,15 +6,15 @@ from typing import Dict
 
 @dataclass
 class Header:
-    north: float = None
-    south: float = None
-    east: float = None
-    west: float = None
+    north: float = 0.0
+    south: float = 0.0
+    east: float = 0.0
+    west: float = 0.0
     center_point: response_model.Point = None
-    version: str = None
-    zone: float = None
-    use_bias: bool = None
-    source: int = None
+    version: str = ""
+    zone: float = 0.0
+    use_bias: bool = False
+    source: int = 0
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -61,11 +61,11 @@ class LineString:
 
 @dataclass
 class Movement:
-    id: str = None
-    upstream_link_id: str = None
-    downstream_link_id: str = None
-    junction_id: str = None
-    flow_direction: int = None
+    id: str = ""
+    upstream_link_id: str = ""
+    downstream_link_id: str = ""
+    junction_id: str = ""
+    flow_direction: int = 0
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -76,14 +76,14 @@ class Movement:
 
 @dataclass
 class Connection:
-    id: int = None
-    junction_id: str = None
-    movement_id: str = None
-    upstream_lane_id: str = None
-    downstream_lane_id: str = None
-    flow_direction: int = None
-    upstream_link_id: str = None
-    downstream_link_id: str = None
+    id: int = 0
+    junction_id: str = ""
+    movement_id: str = ""
+    upstream_lane_id: str = ""
+    downstream_lane_id: str = ""
+    flow_direction: int = 0
+    upstream_link_id: str = ""
+    downstream_link_id: str = ""
     path: LineString = None
 
     def __init__(self, data: dict) -> None:
@@ -97,8 +97,8 @@ class Connection:
 
 @dataclass
 class Crosswalk:
-    id: str = None
-    heading: float = None
+    id: str = ""
+    heading: float = 0.0
     shape: Polygon = None
 
     def __init__(self, data: dict) -> None:
@@ -112,11 +112,11 @@ class Crosswalk:
 
 @dataclass
 class Width:
-    s: float = None
-    a: float = None
-    b: float = None
-    c: float = None
-    d: float = None
+    s: float = 0.0
+    a: float = 0.0
+    b: float = 0.0
+    c: float = 0.0
+    d: float = 0.0
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -127,9 +127,9 @@ class Width:
 @dataclass
 class DirectedPoint:
     point: response_model.Point = None
-    heading: float = None
-    roll: float = None
-    patch: float = None
+    heading: float = 0.0
+    roll: float = 0.0
+    patch: float = 0.0
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -143,7 +143,7 @@ class DirectedPoint:
 @dataclass
 class LaneTurn:
     position: DirectedPoint = None
-    turn_code: str = None
+    turn_code: str = ""
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -156,13 +156,13 @@ class LaneTurn:
 
 @dataclass
 class SpeedLimit:
-    s: float = None
-    length: float = None
-    type: int = None
-    max_value: float = None
-    min_value: float = None
-    unit: str = None
-    source: str = None
+    s: float = 0.0
+    length: float = 0.0
+    type: int = 0
+    max_value: float = 0.0
+    min_value: float = 0.0
+    unit: str = ""
+    source: str = ""
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -172,7 +172,7 @@ class SpeedLimit:
 
 @dataclass
 class Stopline:
-    id: str = None
+    id: str = ""
     shape: LineString = None
 
     def __init__(self, data: dict) -> None:
@@ -186,10 +186,10 @@ class Stopline:
 
 @dataclass
 class CenterPoint:
-    s: float = None
-    heading: float = None
-    left_width: float = None
-    right_width: float = None
+    s: float = 0.0
+    heading: float = 0.0
+    left_width: float = 0.0
+    right_width: float = 0.0
     point: response_model.Point = None
 
     def __init__(self, data: dict) -> None:
@@ -203,12 +203,12 @@ class CenterPoint:
 
 @dataclass
 class LaneMark:
-    s: float = None
-    length: float = None
-    is_merge: bool = None
-    style: int = None
-    color: int = None
-    width: float = None
+    s: float = 0.0
+    length: float = 0.0
+    is_merge: bool = False
+    style: int = 0
+    color: int = 0
+    width: float = 0.0
     styles: List[int] = None
     colors: List[int] = None
 
@@ -279,11 +279,11 @@ class Lane:
 
 @dataclass
 class ReferencePoint:
-    s: float = None
-    heading: float = None
+    s: float = 0.0
+    heading: float = 0.0
     point: response_model.Point = None
-    height: float = None
-    cross_slope: float = None
+    height: float = 0.0
+    cross_slope: float = 0.0
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -296,17 +296,17 @@ class ReferencePoint:
 
 @dataclass
 class Link:
-    id: str = None
-    map_id: int = None
-    name: str = None
-    type: int = None
+    id: str = ""
+    map_id: int = 0
+    name: str = ""
+    type: int = 0
     pair_ids: List[str] = None
     widths: List[Width] = None
     ordered_lanes: List[Lane] = None
-    length: float = None
-    s_offset: float = None
-    link_num: int = None
-    parent_id: str = None
+    length: float = 0.0
+    s_offset: float = 0.0
+    link_num: int = 0
+    parent_id: str = ""
     reference_line: List[ReferencePoint] = None
     upstream_link_ids: List[str] = None
     downstream_link_ids: List[str] = None
@@ -405,10 +405,10 @@ class SignalPlan:
 
 @dataclass
 class Junction:
-    id: str = None
-    map_id: str = None
-    name: str = None
-    type: int = None
+    id: str = ""
+    map_id: str = ""
+    name: str = ""
+    type: int = 0
     shape: Polygon = None
     upstream_segment_ids: List[str] = None
     downstream_segment_ids: List[str] = None
@@ -453,8 +453,8 @@ class Junction:
 
 @dataclass
 class TrafficSign:
-    id: str = None
-    type: int = None
+    id: str = ""
+    type: int = 0
     position: DirectedPoint = None
 
     def __init__(self, data: dict) -> None:
@@ -468,15 +468,15 @@ class TrafficSign:
 
 @dataclass
 class Segment:
-    id: str = None
-    map_id: str = None
-    name: str = None
-    start_junction_id: str = None
-    end_junction_id: str = None
+    id: str = ""
+    map_id: str = ""
+    name: str = ""
+    start_junction_id: str = ""
+    end_junction_id: str = ""
     pair_segment_ids: List[str] = None
-    s_offset: float = None
-    road_id: str = None
-    length: float = None
+    s_offset: float = 0.0
+    road_id: str = ""
+    length: float = 0.0
     ordered_links: List[Link] = None
     traffic_signs: List[TrafficSign] = None
 
@@ -497,9 +497,9 @@ class Segment:
 
 @dataclass
 class RoadPosition:
-    road_id: str = None
-    road_s: float = None
-    s: float = None
+    road_id: str = ""
+    road_s: float = 0.0
+    s: float = 0.0
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -509,7 +509,7 @@ class RoadPosition:
 
 @dataclass
 class ControlPoint:
-    id: str = None
+    id: str = ""
     point: response_model.Point = None
 
     def __init__(self, data: dict) -> None:
@@ -523,13 +523,13 @@ class ControlPoint:
 
 @dataclass
 class Section:
-    id: str = None
-    s: float = None
-    length: float = None
-    start_junction_id: str = None
-    end_junction_id: str = None
-    left_segment_id: str = None
-    right_segment_id: str = None
+    id: str = ""
+    s: float = 0.0
+    length: float = 0.0
+    start_junction_id: str = ""
+    end_junction_id: str = ""
+    left_segment_id: str = ""
+    right_segment_id: str = ""
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -554,11 +554,11 @@ class JunctionPosition:
 
 @dataclass
 class Road:
-    id: str = None
-    map_id: str = None
-    name: str = None
-    type: int = None
-    length: float = None
+    id: str = ""
+    map_id: str = ""
+    name: str = ""
+    type: int = 0
+    length: float = 0.0
     neighbors: List[RoadPosition] = None
     control_points: List[ControlPoint] = None
     reference_line: List[ReferencePoint] = None

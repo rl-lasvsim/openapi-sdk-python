@@ -476,10 +476,10 @@ class Connection:
 # -------------------------车辆(物体)参数相关结构------------------------------------
 @dataclass
 class ObjBaseInfo:
-    length: int = None
-    width: int = None
-    height: int = None
-    weight: int = None
+    length: int = 0
+    width: int = 0
+    height: int = 0
+    weight: int = 0
 
     def __init__(self, data: dict):
         if data == None:
@@ -489,11 +489,11 @@ class ObjBaseInfo:
 
 @dataclass
 class DynamicInfo:
-    front_wheel_stiffness: float = None
-    rear_wheel_stiffness: float = None
-    front_axle_to_center: float = None
-    rear_axle_to_center: float = None
-    yaw_moment_of_inertia: float = None
+    front_wheel_stiffness: float = 0.0
+    rear_wheel_stiffness: float = 0.0
+    front_axle_to_center: float = 0.0
+    rear_axle_to_center: float = 0.0
+    yaw_moment_of_inertia: float = 0.0
 
     def __init__(self, data: dict):
         if data == None:
@@ -503,12 +503,12 @@ class DynamicInfo:
 
 @dataclass
 class ObjMovingInfo:
-    u: float = None
-    u_acc: float = None
-    v: float = None
-    v_acc: float = None
-    w: float = None
-    w_acc: float = None
+    u: float = 0.0
+    u_acc: float = 0.0
+    v: float = 0.0
+    v_acc: float = 0.0
+    w: float = 0.0
+    w_acc: float = 0.0
 
     def __init__(self, data: dict):
         if data == None:
@@ -518,12 +518,12 @@ class ObjMovingInfo:
 
 @dataclass
 class ControlInfo:
-    ste_wheel: float = None  # 方向盘转角[逆时针为正]
-    lon_acc: float = None  # 纵向加速度[m/s^2]
-    fl_torque: float = None  # 左前轮扭矩[N*m]
-    fr_torque: float = None  # 右前轮扭矩[N*m]
-    rl_torque: float = None  # 左后轮扭矩[N*m]
-    rr_torque: float = None  # 右后轮扭矩[N*m]
+    ste_wheel: float = 0.0  # 方向盘转角[逆时针为正]
+    lon_acc: float = 0.0  # 纵向加速度[m/s^2]
+    fl_torque: float = 0.0  # 左前轮扭矩[N*m]
+    fr_torque: float = 0.0  # 右前轮扭矩[N*m]
+    rl_torque: float = 0.0  # 左后轮扭矩[N*m]
+    rr_torque: float = 0.0  # 右后轮扭矩[N*m]
 
     def __init__(self, data: dict):
         if data == None:
@@ -534,8 +534,8 @@ class ControlInfo:
 # -------------------------------------------------------------
 @dataclass
 class StepRes(object):
-    code: int = None
-    message: str = None
+    code: int = 0
+    message: str = ""
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -562,7 +562,7 @@ class ResetRes(object):
 @dataclass
 class GetCurrentStageRes(object):
     movement_ids: List[str] = None
-    countdown: int = None
+    countdown: int = 0
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -572,8 +572,8 @@ class GetCurrentStageRes(object):
 
 @dataclass
 class GetMovementSignalRes(object):
-    current_signal: int = None
-    countdown: int = None
+    current_signal: int = 0
+    countdown: int = 0
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -584,7 +584,7 @@ class GetMovementSignalRes(object):
 @dataclass
 class GetSignalPlanRes_Stage(object):
     movement_ids: List[str] = None
-    duration: int = None
+    duration: int = 0
 
     def __init__(self, data: dict) -> None:
         if data == None:
@@ -594,9 +594,9 @@ class GetSignalPlanRes_Stage(object):
 
 @dataclass
 class GetSignalPlanRes(object):
-    junction_id: str = None
-    cycle: int = None
-    offset: int = None
+    junction_id: str = ""
+    cycle: int = 0
+    offset: int = 0
     stages: List[GetSignalPlanRes_Stage] = None
 
     def __init__(self, data: dict) -> None:
@@ -966,7 +966,7 @@ class SetNMVPositionRes:
 
 @dataclass
 class GetVehicleTargetSpeedRes:
-    target_speed: float
+    target_speed: float = 0.0
 
     def __init__(self, data: dict):
         if data == None:
