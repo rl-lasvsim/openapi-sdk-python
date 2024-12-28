@@ -63,7 +63,7 @@ class TrackResult:
             return
         result = data.pop("result", None)
         self.__dict__.update(data)
-        self.result = None if result is None else Track(**result)
+        self.result = None if result is None else Track(result)
 
 
 @dataclass
@@ -134,7 +134,7 @@ class SensorResult:
             return
         result = data.pop("result", [])
         self.__dict__.update(data)
-        self.result = [SensorObj(**item) for item in result]
+        self.result = [SensorObj(item) for item in result]
 
 
 @dataclass
@@ -200,7 +200,7 @@ class StepResult:
             return
         result = data.pop("result", None)
         self.__dict__.update(data)
-        self.result = None if result is None else Step(**result)
+        self.result = None if result is None else Step(result)
 
 
 @dataclass
@@ -248,7 +248,7 @@ class Path:
             return
         points = data.pop("points", [])
         self.__dict__.update(data)
-        self.points = [PathPoint(**p) for p in points]
+        self.points = [PathPoint(p) for p in points]
 
 
 @dataclass

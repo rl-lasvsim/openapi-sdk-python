@@ -15,7 +15,8 @@ class Point:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        self.__dict__.update(data)
+        for key, value in data.items():
+            setattr(self, key, value)
 
 
 @dataclass
@@ -30,9 +31,11 @@ class ReferencePoint:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        point = data.pop("point", None)
-        self.__dict__.update(data)
-        self.point = None if point is None else Point(**point)
+        point = data.get("point")
+        for key, value in data.items():
+            if key != "point":
+                setattr(self, key, value)
+        self.point = None if point is None else Point(point)
 
 
 @dataclass
@@ -46,9 +49,11 @@ class DirectedPoint:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        point = data.pop("point", None)
-        self.__dict__.update(data)
-        self.point = None if point is None else Point(**point)
+        point = data.get("point")
+        for key, value in data.items():
+            if key != "point":
+                setattr(self, key, value)
+        self.point = None if point is None else Point(point)
 
 
 @dataclass
@@ -60,9 +65,11 @@ class Polygon:
         if data is None:
             self.points = []
             return
-        points = data.pop("points", [])
-        self.__dict__.update(data)
-        self.points = [Point(**p) for p in points]
+        points = data.get("points", [])
+        for key, value in data.items():
+            if key != "points":
+                setattr(self, key, value)
+        self.points = [Point(p) for p in points]
 
 
 @dataclass
@@ -74,9 +81,11 @@ class LineString:
         if data is None:
             self.points = []
             return
-        points = data.pop("points", [])
-        self.__dict__.update(data)
-        self.points = [Point(**p) for p in points]
+        points = data.get("points", [])
+        for key, value in data.items():
+            if key != "points":
+                setattr(self, key, value)
+        self.points = [Point(p) for p in points]
 
 
 @dataclass
@@ -133,7 +142,8 @@ class Header:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        self.__dict__.update(data)
+        for key, value in data.items():
+            setattr(self, key, value)
 
 
 @dataclass
@@ -148,7 +158,8 @@ class Width:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        self.__dict__.update(data)
+        for key, value in data.items():
+            setattr(self, key, value)
 
 
 @dataclass
@@ -172,7 +183,8 @@ class SpeedLimit:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        self.__dict__.update(data)
+        for key, value in data.items():
+            setattr(self, key, value)
 
 
 @dataclass
@@ -199,7 +211,8 @@ class LaneMark:
             self.styles = []
             self.colors = []
             return
-        self.__dict__.update(data)
+        for key, value in data.items():
+            setattr(self, key, value)
 
 
 @dataclass
@@ -214,9 +227,11 @@ class CenterPoint:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        point = data.pop("point", None)
-        self.__dict__.update(data)
-        self.point = None if point is None else Point(**point)
+        point = data.get("point")
+        for key, value in data.items():
+            if key != "point":
+                setattr(self, key, value)
+        self.point = None if point is None else Point(point)
 
 
 @dataclass
@@ -250,25 +265,27 @@ class Lane:
             self.left_lane_marks = []
             self.right_lane_marks = []
             return
-        lane_turn = data.pop("lane_turn", None)
-        speed_limits = data.pop("speed_limits", [])
-        stopline = data.pop("stopline", None)
-        widths = data.pop("widths", [])
-        center_line = data.pop("center_line", [])
-        left_lane_marks = data.pop("left_lane_marks", [])
-        right_lane_marks = data.pop("right_lane_marks", [])
-        left_boundary = data.pop("left_boundary", None)
-        right_boundary = data.pop("right_boundary", None)
-        self.__dict__.update(data)
-        self.lane_turn = None if lane_turn is None else LaneTurn(**lane_turn)
-        self.speed_limits = [SpeedLimit(**s) for s in speed_limits]
-        self.stopline = None if stopline is None else Stopline(**stopline)
-        self.widths = [Width(**w) for w in widths]
-        self.center_line = [CenterPoint(**c) for c in center_line]
-        self.left_lane_marks = [LaneMark(**m) for m in left_lane_marks]
-        self.right_lane_marks = [LaneMark(**m) for m in right_lane_marks]
-        self.left_boundary = None if left_boundary is None else LineString(**left_boundary)
-        self.right_boundary = None if right_boundary is None else LineString(**right_boundary)
+        lane_turn = data.get("lane_turn")
+        speed_limits = data.get("speed_limits", [])
+        stopline = data.get("stopline")
+        widths = data.get("widths", [])
+        center_line = data.get("center_line", [])
+        left_lane_marks = data.get("left_lane_marks", [])
+        right_lane_marks = data.get("right_lane_marks", [])
+        left_boundary = data.get("left_boundary")
+        right_boundary = data.get("right_boundary")
+        for key, value in data.items():
+            if key not in ["lane_turn", "speed_limits", "stopline", "widths", "center_line", "left_lane_marks", "right_lane_marks", "left_boundary", "right_boundary"]:
+                setattr(self, key, value)
+        self.lane_turn = None if lane_turn is None else LaneTurn(lane_turn)
+        self.speed_limits = [SpeedLimit(s) for s in speed_limits]
+        self.stopline = None if stopline is None else Stopline(stopline)
+        self.widths = [Width(w) for w in widths]
+        self.center_line = [CenterPoint(c) for c in center_line]
+        self.left_lane_marks = [LaneMark(m) for m in left_lane_marks]
+        self.right_lane_marks = [LaneMark(m) for m in right_lane_marks]
+        self.left_boundary = None if left_boundary is None else LineString(left_boundary)
+        self.right_boundary = None if right_boundary is None else LineString(right_boundary)
 
 
 @dataclass
@@ -300,17 +317,19 @@ class Link:
             self.upstream_link_ids = []
             self.downstream_link_ids = []
             return
-        widths = data.pop("widths", [])
-        ordered_lanes = data.pop("ordered_lanes", [])
-        reference_line = data.pop("reference_line", [])
-        left_boundary = data.pop("left_boundary", None)
-        right_boundary = data.pop("right_boundary", None)
-        self.__dict__.update(data)
-        self.widths = [Width(**w) for w in widths]
-        self.ordered_lanes = [Lane(**l) for l in ordered_lanes]
-        self.reference_line = [ReferencePoint(**r) for r in reference_line]
-        self.left_boundary = None if left_boundary is None else LineString(**left_boundary)
-        self.right_boundary = None if right_boundary is None else LineString(**right_boundary)
+        widths = data.get("widths", [])
+        ordered_lanes = data.get("ordered_lanes", [])
+        reference_line = data.get("reference_line", [])
+        left_boundary = data.get("left_boundary")
+        right_boundary = data.get("right_boundary")
+        for key, value in data.items():
+            if key not in ["widths", "ordered_lanes", "reference_line", "left_boundary", "right_boundary"]:
+                setattr(self, key, value)
+        self.widths = [Width(w) for w in widths]
+        self.ordered_lanes = [Lane(l) for l in ordered_lanes]
+        self.reference_line = [ReferencePoint(r) for r in reference_line]
+        self.left_boundary = None if left_boundary is None else LineString(left_boundary)
+        self.right_boundary = None if right_boundary is None else LineString(right_boundary)
 
 
 @dataclass
@@ -347,9 +366,11 @@ class Crosswalk:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        shape = data.pop("shape", None)
-        self.__dict__.update(data)
-        self.shape = None if shape is None else Polygon(**shape)
+        shape = data.get("shape")
+        for key, value in data.items():
+            if key != "shape":
+                setattr(self, key, value)
+        self.shape = None if shape is None else Polygon(shape)
 
 
 @dataclass
@@ -363,7 +384,8 @@ class SignalPlan_MovementSignal_SignalOfGreen:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        self.__dict__.update(data)
+        for key, value in data.items():
+            setattr(self, key, value)
 
 
 @dataclass
@@ -378,11 +400,13 @@ class SignalPlan_MovementSignal:
         if data is None:
             self.signal_of_greens = []
             return
-        position = data.pop("position", None)
-        signal_of_greens = data.pop("signal_of_greens", [])
-        self.__dict__.update(data)
-        self.position = None if position is None else DirectedPoint(**position)
-        self.signal_of_greens = [SignalPlan_MovementSignal_SignalOfGreen(**s) for s in signal_of_greens]
+        position = data.get("position")
+        signal_of_greens = data.get("signal_of_greens", [])
+        for key, value in data.items():
+            if key not in ["position", "signal_of_greens"]:
+                setattr(self, key, value)
+        self.position = None if position is None else DirectedPoint(position)
+        self.signal_of_greens = [SignalPlan_MovementSignal_SignalOfGreen(s) for s in signal_of_greens]
 
 
 @dataclass
@@ -399,9 +423,11 @@ class SignalPlan:
         if data is None:
             self.movement_signals = {}
             return
-        movement_signals = data.pop("movement_signals", {})
-        self.__dict__.update(data)
-        self.movement_signals = {k: SignalPlan_MovementSignal(**v) for k, v in movement_signals.items()}
+        movement_signals = data.get("movement_signals", {})
+        for key, value in data.items():
+            if key != "movement_signals":
+                setattr(self, key, value)
+        self.movement_signals = {k: SignalPlan_MovementSignal(v) for k, v in movement_signals.items()}
 
 
 @dataclass
@@ -433,23 +459,26 @@ class Junction:
             self.roundabout = []
             self.links = []
             return
-        shape = data.pop("shape", None)
-        movements = data.pop("movements", [])
-        connections = data.pop("connections", [])
-        crosswalks = data.pop("crosswalks", [])
-        wait_areas = data.pop("wait_areas", [])
-        roundabout = data.pop("roundabout", [])
-        links = data.pop("links", [])
-        signal_plan = data.pop("signal_plan", None)
-        self.__dict__.update(data)
-        self.shape = None if shape is None else Polygon(**shape)
-        self.movements = [Movement(**m) for m in movements]
-        self.connections = [Connection(**c) for c in connections]
-        self.crosswalks = [Crosswalk(**c) for c in crosswalks]
-        self.wait_areas = [Link(**w) for w in wait_areas]
-        self.roundabout = [Link(**r) for r in roundabout]
-        self.links = [Link(**l) for l in links]
-        self.signal_plan = None if signal_plan is None else SignalPlan(**signal_plan)
+        shape = data.get("shape")
+        movements = data.get("movements", [])
+        connections = data.get("connections", [])
+        crosswalks = data.get("crosswalks", [])
+        wait_areas = data.get("wait_areas", [])
+        roundabout = data.get("roundabout", [])
+        links = data.get("links", [])
+        signal_plan = data.get("signal_plan")
+        for key, value in data.items():
+            if key not in ["shape", "movements", "connections", "crosswalks", "wait_areas", "roundabout", "links", "signal_plan"]:
+                setattr(self, key, value)
+        self.shape = None if shape is None else Polygon(shape)
+        self.movements = [Movement(m) for m in movements]
+        self.connections = [Connection(c) for c in connections]
+        self.crosswalks = [Crosswalk(c) for c in crosswalks]
+        self.wait_areas = [Link(w) for w in wait_areas]
+        self.roundabout = [Link(r) for r in roundabout]
+        self.links = [Link(l) for l in links]
+        self.signal_plan = None if signal_plan is None else SignalPlan(signal_plan)
+
 
 @dataclass
 class TrafficSign:
@@ -461,9 +490,12 @@ class TrafficSign:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        position = data.pop("position", None)
-        self.__dict__.update(data)
-        self.position = None if position is None else DirectedPoint(**position)
+        position = data.get("position")
+        for key, value in data.items():
+            if key != "position":
+                setattr(self, key, value)
+        self.position = None if position is None else DirectedPoint(position)
+
 
 @dataclass
 class Segment:
@@ -486,11 +518,13 @@ class Segment:
             self.ordered_links = []
             self.traffic_signs = []
             return
-        ordered_links = data.pop("ordered_links", [])
-        traffic_signs = data.pop("traffic_signs", [])
-        self.__dict__.update(data)
-        self.ordered_links = [Link(**l) for l in ordered_links]
-        self.traffic_signs = [TrafficSign(**t) for t in traffic_signs]
+        ordered_links = data.get("ordered_links", [])
+        traffic_signs = data.get("traffic_signs", [])
+        for key, value in data.items():
+            if key not in ["ordered_links", "traffic_signs"]:
+                setattr(self, key, value)
+        self.ordered_links = [Link(l) for l in ordered_links]
+        self.traffic_signs = [TrafficSign(t) for t in traffic_signs]
 
 
 @dataclass
@@ -515,17 +549,19 @@ class Road:
             self.sections = []
             self.junction_positions = []
             return
-        neighbors = data.pop("neighbors", [])
-        control_points = data.pop("control_points", [])
-        reference_line = data.pop("reference_line", [])
-        sections = data.pop("sections", [])
-        junction_positions = data.pop("junction_positions", [])
-        self.__dict__.update(data)
-        self.neighbors = [RoadPosition(**n) for n in neighbors]
-        self.control_points = [ControlPoint(**c) for c in control_points]
-        self.reference_line = [ReferencePoint(**r) for r in reference_line]
-        self.sections = [Section(**s) for s in sections]
-        self.junction_positions = [JunctionPosition(**j) for j in junction_positions]
+        neighbors = data.get("neighbors", [])
+        control_points = data.get("control_points", [])
+        reference_line = data.get("reference_line", [])
+        sections = data.get("sections", [])
+        junction_positions = data.get("junction_positions", [])
+        for key, value in data.items():
+            if key not in ["neighbors", "control_points", "reference_line", "sections", "junction_positions"]:
+                setattr(self, key, value)
+        self.neighbors = [RoadPosition(n) for n in neighbors]
+        self.control_points = [ControlPoint(c) for c in control_points]
+        self.reference_line = [ReferencePoint(r) for r in reference_line]
+        self.sections = [Section(s) for s in sections]
+        self.junction_positions = [JunctionPosition(j) for j in junction_positions]
 
 
 @dataclass
@@ -543,7 +579,9 @@ class Mapper:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        self.__dict__.update(data)
+        for key, value in data.items():
+            setattr(self, key, value)
+
 
 @dataclass
 class Building:
@@ -562,11 +600,13 @@ class Building:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        pos = data.pop("pos", None)
-        shape = data.pop("shape", None)
-        self.__dict__.update(data)
-        self.pos = None if pos is None else Point(**pos)
-        self.shape = None if shape is None else Polygon(**shape)
+        pos = data.get("pos")
+        shape = data.get("shape")
+        for key, value in data.items():
+            if key not in ["pos", "shape"]:
+                setattr(self, key, value)
+        self.pos = None if pos is None else Point(pos)
+        self.shape = None if shape is None else Polygon(shape)
 
 
 @dataclass
@@ -585,9 +625,11 @@ class Tree:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        pos = data.pop("pos", None)
-        self.__dict__.update(data)
-        self.pos = None if pos is None else Point(**pos)
+        pos = data.get("pos")
+        for key, value in data.items():
+            if key != "pos":
+                setattr(self, key, value)
+        self.pos = None if pos is None else Point(pos)
 
 
 @dataclass
@@ -606,9 +648,11 @@ class Lamp:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        pos = data.pop("pos", None)
-        self.__dict__.update(data)
-        self.pos = None if pos is None else Point(**pos)
+        pos = data.get("pos")
+        for key, value in data.items():
+            if key != "pos":
+                setattr(self, key, value)
+        self.pos = None if pos is None else Point(pos)
 
 
 @dataclass
@@ -635,20 +679,22 @@ class Qxmap:
             self.trees = []
             self.lamps = []
             return
-        header = data.pop("header", None)
-        junctions = data.pop("junctions", [])
-        segments = data.pop("segments", [])
-        roads = data.pop("roads", [])
-        mappers = data.pop("mappers", [])
-        buildings = data.pop("buildings", [])
-        trees = data.pop("trees", [])
-        lamps = data.pop("lamps", [])
-        self.__dict__.update(data)
+        header = data.get("header")
+        junctions = data.get("junctions", [])
+        segments = data.get("segments", [])
+        roads = data.get("roads", [])
+        mappers = data.get("mappers", [])
+        buildings = data.get("buildings", [])
+        trees = data.get("trees", [])
+        lamps = data.get("lamps", [])
+        for key, value in data.items():
+            if key not in ["header", "junctions", "segments", "roads", "mappers", "buildings", "trees", "lamps"]:
+                setattr(self, key, value)
         self.header = None if header is None else Header(header)
-        self.junctions = [Junction(**j) for j in junctions]
-        self.segments = [Segment(**s) for s in segments]
-        self.roads = [Road(**r) for r in roads]
-        self.mappers = [Mapper(**m) for m in mappers]
-        self.buildings = [Building(**b) for b in buildings]
-        self.trees = [Tree(**t) for t in trees]
-        self.lamps = [Lamp(**l) for l in lamps]
+        self.junctions = [Junction(j) for j in junctions]
+        self.segments = [Segment(s) for s in segments]
+        self.roads = [Road(r) for r in roads]
+        self.mappers = [Mapper(m) for m in mappers]
+        self.buildings = [Building(b) for b in buildings]
+        self.trees = [Tree(t) for t in trees]
+        self.lamps = [Lamp(l) for l in lamps]

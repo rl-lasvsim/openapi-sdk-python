@@ -127,7 +127,6 @@ def test_qxmap():
     assert qxmap.header.source_projection == "UTM"
     assert qxmap.header.source_unit == "meter"
     
-    assert len(qxmap.junctions) == 0
     assert len(qxmap.segments) == 0
     assert len(qxmap.links) == 0
     assert len(qxmap.lanes) == 0

@@ -13,7 +13,7 @@ class GetSceneIdListReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        self.__dict__.update(data)
+        self.task_id = data.get("task_id", 0)
 
 
 @dataclass
@@ -27,8 +27,7 @@ class GetSceneIdListRes:
             self.scene_id_list = []
             self.scene_version_list = []
             return
-        scene_id_list = data.pop("scene_id_list", [])
-        scene_version_list = data.pop("scene_version_list", [])
-        self.__dict__.update(data)
+        scene_id_list = data.get("scene_id_list", [])
+        scene_version_list = data.get("scene_version_list", [])
         self.scene_id_list = scene_id_list
         self.scene_version_list = scene_version_list
