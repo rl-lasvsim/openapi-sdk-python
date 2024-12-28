@@ -432,33 +432,33 @@ class SignalPlan:
 
 @dataclass
 class Junction:
-    """Junction information."""
     id: str = ""
-    map_id: str = ""
     name: str = ""
     type: int = 0
-    shape: Optional[Polygon] = None
-    upstream_segment_ids: List[str] = field(default_factory=list)
-    downstream_segment_ids: List[str] = field(default_factory=list)
-    movements: List[Movement] = field(default_factory=list)
-    connections: List[Connection] = field(default_factory=list)
-    crosswalks: List[Crosswalk] = field(default_factory=list)
-    wait_areas: List[Link] = field(default_factory=list)
-    roundabout: List[Link] = field(default_factory=list)
-    links: List[Link] = field(default_factory=list)
-    signal_plan: Optional[SignalPlan] = None
-    
+    center: Point = None
+    shape: Polygon = None
+    movements: List[Movement] = None
+    connections: List[Connection] = None
+    crosswalks: List[Crosswalk] = None
+    wait_areas: List[Link] = None
+    roundabout: List[Link] = None
+    links: List[Link] = None
+    signal_plan: SignalPlan = None
+    upstream_segment_ids: List[str] = None  # 添加这个字段
+    downstream_segment_ids: List[str] = None  # 添加这个字段
+
     def __init__(self, data: dict = None) -> None:
         if data is None:
-            self.upstream_segment_ids = []
-            self.downstream_segment_ids = []
             self.movements = []
             self.connections = []
             self.crosswalks = []
             self.wait_areas = []
             self.roundabout = []
             self.links = []
+            self.upstream_segment_ids = []  # 初始化为空列表
+            self.downstream_segment_ids = []  # 初始化为空列表
             return
+        
         shape = data.get("shape")
         movements = data.get("movements", [])
         connections = data.get("connections", [])
@@ -467,9 +467,13 @@ class Junction:
         roundabout = data.get("roundabout", [])
         links = data.get("links", [])
         signal_plan = data.get("signal_plan")
+        center = data.get("center")
+        
         for key, value in data.items():
-            if key not in ["shape", "movements", "connections", "crosswalks", "wait_areas", "roundabout", "links", "signal_plan"]:
+            if key not in ["shape", "movements", "connections", "crosswalks", 
+                         "wait_areas", "roundabout", "links", "signal_plan", "center"]:
                 setattr(self, key, value)
+                
         self.shape = None if shape is None else Polygon(shape)
         self.movements = [Movement(m) for m in movements]
         self.connections = [Connection(c) for c in connections]
@@ -478,7 +482,9 @@ class Junction:
         self.roundabout = [Link(r) for r in roundabout]
         self.links = [Link(l) for l in links]
         self.signal_plan = None if signal_plan is None else SignalPlan(signal_plan)
-
+        self.center = None if center is None else Point(center)
+        self.upstream_segment_ids = data.get("upstream_segment_ids", [])
+        self.downstream_segment_ids = data.get("downstream_segment_ids", [])
 
 @dataclass
 class TrafficSign:
