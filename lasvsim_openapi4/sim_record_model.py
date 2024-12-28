@@ -3,6 +3,7 @@ Simulation record model module for the lasvsim API.
 """
 from typing import List, Optional
 from dataclasses import dataclass, field
+from lasvsim_openapi4.simulator_model import Position
 
 
 @dataclass
@@ -11,17 +12,22 @@ class GetRecordIdsReq:
     scen_id: str = ""
     scen_ver: str = ""
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetRecordIdsRes:
     """Response for getting record IDs."""
-    ids: List[str] = field(default_factory=list)
-
-    def __init__(self, data: dict = None):
+    record_ids: List[str] = field(default_factory=list)
+    
+    def __init__(self, data: dict = None) -> None:
         if data is None:
-            self.ids = []
+            self.record_ids = []
             return
-        self.ids = data.get("ids", [])
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -33,6 +39,15 @@ class Track:
     phi: float = 0.0
     lane_id: str = ""  # 车道ID，允许为空
     position_type: str = ""
+    timestamp: int = 0
+    position: Optional[Position] = None
+    
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        position = data.pop("position", None)
+        self.__dict__.update(data)
+        self.position = None if position is None else Position(position)
 
 
 @dataclass
@@ -57,17 +72,24 @@ class GetTrackResultsReq:
     id: str = ""
     obj_id: str = ""
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetTrackResultsRes:
     """Response for getting track results."""
     data: List[TrackResult] = field(default_factory=list)
-
-    def __init__(self, data: dict = None):
+    
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             self.data = []
             return
-        self.data = [TrackResult(item) for item in data.get("data", [])]
+        data_list = data.pop("data", [])
+        self.__dict__.update(data)
+        self.data = [TrackResult(d) for d in data_list]
 
 
 @dataclass
@@ -86,6 +108,16 @@ class SensorObj:
     risk_2_ego: int = 0  # 0(无风险); 1(低风险); 2(高风险)
     lon_acc: float = 0.0  # 纵向加速度
     lat_speed: float = 0.0  # 横向速度
+    obj_id: str = ""
+    obj_type: int = 0
+    position: Optional[Position] = None
+    
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        position = data.pop("position", None)
+        self.__dict__.update(data)
+        self.position = None if position is None else Position(position)
 
 
 @dataclass
@@ -111,17 +143,24 @@ class GetSensorResultsReq:
     id: str = ""
     obj_id: str = ""
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetSensorResultsRes:
     """Response for getting sensor results."""
     data: List[SensorResult] = field(default_factory=list)
-
-    def __init__(self, data: dict = None):
+    
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             self.data = []
             return
-        self.data = [SensorResult(item) for item in data.get("data", [])]
+        data_list = data.pop("data", [])
+        self.__dict__.update(data)
+        self.data = [SensorResult(d) for d in data_list]
 
 
 @dataclass
@@ -137,6 +176,15 @@ class Step:
     w: float = 0.0
     w_acc: float = 0.0
     reference_speed: float = 0.0
+    timestamp: int = 0
+    position: Optional[Position] = None
+    
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        position = data.pop("position", None)
+        self.__dict__.update(data)
+        self.position = None if position is None else Position(position)
 
 
 @dataclass
@@ -161,17 +209,24 @@ class GetStepResultsReq:
     id: str = ""
     obj_id: str = ""
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetStepResultsRes:
     """Response for getting step results."""
     data: List[StepResult] = field(default_factory=list)
-
-    def __init__(self, data: dict = None):
+    
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             self.data = []
             return
-        self.data = [StepResult(item) for item in data.get("data", [])]
+        data_list = data.pop("data", [])
+        self.__dict__.update(data)
+        self.data = [StepResult(d) for d in data_list]
 
 
 @dataclass
@@ -186,12 +241,14 @@ class PathPoint:
 class Path:
     """Path information."""
     points: List[PathPoint] = field(default_factory=list)
-
-    def __init__(self, data: dict = None):
+    
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             self.points = []
             return
-        self.points = [PathPoint(**point) for point in data.get("points", [])]
+        points = data.pop("points", [])
+        self.__dict__.update(data)
+        self.points = [PathPoint(**p) for p in points]
 
 
 @dataclass
@@ -201,14 +258,14 @@ class PathResult:
     obj_id: str = ""  # 对象ID
     timestamp: int = 0  # 时间戳
     result: List[Path] = field(default_factory=list)
-
-    def __init__(self, data: dict = None):
+    
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             self.result = []
             return
         result = data.pop("result", [])
         self.__dict__.update(data)
-        self.result = [Path(item) for item in result]
+        self.result = [Path(p) for p in result]
 
 
 @dataclass
@@ -217,17 +274,24 @@ class GetPathResultsReq:
     id: str = ""
     obj_id: str = ""
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetPathResultsRes:
     """Response for getting path results."""
     data: List[PathResult] = field(default_factory=list)
-
-    def __init__(self, data: dict = None):
+    
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             self.data = []
             return
-        self.data = [PathResult(item) for item in data.get("data", [])]
+        data_list = data.pop("data", [])
+        self.__dict__.update(data)
+        self.data = [PathResult(d) for d in data_list]
 
 
 @dataclass
@@ -276,14 +340,21 @@ class GetReferenceLineResultsReq:
     id: str = ""
     obj_id: str = ""
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetReferenceLineResultsRes:
     """Response for getting reference line results."""
     data: List[ReferenceLineResult] = field(default_factory=list)
-
-    def __init__(self, data: dict = None):
+    
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             self.data = []
             return
-        self.data = [ReferenceLineResult(item) for item in data.get("data", [])]
+        data_list = data.pop("data", [])
+        self.__dict__.update(data)
+        self.data = [ReferenceLineResult(d) for d in data_list]

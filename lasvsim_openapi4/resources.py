@@ -13,22 +13,24 @@ class GetHdMapReq:
     """Request for getting HD map."""
     scen_id: str = ""
     scen_ver: str = ""
+    
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
 class GetHdMapRes:
     """Response for getting HD map."""
-    data: Optional[Qxmap] = None
-
-    def __init__(self, data: dict = None):
-        """Initialize response object.
-        
-        Args:
-            data: Response data
-        """
+    map: Optional[Qxmap] = None
+    
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        self.data = Qxmap(**data["data"]) if data.get("data") else None
+        map_data = data.pop("map", None)
+        self.__dict__.update(data)
+        self.map = None if map_data is None else Qxmap(**map_data)
 
 
 class Resources:

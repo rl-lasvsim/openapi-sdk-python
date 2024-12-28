@@ -11,6 +11,11 @@ class Point:
     x: float = 0.0
     y: float = 0.0
     z: float = 0.0
+    
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -20,6 +25,11 @@ class ObjBaseInfo:
     height: float = 0.0
     length: float = 0.0
     weight: float = 0.0
+    
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -30,6 +40,11 @@ class DynamicInfo:
     front_axle_to_center: float = 0.0
     rear_axle_to_center: float = 0.0
     yaw_moment_of_inertia: float = 0.0
+    
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -42,14 +57,16 @@ class Position:
     junction_id: str = ""
     segment_id: str = ""
     dis_to_lane_end: Optional[float] = None
-    position_type: int = 0
-
-    def __init__(self, data: dict = None):
+    position_type: int = 0  # 1 - 地图外
+    
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             return
         point = data.pop("point", None)
+        dis_to_lane_end = data.pop("dis_to_lane_end", None)
         self.__dict__.update(data)
         self.point = None if point is None else Point(**point)
+        self.dis_to_lane_end = dis_to_lane_end
 
 
 @dataclass
@@ -61,6 +78,11 @@ class ObjMovingInfo:
     v_acc: float = 0.0
     w: float = 0.0
     w_acc: float = 0.0
+    
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -72,6 +94,11 @@ class ControlInfo:
     fr_torque: float = 0.0
     rl_torque: float = 0.0
     rr_torque: float = 0.0
+    
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -82,7 +109,7 @@ class ReferenceLine:
     points: List[Point] = field(default_factory=list)
     lane_idxes: List[int] = field(default_factory=list)
     opposite: bool = False
-
+    
     def __init__(self, data: dict = None):
         if data is None:
             self.lane_ids = []
@@ -122,6 +149,11 @@ class Movement:
     junction_id: str = ""
     flow_direction: str = ""
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class LaneNav:
@@ -136,6 +168,11 @@ class SimulatorConfig:
     scen_ver: str = ""
     sim_record_id: str = ""
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class InitReq:
@@ -144,6 +181,11 @@ class InitReq:
     scen_ver: str = ""
     sim_record_id: str = ""
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class InitRes:
@@ -151,7 +193,7 @@ class InitRes:
     simulation_id: str = ""
     simulation_addr: str = ""
 
-    def __init__(self, data: dict = None):
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             return
         self.__dict__.update(data)
@@ -161,6 +203,11 @@ class InitRes:
 class StopReq:
     """Request for stopping simulator."""
     simulation_id: str = ""
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -174,18 +221,26 @@ class StepReq:
     """Request for stepping simulator."""
     simulation_id: str = ""
 
-
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+    
 @dataclass
 class StepRes:
-    """Response for stepping simulator."""
-    pass
-
+    def __init__(self, data: dict = None) -> None:
+        pass
 
 @dataclass
 class GetCurrentStageReq:
     """Request for getting current stage."""
     simulation_id: str = ""  # 仿真ID
     junction_id: str = ""  # movementId
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -194,7 +249,7 @@ class GetCurrentStageRes:
     movement_ids: List[str] = field(default_factory=list)  # 当前阶段包含的绿灯流向
     countdown: int = 0  # 倒计时(s)
 
-    def __init__(self, data: dict = None):
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             self.movement_ids = []
             return
@@ -207,6 +262,11 @@ class GetMovementSignalReq:
     simulation_id: str = ""  # 仿真ID
     movement_id: str = ""  # movementId
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetMovementSignalRes:
@@ -214,7 +274,7 @@ class GetMovementSignalRes:
     current_signal: int = 0  # 当前灯色
     countdown: int = 0  # 倒计时(s)
 
-    def __init__(self, data: dict = None):
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             return
         self.__dict__.update(data)
@@ -239,6 +299,11 @@ class GetSignalPlanReq:
     simulation_id: str = ""
     junction_id: str = ""
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetSignalPlanRes:
@@ -248,7 +313,7 @@ class GetSignalPlanRes:
     offset: int = 0
     stages: List[GetSignalPlanRes_Stage] = field(default_factory=list)
 
-    def __init__(self, data: dict = None):
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             self.stages = []
             return
@@ -263,13 +328,18 @@ class GetMovementListReq:
     simulation_id: str = ""
     junction_id: str = ""
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetMovementListRes:
     """Response for getting movement list."""
     list: List[Movement] = field(default_factory=list)  # movement 列表
 
-    def __init__(self, data: dict = None):
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             self.list = []
             return
@@ -281,13 +351,18 @@ class GetVehicleIdListReq:
     """Request for getting vehicle ID list."""
     simulation_id: str = ""  # 仿真ID
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetVehicleIdListRes:
     """Response for getting vehicle ID list."""
     list: List[str] = field(default_factory=list)  # 车辆ID列表
 
-    def __init__(self, data: dict = None):
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             self.list = []
             return
@@ -299,13 +374,18 @@ class GetTestVehicleIdListReq:
     """Request for getting test vehicle ID list."""
     simulation_id: str = ""  # 仿真ID
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetTestVehicleIdListRes:
     """Response for getting test vehicle ID list."""
     list: List[str] = field(default_factory=list)
 
-    def __init__(self, data: dict = None):
+    def __init__(self, data: dict = None) -> None:
         if data is None:
             self.list = []
             return
@@ -317,6 +397,11 @@ class GetVehicleBaseInfoReq:
     """Request for getting vehicle base information."""
     simulation_id: str = ""
     id_list: List[str] = field(default_factory=list)
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -352,6 +437,11 @@ class GetVehiclePositionReq:
     simulation_id: str = ""
     id_list: List[str] = field(default_factory=list)
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetVehiclePositionRes:
@@ -370,6 +460,11 @@ class GetVehicleMovingInfoReq:
     """Request for getting vehicle moving information."""
     simulation_id: str = ""
     id_list: List[str] = field(default_factory=list)
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -390,6 +485,11 @@ class GetVehicleControlInfoReq:
     simulation_id: str = ""
     id_list: List[str] = field(default_factory=list)
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetVehicleControlInfoRes:
@@ -408,6 +508,11 @@ class GetVehiclePerceptionInfoReq:
     """Request for getting vehicle perception information."""
     simulation_id: str = ""
     vehicle_id: str = ""
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -448,6 +553,11 @@ class GetVehicleReferenceLinesReq:
     simulation_id: str = ""
     vehicle_id: str = ""
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetVehicleReferenceLinesRes:
@@ -466,6 +576,11 @@ class GetVehiclePlanningInfoReq:
     """Request for getting vehicle planning information."""
     simulation_id: str = ""
     vehicle_id: str = ""
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -486,6 +601,11 @@ class GetVehicleNavigationInfoReq:
     simulation_id: str = ""
     vehicle_id: str = ""
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetVehicleNavigationInfoRes:
@@ -505,6 +625,11 @@ class GetVehicleCollisionStatusReq:
     simulation_id: str = ""
     vehicle_id: str = ""
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class GetVehicleCollisionStatusRes:
@@ -522,6 +647,11 @@ class GetVehicleTargetSpeedReq:
     """Request for getting vehicle target speed."""
     simulation_id: str = ""
     vehicle_id: str = ""
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -542,6 +672,11 @@ class SetVehiclePlanningInfoReq:
     vehicle_id: str = ""
     planning_path: List[Point] = field(default_factory=list)
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class SetVehiclePlanningInfoRes:
@@ -557,6 +692,11 @@ class SetVehicleControlInfoReq:
     ste_wheel: Optional[float] = None
     lon_acc: Optional[float] = None
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class SetVehicleControlInfoRes:
@@ -571,6 +711,11 @@ class SetVehiclePositionReq:
     vehicle_id: str = ""
     point: Optional[Point] = None
     phi: Optional[float] = None
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -591,6 +736,11 @@ class SetVehicleMovingInfoReq:
     v_acc: Optional[float] = None
     w_acc: Optional[float] = None
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class SetVehicleMovingInfoRes:
@@ -606,6 +756,11 @@ class SetVehicleBaseInfoReq:
     base_info: Optional[ObjBaseInfo] = None
     dynamic_info: Optional[DynamicInfo] = None
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class SetVehicleBaseInfoRes:
@@ -619,6 +774,11 @@ class SetVehicleRouteNavReq:
     simulation_id: str = ""
     vehicle_id: str = ""
     route_nav: List[str] = field(default_factory=list)
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -634,6 +794,11 @@ class SetVehicleLinkNavReq:
     vehicle_id: str = ""
     link_nav: List[str] = field(default_factory=list)
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class SetVehicleLinkNavRes:
@@ -647,6 +812,11 @@ class SetVehicleLaneNavReq:
     simulation_id: str = ""
     vehicle_id: str = ""
     lane_nav: List[LaneNav] = field(default_factory=list)
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -662,6 +832,11 @@ class SetVehicleDestinationReq:
     vehicle_id: str = ""
     destination: Optional[Point] = None
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class SetVehicleDestinationRes:
@@ -673,6 +848,11 @@ class SetVehicleDestinationRes:
 class GetPedIdListReq:
     """Request for getting pedestrian ID list."""
     simulation_id: str = ""
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -692,6 +872,11 @@ class GetPedBaseInfoReq:
     """Request for getting pedestrian base information."""
     simulation_id: str = ""
     ped_id_list: List[str] = field(default_factory=list)
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -714,6 +899,11 @@ class SetPedPositionReq:
     point: Optional[Point] = None
     phi: Optional[float] = None
 
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
+
 
 @dataclass
 class SetPedPositionRes:
@@ -725,6 +915,11 @@ class SetPedPositionRes:
 class GetNMVIdListReq:
     """Request for getting non-motor vehicle ID list."""
     simulation_id: str = ""
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -744,6 +939,11 @@ class GetNMVBaseInfoReq:
     """Request for getting non-motor vehicle base information."""
     simulation_id: str = ""
     nmv_id_list: List[str] = field(default_factory=list)
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
@@ -765,6 +965,11 @@ class SetNMVPositionReq:
     nmv_id: str = ""
     point: Optional[Point] = None
     phi: Optional[float] = None
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        self.__dict__.update(data)
 
 
 @dataclass
