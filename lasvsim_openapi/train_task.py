@@ -1,27 +1,38 @@
+"""
+Train task client.
+"""
+from typing import Optional
 from lasvsim_openapi.http_client import HttpClient
-from dataclasses import dataclass
-from typing import List
+from lasvsim_openapi.train_task_model import GetSceneIdListReq, GetSceneIdListRes
 
 
 class TrainTask:
-    client: HttpClient
+    """Train task client."""
+    
+    def __init__(self, http_client: HttpClient) -> None:
+        """Initialize train task client.
+        
+        Args:
+            http_client: HTTP client.
+        """
+        self.http_client = http_client.clone()
 
-    def __init__(self, client: HttpClient):
-        self.client = client
-
-    def get_scene_id_list(self, task_id: int):
-        resp = self.client.get(
-            "/openapi/train_task/{}/scene_id_list".format(task_id), {}
+    def copy_record(self, task_id: int) -> GetSceneIdListRes:
+        """Copy record.
+        
+        Args:
+            task_id: Task ID
+            
+        Returns:
+            Get scene ID list response
+            
+        Raises:
+            APIError: If the request fails
+        """
+        req = GetSceneIdListReq(task_id=task_id)
+        
+        return self.http_client.post(
+            "/openapi/train_task/v2/record/copy",
+            {"task_id": req.task_id},
+            GetSceneIdListRes
         )
-        return GetSceneIdListRes(resp)
-
-
-@dataclass
-class GetSceneIdListRes:
-    scene_id_list: List[str] = None
-    scene_version_list: List[str] = None
-
-    def __init__(self, data: dict):
-        if data == None:
-            return
-        self.__dict__ = data

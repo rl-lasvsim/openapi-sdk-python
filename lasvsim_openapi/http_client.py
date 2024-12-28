@@ -1,58 +1,170 @@
+"""
+HTTP client module for the lasvsim API.
+"""
+from typing import Any, Dict, Generic, Optional, Type, TypeVar
 import requests
 
 
+class ErrorReason:
+    """Error reason constants."""
+    CALL_GRPC_ERR = "CALL_GRPC_ERR"
+    PARAM_UNAVAILABLE = "PARAM_UNVAILABLE"  # Keep original typo for compatibility
+    NOT_EXIST = "NOT_EXIST"
+    GET_HEADER_ERR = "GET_HEADER_ERR"
+
+
 class APIError(Exception):
-    def __init__(self, status_code, message, url):
+    """Error returned by the API."""
+    status_code: int = 0
+    message: Any = None
+    url: str = ""
+    reason: str = ""
+
+    def __init__(self, status_code: int, message: Any, url: str, reason: str = ""):
         super().__init__(f"APIError {url} {status_code}: {message}")
         self.status_code = status_code
         self.message = message
         self.url = url
+        self.reason = reason
+
+    @staticmethod
+    def is_api_error(err: Exception) -> tuple[Optional['APIError'], bool]:
+        """Check if an error is an APIError.
+        
+        Args:
+            err: The error to check
+            
+        Returns:
+            A tuple of (APIError instance if it is an APIError, boolean indicating if it is an APIError)
+        """
+        if isinstance(err, APIError):
+            return err, True
+        return None, False
+
+    @staticmethod
+    def match_error_reason(err: Exception, err_str: str) -> bool:
+        """Check if an error matches a specific error reason.
+        
+        Args:
+            err: The error to check
+            err_str: The error reason to match against
+            
+        Returns:
+            True if the error matches the reason, False otherwise
+        """
+        if isinstance(err, APIError):
+            return err.reason == err_str
+        return False
 
 
-class HttpConfig(object):
-    """
-    Configuration for the client.
-    """
+class HttpConfig:
+    """Configuration for the HTTP client."""
+    token: str = ""
+    endpoint: str = ""
 
-    def __init__(self, token: str = None, endpoint: str = None):
+    def __init__(self, token: str = "", endpoint: str = ""):
+        """Initialize HTTP configuration.
+        
+        Args:
+            token: Authentication token
+            endpoint: API endpoint URL
+        """
         self.token = token
         self.endpoint = endpoint
 
 
-class HttpClient(object):
-    """
-    HTTP client for the API.
-    """
+T = TypeVar('T')
 
-    def __init__(self, config: HttpConfig, headers: dict):
+class HttpClient():
+    """HTTP client for the API."""
+    config: HttpConfig = None
+    headers: Dict[str, str] = {}
+    
+    def __init__(self, config: HttpConfig, headers: Dict[str, str] = None):
+        """Initialize HTTP client.
+        
+        Args:
+            config: Client configuration
+            headers: Optional custom headers
+        """
         self.config = config
-        self.headers = headers
-        self.headers.update({"Authorization": "Bearer " + self.config.token})
+        self.headers = headers or {}
+        self.headers["Authorization"] = f"Bearer {config.token}"
 
-    def get(self, path: str, params: dict):
+    def clone(self) -> 'HttpClient':
+        """Create a clone of this client.
+        
+        Returns:
+            A new HttpClient instance with the same configuration
+        """
+        return HttpClient(self.config, dict(self.headers))
+
+    def _handle_response(self, response: requests.Response, out_type: Optional[Type[T]] = None) -> Optional[T]:
+        if response.status_code != 200:
+            try:
+                error_data = response.json()
+                reason = error_data.get('reason') if isinstance(error_data, dict) else None
+                raise APIError(
+                    status=response.status_code,
+                    message=error_data,
+                    url=f"{response.request.method},{response.url}",
+                    reason=reason
+                )
+            except ValueError:
+                raise APIError(
+                    status=response.status_code,
+                    message=response.text,
+                    url=f"{response.request.method},{response.url}"
+                )
+
+        if out_type is None:
+            return None
+            
+        try:
+            response_data = response.json()
+        except ValueError:
+            raise APIError("Invalid JSON response")
+            
+        return out_type(response_data)
+
+    def get(self, path: str, params: Dict[str, str] = None, out_type: Optional[Type[T]] = None) -> T:
+        """Send GET request.
+        
+        Args:
+            path: API endpoint path
+            params: Query parameters
+            out: Type to parse response into
+            
+        Returns:
+            Response data parsed into specified type
+            
+        Raises:
+            APIError: If the request fails
+        """
         response = requests.get(
-            self.config.endpoint + path, params, headers=self.headers
+            self.config.endpoint + path,
+            params=params,
+            headers=self.headers
         )
-        if response.status_code != 200:
-            raise APIError(
-                response.status_code, tryParseResponse(response), response.url
-            )
-        return response.json()
+        return self._handle_response(response, out_type)
 
-    def post(self, path: str, data: dict):
+    def post(self, path: str, data: Any = None, out_type: Optional[Type[T]] = None) -> T:
+        """Send POST request.
+        
+        Args:
+            path: API endpoint path
+            data: Request data
+            out: Type to parse response into
+            
+        Returns:
+            Response data parsed into specified type
+            
+        Raises:
+            APIError: If the request fails
+        """
         response = requests.post(
-            self.config.endpoint + path, json=data, headers=self.headers
+            self.config.endpoint + path,
+            json=data,
+            headers=self.headers
         )
-        if response.status_code != 200:
-            raise APIError(
-                response.status_code, tryParseResponse(response), response.url
-            )
-        return response.json()
-
-
-def tryParseResponse(response):
-    try:
-        return response.json()
-    except:
-        print("Failed to parse response:", response.text)
-        return response.reason
+        return self._handle_response(response, out_type)
