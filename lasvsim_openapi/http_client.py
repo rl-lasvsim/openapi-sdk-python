@@ -102,7 +102,9 @@ class HttpClient():
     def _handle_response(self, response: requests.Response, out_type: Optional[Type[T]] = None) -> Optional[T]:
         if response.status_code != 200:
             try:
+                print(response.reason)
                 error_data = response.json()
+                print(error_data)
                 reason = error_data.get('reason') if isinstance(error_data, dict) else None
                 raise APIError(
                     status=response.status_code,
@@ -112,7 +114,7 @@ class HttpClient():
                 )
             except ValueError:
                 raise APIError(
-                    status=response.status_code,
+                    status_code=response.status_code,
                     message=response.text,
                     url=f"{response.request.method},{response.url}"
                 )
@@ -162,6 +164,7 @@ class HttpClient():
         Raises:
             APIError: If the request fails
         """
+        print(f"POST {path},{ self.config.endpoint}")
         response = requests.post(
             self.config.endpoint + path,
             json=data,

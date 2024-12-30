@@ -17,7 +17,7 @@ class TrainTask:
         """
         self.http_client = http_client.clone()
 
-    def copy_record(self, task_id: int) -> GetSceneIdListRes:
+    def get_scene_id_list(self, task_id: int) -> GetSceneIdListRes:
         """Copy record.
         
         Args:
@@ -29,10 +29,9 @@ class TrainTask:
         Raises:
             APIError: If the request fails
         """
-        req = GetSceneIdListReq(task_id=task_id)
         
         return self.http_client.post(
-            "/openapi/train_task/v2/record/copy",
-            {"task_id": req.task_id},
+            f"/openapi/train_task/{task_id}/scene_id_list",
+            {},
             GetSceneIdListRes
         )
