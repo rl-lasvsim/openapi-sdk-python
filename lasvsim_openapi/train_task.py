@@ -30,7 +30,7 @@ class TrainTask:
             APIError: If the request fails
         """
         
-        return self.http_client.post(
+        return self.http_client.get(
             f"/openapi/train_task/{task_id}/scene_id_list",
             {},
             GetSceneIdListRes
