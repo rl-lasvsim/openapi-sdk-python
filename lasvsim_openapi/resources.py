@@ -18,6 +18,10 @@ class GetHdMapReq:
         if data is None:
             return
         self.__dict__.update(data)
+        
+    def __init__(self, scen_id: str = "", scen_ver: str = ""):
+        self.scen_id = scen_id
+        self.scen_ver = scen_ver
 
 
 @dataclass

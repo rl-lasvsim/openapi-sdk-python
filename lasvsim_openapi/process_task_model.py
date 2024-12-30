@@ -15,6 +15,10 @@ class CopyRecordReq:
         if data is None:
             return
         self.__dict__.update(data)
+        
+    def __init__(self, task_id: int = 0, record_id: int = 0):
+        self.task_id = task_id
+        self.record_id = record_id
 
 
 @dataclass
@@ -41,6 +45,10 @@ class GetRecordScenarioReq:
         if data is None:
             return
         self.__dict__.update(data)
+        
+    def __init__(self, task_id: int = 0, record_id: int = 0):
+        self.task_id = task_id
+        self.record_id = record_id
 
 
 @dataclass
@@ -64,6 +72,9 @@ class GetTaskRecordIdsReq:
         if data is None:
             return
         self.__dict__.update(data)
+        
+    def __init__(self, task_id: int = 0):
+        self.task_id = task_id
 
 
 @dataclass

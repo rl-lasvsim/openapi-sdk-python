@@ -195,6 +195,11 @@ class InitReq:
         for key, value in data.items():
             setattr(self, key, value)
 
+    def __init__(self, scen_id: str = "", scen_ver: str = "", sim_record_id: str = ""):
+        self.scen_id = scen_id
+        self.scen_ver = scen_ver
+        self.sim_record_id = sim_record_id
+
 
 @dataclass
 class InitRes:
@@ -220,6 +225,9 @@ class StopReq:
         for key, value in data.items():
             setattr(self, key, value)
 
+    def __init__(self, simulation_id: str = ""):
+        self.simulation_id = simulation_id
+
 
 @dataclass
 class StopRes:
@@ -237,6 +245,10 @@ class StepReq:
             return
         for key, value in data.items():
             setattr(self, key, value)
+
+    def __init__(self, simulation_id: str = "", step_count: int = 0):
+        self.simulation_id = simulation_id
+        self.step_count = step_count
     
 @dataclass
 class StepRes:
