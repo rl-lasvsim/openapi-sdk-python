@@ -1,7 +1,7 @@
 """
 HTTP client module for the lasvsim API.
 """
-from typing import Any, Dict, Generic, Optional, Type, TypeVar
+from typing import Any, Dict, Generic, Optional, Type, TypeVar,Tuple
 import requests
 
 
@@ -28,7 +28,7 @@ class APIError(Exception):
         self.reason = reason
 
     @staticmethod
-    def is_api_error(err: Exception) -> tuple[Optional['APIError'], bool]:
+    def is_api_error(err: Exception) -> Tuple[Optional['APIError'], bool]:
         """Check if an error is an APIError.
         
         Args:

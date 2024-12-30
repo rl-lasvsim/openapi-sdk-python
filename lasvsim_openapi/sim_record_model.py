@@ -16,7 +16,7 @@ class GetRecordIdsReq:
         if data is None:
             return
         self.__dict__.update(data)
-        
+
     def __init__(self, scen_id: str = "", scen_ver: str = ""):
         self.scen_id = scen_id
         self.scen_ver = scen_ver
@@ -155,7 +155,7 @@ class GetSensorResultsReq:
         if data is None:
             return
         self.__dict__.update(data)
-        
+
     def __init__(self, id: str = "", obj_id: str = ""):
         self.id = id
         self.obj_id = obj_id
@@ -225,7 +225,7 @@ class GetStepResultsReq:
         if data is None:
             return
         self.__dict__.update(data)
-        
+
     def __init__(self, id: str = "", obj_id: str = ""):
         self.id = id
         self.obj_id = obj_id
@@ -294,7 +294,7 @@ class GetPathResultsReq:
         if data is None:
             return
         self.__dict__.update(data)
-        
+
     def __init__(self, id: str = "", obj_id: str = ""):
         self.id = id
         self.obj_id = obj_id
@@ -364,7 +364,7 @@ class GetReferenceLineResultsReq:
         if data is None:
             return
         self.__dict__.update(data)
-        
+
     def __init__(self, id: str = "", obj_id: str = ""):
         self.id = id
         self.obj_id = obj_id

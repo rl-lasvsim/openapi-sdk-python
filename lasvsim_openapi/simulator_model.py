@@ -180,7 +180,10 @@ class SimulatorConfig:
             return
         for key, value in data.items():
             setattr(self, key, value)
-
+    def __init__(self, scen_id: str = "", scen_ver: str = "", sim_record_id: str = ""):
+        self.scen_id = scen_id
+        self.scen_ver = scen_ver
+        self.sim_record_id = sim_record_id
 
 @dataclass
 class InitReq:
@@ -222,8 +225,7 @@ class StopReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
 
     def __init__(self, simulation_id: str = ""):
         self.simulation_id = simulation_id
@@ -243,17 +245,17 @@ class StepReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
 
-    def __init__(self, simulation_id: str = "", step_count: int = 0):
+    def __init__(self, simulation_id: str = ""):
         self.simulation_id = simulation_id
-        self.step_count = step_count
-    
+
+
 @dataclass
 class StepRes:
     def __init__(self, data: dict = None) -> None:
         pass
+
 
 @dataclass
 class GetCurrentStageReq:
@@ -264,8 +266,11 @@ class GetCurrentStageReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", junction_id: str = ""):
+        self.simulation_id = simulation_id
+        self.junction_id = junction_id
 
 
 @dataclass
@@ -291,8 +296,11 @@ class GetMovementSignalReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", movement_id: str = ""):
+        self.simulation_id = simulation_id
+        self.movement_id = movement_id
 
 
 @dataclass
@@ -331,8 +339,11 @@ class GetSignalPlanReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", junction_id: str = ""):
+        self.simulation_id = simulation_id
+        self.junction_id = junction_id
 
 
 @dataclass
@@ -362,8 +373,11 @@ class GetMovementListReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", junction_id: str = ""):
+        self.simulation_id = simulation_id
+        self.junction_id = junction_id
 
 
 @dataclass
@@ -389,8 +403,10 @@ class GetVehicleIdListReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = ""):
+        self.simulation_id = simulation_id
 
 
 @dataclass
@@ -414,8 +430,10 @@ class GetTestVehicleIdListReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = ""):
+        self.simulation_id = simulation_id
 
 
 @dataclass
@@ -440,8 +458,11 @@ class GetVehicleBaseInfoReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", id_list: List[str] = None):
+        self.simulation_id = simulation_id
+        self.id_list = id_list if id_list is not None else []
 
 
 @dataclass
@@ -485,8 +506,11 @@ class GetVehiclePositionReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", id_list: List[str] = None):
+        self.simulation_id = simulation_id
+        self.id_list = id_list if id_list is not None else []
 
 
 @dataclass
@@ -513,8 +537,11 @@ class GetVehicleMovingInfoReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", id_list: List[str] = None):
+        self.simulation_id = simulation_id
+        self.id_list = id_list if id_list is not None else []
 
 
 @dataclass
@@ -541,8 +568,11 @@ class GetVehicleControlInfoReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", id_list: List[str] = None):
+        self.simulation_id = simulation_id
+        self.id_list = id_list if id_list is not None else []
 
 
 @dataclass
@@ -569,8 +599,11 @@ class GetVehiclePerceptionInfoReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = ""):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
 
 
 @dataclass
@@ -618,8 +651,11 @@ class GetVehicleReferenceLinesReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = ""):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
 
 
 @dataclass
@@ -646,8 +682,11 @@ class GetVehiclePlanningInfoReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = ""):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
 
 
 @dataclass
@@ -674,8 +713,11 @@ class GetVehicleNavigationInfoReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = ""):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
 
 
 @dataclass
@@ -701,8 +743,11 @@ class GetVehicleCollisionStatusReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = ""):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
 
 
 @dataclass
@@ -726,8 +771,11 @@ class GetVehicleTargetSpeedReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = ""):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
 
 
 @dataclass
@@ -752,8 +800,12 @@ class SetVehiclePlanningInfoReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = "", planning_path: List[Point] = None):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
+        self.planning_path = planning_path if planning_path is not None else []
 
 
 @dataclass
@@ -773,8 +825,13 @@ class SetVehicleControlInfoReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = "", ste_wheel: Optional[float] = None, lon_acc: Optional[float] = None):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
+        self.ste_wheel = ste_wheel
+        self.lon_acc = lon_acc
 
 
 @dataclass
@@ -794,8 +851,13 @@ class SetVehiclePositionReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = "", point: Optional[Point] = None, phi: Optional[float] = None):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
+        self.point = point
+        self.phi = phi
 
 
 @dataclass
@@ -819,8 +881,17 @@ class SetVehicleMovingInfoReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = "", u: Optional[float] = None, v: Optional[float] = None, w: Optional[float] = None, u_acc: Optional[float] = None, v_acc: Optional[float] = None, w_acc: Optional[float] = None):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
+        self.u = u
+        self.v = v
+        self.w = w
+        self.u_acc = u_acc
+        self.v_acc = v_acc
+        self.w_acc = w_acc
 
 
 @dataclass
@@ -840,8 +911,13 @@ class SetVehicleBaseInfoReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = "", base_info: Optional[ObjBaseInfo] = None, dynamic_info: Optional[DynamicInfo] = None):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
+        self.base_info = base_info
+        self.dynamic_info = dynamic_info
 
 
 @dataclass
@@ -860,8 +936,12 @@ class SetVehicleRouteNavReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = "", route_nav: List[str] = None):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
+        self.route_nav = route_nav if route_nav is not None else []
 
 
 @dataclass
@@ -880,8 +960,12 @@ class SetVehicleLinkNavReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = "", link_nav: List[str] = None):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
+        self.link_nav = link_nav if link_nav is not None else []
 
 
 @dataclass
@@ -900,8 +984,12 @@ class SetVehicleLaneNavReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = "", lane_nav: List[LaneNav] = None):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
+        self.lane_nav = lane_nav if lane_nav is not None else []
 
 
 @dataclass
@@ -920,8 +1008,12 @@ class SetVehicleDestinationReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = "", destination: Optional[Point] = None):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
+        self.destination = destination
 
 
 @dataclass
@@ -933,19 +1025,21 @@ class SetVehicleDestinationRes:
 @dataclass
 class GetPedIdListReq:
     """Request for getting pedestrian ID list."""
-    simulation_id: str = ""
+    simulation_id: str = ""  # 仿真ID
 
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = ""):
+        self.simulation_id = simulation_id
 
 
 @dataclass
 class GetPedIdListRes:
     """Response for getting pedestrian ID list."""
-    list: List[str] = field(default_factory=list)
+    list: List[str] = field(default_factory=list)  # 行人ID列表
 
     def __init__(self, data: dict = None):
         if data is None:
@@ -964,8 +1058,11 @@ class GetPedBaseInfoReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", ped_id_list: List[str] = None):
+        self.simulation_id = simulation_id
+        self.ped_id_list = ped_id_list if ped_id_list is not None else []
 
 
 @dataclass
@@ -994,8 +1091,13 @@ class SetPedPositionReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", ped_id: str = "", point: Optional[Point] = None, phi: Optional[float] = None):
+        self.simulation_id = simulation_id
+        self.ped_id = ped_id
+        self.point = point
+        self.phi = phi
 
 
 @dataclass
@@ -1007,19 +1109,21 @@ class SetPedPositionRes:
 @dataclass
 class GetNMVIdListReq:
     """Request for getting non-motor vehicle ID list."""
-    simulation_id: str = ""
+    simulation_id: str = ""  # 仿真ID
 
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = ""):
+        self.simulation_id = simulation_id
 
 
 @dataclass
 class GetNMVIdListRes:
     """Response for getting non-motor vehicle ID list."""
-    list: List[str] = field(default_factory=list)
+    list: List[str] = field(default_factory=list)  # 非机动车ID列表
 
     def __init__(self, data: dict = None):
         if data is None:
@@ -1038,8 +1142,11 @@ class GetNMVBaseInfoReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", nmv_id_list: List[str] = None):
+        self.simulation_id = simulation_id
+        self.nmv_id_list = nmv_id_list if nmv_id_list is not None else []
 
 
 @dataclass
@@ -1068,8 +1175,13 @@ class SetNMVPositionReq:
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
-        for key, value in data.items():
-            setattr(self, key, value)
+        self.__dict__.update(data)
+
+    def __init__(self, simulation_id: str = "", nmv_id: str = "", point: Optional[Point] = None, phi: Optional[float] = None):
+        self.simulation_id = simulation_id
+        self.nmv_id = nmv_id
+        self.point = point
+        self.phi = phi
 
 
 @dataclass

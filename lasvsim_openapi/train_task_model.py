@@ -7,13 +7,14 @@ from dataclasses import dataclass
 
 @dataclass
 class GetSceneIdListReq:
-    """Get scene id list request."""
+    """Request for getting scene ID list."""
     task_id: int = 0
-    
+
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
         self.task_id = data.get("task_id", 0)
+        
     def __init__(self, task_id: int = 0):
         self.task_id = task_id
 
