@@ -27,6 +27,12 @@ class GetRecordIdsRes:
     """Response for getting record IDs."""
     record_ids: List[str] = field(default_factory=list)
     
+    def __init__(self, record_ids: List[str] = None):
+        if record_ids is None:
+            self.record_ids = []
+        else:
+            self.record_ids = record_ids
+
     def __init__(self, data: dict = None) -> None:
         if data is None:
             self.record_ids = []
@@ -46,6 +52,16 @@ class Track:
     timestamp: int = 0
     position: Optional[Position] = None
     
+    def __init__(self, x: float = 0.0, y: float = 0.0, z: float = 0.0, phi: float = 0.0, lane_id: str = "", position_type: str = "", timestamp: int = 0, position: Optional[Position] = None):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.phi = phi
+        self.lane_id = lane_id
+        self.position_type = position_type
+        self.timestamp = timestamp
+        self.position = position
+
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
@@ -61,6 +77,12 @@ class TrackResult:
     obj_id: str = ""  # 对象ID
     timestamp: int = 0  # 时间戳
     result: Optional[Track] = None  # 轨迹信息
+
+    def __init__(self, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: Optional[Track] = None):
+        self.record_id = record_id
+        self.obj_id = obj_id
+        self.timestamp = timestamp
+        self.result = result
 
     def __init__(self, data: dict = None):
         if data is None:
@@ -91,6 +113,12 @@ class GetTrackResultsRes:
     """Response for getting track results."""
     data: List[TrackResult] = field(default_factory=list)
     
+    def __init__(self, data: List[TrackResult] = None):
+        if data is None:
+            self.data = []
+        else:
+            self.data = data
+
     def __init__(self, data: dict = None) -> None:
         if data is None:
             self.data = []
@@ -120,6 +148,24 @@ class SensorObj:
     obj_type: int = 0
     position: Optional[Position] = None
     
+    def __init__(self, id: str = "", speed: float = 0.0, x: float = 0.0, y: float = 0.0, z: float = 0.0, length: float = 0.0, width: float = 0.0, height: float = 0.0, phi: float = 0.0, exterior_light: str = "", risk_2_ego: int = 0, lon_acc: float = 0.0, lat_speed: float = 0.0, obj_id: str = "", obj_type: int = 0, position: Optional[Position] = None):
+        self.id = id
+        self.speed = speed
+        self.x = x
+        self.y = y
+        self.z = z
+        self.length = length
+        self.width = width
+        self.height = height
+        self.phi = phi
+        self.exterior_light = exterior_light
+        self.risk_2_ego = risk_2_ego
+        self.lon_acc = lon_acc
+        self.lat_speed = lat_speed
+        self.obj_id = obj_id
+        self.obj_type = obj_type
+        self.position = position
+
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
@@ -135,6 +181,12 @@ class SensorResult:
     obj_id: str = ""  # 对象ID
     timestamp: int = 0  # 时间戳
     result: List[SensorObj] = field(default_factory=list)  # 传感器信息
+
+    def __init__(self, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: List[SensorObj] = None):
+        self.record_id = record_id
+        self.obj_id = obj_id
+        self.timestamp = timestamp
+        self.result = result
 
     def __init__(self, data: dict = None):
         if data is None:
@@ -166,6 +218,12 @@ class GetSensorResultsRes:
     """Response for getting sensor results."""
     data: List[SensorResult] = field(default_factory=list)
     
+    def __init__(self, data: List[SensorResult] = None):
+        if data is None:
+            self.data = []
+        else:
+            self.data = data
+
     def __init__(self, data: dict = None) -> None:
         if data is None:
             self.data = []
@@ -191,6 +249,20 @@ class Step:
     timestamp: int = 0
     position: Optional[Position] = None
     
+    def __init__(self, speed: float = 0.0, acc: float = 0.0, mileage: float = 0.0, ste_wheel: float = 0.0, turn_signal: str = "", v: float = 0.0, lat_acc: float = 0.0, w: float = 0.0, w_acc: float = 0.0, reference_speed: float = 0.0, timestamp: int = 0, position: Optional[Position] = None):
+        self.speed = speed
+        self.acc = acc
+        self.mileage = mileage
+        self.ste_wheel = ste_wheel
+        self.turn_signal = turn_signal
+        self.v = v
+        self.lat_acc = lat_acc
+        self.w = w
+        self.w_acc = w_acc
+        self.reference_speed = reference_speed
+        self.timestamp = timestamp
+        self.position = position
+
     def __init__(self, data: dict = None) -> None:
         if data is None:
             return
@@ -207,6 +279,12 @@ class StepResult:
     timestamp: int = 0  # 时间戳
     result: Optional[Step] = None
 
+    def __init__(self, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: Optional[Step] = None):
+        self.record_id = record_id
+        self.obj_id = obj_id
+        self.timestamp = timestamp
+        self.result = result
+
     def __init__(self, data: dict = None):
         if data is None:
             return
@@ -221,14 +299,15 @@ class GetStepResultsReq:
     id: str = ""
     obj_id: str = ""
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
-            return
-        self.__dict__.update(data)
-
     def __init__(self, id: str = "", obj_id: str = ""):
         self.id = id
         self.obj_id = obj_id
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        for key, value in data.items():
+            setattr(self, key, value)
 
 
 @dataclass
@@ -236,6 +315,12 @@ class GetStepResultsRes:
     """Response for getting step results."""
     data: List[StepResult] = field(default_factory=list)
     
+    def __init__(self, data: List[StepResult] = None):
+        if data is None:
+            self.data = []
+        else:
+            self.data = data
+
     def __init__(self, data: dict = None) -> None:
         if data is None:
             self.data = []
@@ -252,12 +337,23 @@ class PathPoint:
     y: float = 0.0
     z: float = 0.0
 
+    def __init__(self, x: float = 0.0, y: float = 0.0, z: float = 0.0):
+        self.x = x
+        self.y = y
+        self.z = z
+
 
 @dataclass
 class Path:
     """Path information."""
     points: List[PathPoint] = field(default_factory=list)
     
+    def __init__(self, points: List[PathPoint] = None):
+        if points is None:
+            self.points = []
+        else:
+            self.points = points
+
     def __init__(self, data: dict = None) -> None:
         if data is None:
             self.points = []
@@ -275,6 +371,12 @@ class PathResult:
     timestamp: int = 0  # 时间戳
     result: List[Path] = field(default_factory=list)
     
+    def __init__(self, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: List[Path] = None):
+        self.record_id = record_id
+        self.obj_id = obj_id
+        self.timestamp = timestamp
+        self.result = result
+
     def __init__(self, data: dict = None) -> None:
         if data is None:
             self.result = []
@@ -290,14 +392,15 @@ class GetPathResultsReq:
     id: str = ""
     obj_id: str = ""
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
-            return
-        self.__dict__.update(data)
-
     def __init__(self, id: str = "", obj_id: str = ""):
         self.id = id
         self.obj_id = obj_id
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        for key, value in data.items():
+            setattr(self, key, value)
 
 
 @dataclass
@@ -305,6 +408,12 @@ class GetPathResultsRes:
     """Response for getting path results."""
     data: List[PathResult] = field(default_factory=list)
     
+    def __init__(self, data: List[PathResult] = None):
+        if data is None:
+            self.data = []
+        else:
+            self.data = data
+
     def __init__(self, data: dict = None) -> None:
         if data is None:
             self.data = []
@@ -322,6 +431,25 @@ class ReferenceLine:
     line_types: List[str] = field(default_factory=list)
     line_idxs: List[int] = field(default_factory=list)
     opposite: bool = False
+
+    def __init__(self, points: List[PathPoint] = None, line_ids: List[str] = None, line_types: List[str] = None, line_idxs: List[int] = None, opposite: bool = False):
+        if points is None:
+            self.points = []
+        else:
+            self.points = points
+        if line_ids is None:
+            self.line_ids = []
+        else:
+            self.line_ids = line_ids
+        if line_types is None:
+            self.line_types = []
+        else:
+            self.line_types = line_types
+        if line_idxs is None:
+            self.line_idxs = []
+        else:
+            self.line_idxs = line_idxs
+        self.opposite = opposite
 
     def __init__(self, data: dict = None):
         if data is None:
@@ -345,6 +473,12 @@ class ReferenceLineResult:
     timestamp: int = 0  # 时间戳
     result: List[ReferenceLine] = field(default_factory=list)
 
+    def __init__(self, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: List[ReferenceLine] = None):
+        self.record_id = record_id
+        self.obj_id = obj_id
+        self.timestamp = timestamp
+        self.result = result
+
     def __init__(self, data: dict = None):
         if data is None:
             self.result = []
@@ -360,14 +494,15 @@ class GetReferenceLineResultsReq:
     id: str = ""
     obj_id: str = ""
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
-            return
-        self.__dict__.update(data)
-
     def __init__(self, id: str = "", obj_id: str = ""):
         self.id = id
         self.obj_id = obj_id
+
+    def __init__(self, data: dict = None) -> None:
+        if data is None:
+            return
+        for key, value in data.items():
+            setattr(self, key, value)
 
 
 @dataclass
@@ -375,6 +510,12 @@ class GetReferenceLineResultsRes:
     """Response for getting reference line results."""
     data: List[ReferenceLineResult] = field(default_factory=list)
     
+    def __init__(self, data: List[ReferenceLineResult] = None):
+        if data is None:
+            self.data = []
+        else:
+            self.data = data
+
     def __init__(self, data: dict = None) -> None:
         if data is None:
             self.data = []
