@@ -300,7 +300,7 @@ class Simulator:
         """
         req = GetTestVehicleIdListReq(simulation_id=self.simulation_id)
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/vehicle/test_id_list/get",
+            "/openapi/cosim/v2/simulation/test_vehicle/id_list/get",
             {"simulation_id": req.simulation_id},
             GetTestVehicleIdListRes
         )
