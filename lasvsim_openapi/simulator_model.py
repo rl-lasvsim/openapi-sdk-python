@@ -12,13 +12,11 @@ class Point:
     y: float = 0.0
     z: float = 0.0
     
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, x: float = 0.0, y: float = 0.0, z: float = 0.0):
+        if data is not None:
+            for key, value in data.items():
+                setattr(self, key, value)
             return
-        for key, value in data.items():
-            setattr(self, key, value)
-
-    def __init__(self, x: float = 0.0, y: float = 0.0, z: float = 0.0):
         self.x = x
         self.y = y
         self.z = z
@@ -32,13 +30,11 @@ class ObjBaseInfo:
     length: float = 0.0
     weight: float = 0.0
     
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, width: float = 0.0, height: float = 0.0, length: float = 0.0, weight: float = 0.0):
+        if data is not None:
+            for key, value in data.items():
+                setattr(self, key, value)
             return
-        for key, value in data.items():
-            setattr(self, key, value)
-
-    def __init__(self, width: float = 0.0, height: float = 0.0, length: float = 0.0, weight: float = 0.0):
         self.width = width
         self.height = height
         self.length = length
@@ -54,13 +50,11 @@ class DynamicInfo:
     rear_axle_to_center: float = 0.0
     yaw_moment_of_inertia: float = 0.0
     
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, front_wheel_stiffness: float = 0.0, rear_wheel_stiffness: float = 0.0, front_axle_to_center: float = 0.0, rear_axle_to_center: float = 0.0, yaw_moment_of_inertia: float = 0.0):
+        if data is not None:
+            for key, value in data.items():
+                setattr(self, key, value)
             return
-        for key, value in data.items():
-            setattr(self, key, value)
-
-    def __init__(self, front_wheel_stiffness: float = 0.0, rear_wheel_stiffness: float = 0.0, front_axle_to_center: float = 0.0, rear_axle_to_center: float = 0.0, yaw_moment_of_inertia: float = 0.0):
         self.front_wheel_stiffness = front_wheel_stiffness
         self.rear_wheel_stiffness = rear_wheel_stiffness
         self.front_axle_to_center = front_axle_to_center
@@ -80,17 +74,15 @@ class Position:
     dis_to_lane_end: Optional[float] = None
     position_type: int = 0  # 1 - 地图外
     
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, point: Optional[Point] = None, phi: float = 0.0, lane_id: str = "", link_id: str = "", junction_id: str = "", segment_id: str = "", dis_to_lane_end: Optional[float] = None, position_type: int = 0):
+        if data is not None:
+            _point = data.pop("point", None)
+            _dis_to_lane_end = data.pop("dis_to_lane_end", None)
+            for key, value in data.items():
+                setattr(self, key, value)
+            self.point = None if _point is None else Point(_point)
+            self.dis_to_lane_end = _dis_to_lane_end
             return
-        point = data.pop("point", None)
-        dis_to_lane_end = data.pop("dis_to_lane_end", None)
-        for key, value in data.items():
-            setattr(self, key, value)
-        self.point = None if point is None else Point(point)
-        self.dis_to_lane_end = dis_to_lane_end
-
-    def __init__(self, point: Optional[Point] = None, phi: float = 0.0, lane_id: str = "", link_id: str = "", junction_id: str = "", segment_id: str = "", dis_to_lane_end: Optional[float] = None, position_type: int = 0):
         self.point = point
         self.phi = phi
         self.lane_id = lane_id
@@ -111,13 +103,11 @@ class ObjMovingInfo:
     w: float = 0.0
     w_acc: float = 0.0
     
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, u: float = 0.0, u_acc: float = 0.0, v: float = 0.0, v_acc: float = 0.0, w: float = 0.0, w_acc: float = 0.0):
+        if data is not None:
+            for key, value in data.items():
+                setattr(self, key, value)
             return
-        for key, value in data.items():
-            setattr(self, key, value)
-
-    def __init__(self, u: float = 0.0, u_acc: float = 0.0, v: float = 0.0, v_acc: float = 0.0, w: float = 0.0, w_acc: float = 0.0):
         self.u = u
         self.u_acc = u_acc
         self.v = v
@@ -136,13 +126,11 @@ class ControlInfo:
     rl_torque: float = 0.0
     rr_torque: float = 0.0
     
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, ste_wheel: float = 0.0, lon_acc: float = 0.0, fl_torque: float = 0.0, fr_torque: float = 0.0, rl_torque: float = 0.0, rr_torque: float = 0.0):
+        if data is not None:
+            for key, value in data.items():
+                setattr(self, key, value)
             return
-        for key, value in data.items():
-            setattr(self, key, value)
-
-    def __init__(self, ste_wheel: float = 0.0, lon_acc: float = 0.0, fl_torque: float = 0.0, fr_torque: float = 0.0, rl_torque: float = 0.0, rr_torque: float = 0.0):
         self.ste_wheel = ste_wheel
         self.lon_acc = lon_acc
         self.fl_torque = fl_torque
@@ -160,19 +148,17 @@ class ReferenceLine:
     lane_idxes: List[int] = field(default_factory=list)
     opposite: bool = False
     
-    def __init__(self, data: dict = None):
-        if data is None:
+    def __init__(self, data: dict = None, lane_ids: List[str] = None, lane_types: List[str] = None, points: List[Point] = None, lane_idxes: List[int] = None, opposite: bool = False):
+        if data is not None:
             self.lane_ids = []
             self.lane_types = []
             self.points = []
             self.lane_idxes = []
+            for key, value in data.items():
+                if key == "points":
+                    value = [Point(point) for point in value]
+                setattr(self, key, value)
             return
-        for key, value in data.items():
-            if key == "points":
-                value = [Point(point) for point in value]
-            setattr(self, key, value)
-
-    def __init__(self, lane_ids: List[str] = None, lane_types: List[str] = None, points: List[Point] = None, lane_idxes: List[int] = None, opposite: bool = False):
         self.lane_ids = lane_ids if lane_ids is not None else []
         self.lane_types = lane_types if lane_types is not None else []
         self.points = points if points is not None else []
@@ -186,16 +172,14 @@ class NavigationInfo:
     link_nav: List[str] = field(default_factory=list)
     destination: Optional[Position] = None
 
-    def __init__(self, data: dict = None):
-        if data is None:
+    def __init__(self, data: dict = None, link_nav: List[str] = None, destination: Optional[Position] = None):
+        if data is not None:
             self.link_nav = []
+            _destination = data.pop("destination", None)
+            for key, value in data.items():
+                setattr(self, key, value)
+            self.destination = None if _destination is None else Position(_destination)
             return
-        destination = data.pop("destination", None)
-        for key, value in data.items():
-            setattr(self, key, value)
-        self.destination = None if destination is None else Position(destination)
-
-    def __init__(self, link_nav: List[str] = None, destination: Optional[Position] = None):
         self.link_nav = link_nav if link_nav is not None else []
         self.destination = destination
 
@@ -210,13 +194,11 @@ class Movement:
     junction_id: str = ""
     flow_direction: str = ""
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, map_id: int = 0, movement_id: str = "", upstream_link_id: str = "", downstream_link_id: str = "", junction_id: str = "", flow_direction: str = ""):
+        if data is not None:
+            for key, value in data.items():
+                setattr(self, key, value)
             return
-        for key, value in data.items():
-            setattr(self, key, value)
-
-    def __init__(self, map_id: int = 0, movement_id: str = "", upstream_link_id: str = "", downstream_link_id: str = "", junction_id: str = "", flow_direction: str = ""):
         self.map_id = map_id
         self.movement_id = movement_id
         self.upstream_link_id = upstream_link_id
@@ -257,13 +239,11 @@ class InitReq:
     scen_ver: str = ""
     sim_record_id: str = ""
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, scen_id: str = "", scen_ver: str = "", sim_record_id: str = ""):
+        if data is not None:
+            for key, value in data.items():
+                setattr(self, key, value)
             return
-        for key, value in data.items():
-            setattr(self, key, value)
-
-    def __init__(self, scen_id: str = "", scen_ver: str = "", sim_record_id: str = ""):
         self.scen_id = scen_id
         self.scen_ver = scen_ver
         self.sim_record_id = sim_record_id
@@ -275,11 +255,10 @@ class InitRes:
     simulation_id: str = ""
     simulation_addr: str = ""
 
-    def __init__(self,data: dict = None, simulation_id: str = "", simulation_addr: str = ""):
+    def __init__(self, data: dict = None, simulation_id: str = "", simulation_addr: str = ""):
         if data is not None:
             self.__dict__.update(data)
             return
-        
         self.simulation_id = simulation_id
         self.simulation_addr = simulation_addr
 
@@ -309,12 +288,10 @@ class StepReq:
     """Request for stepping simulator."""
     simulation_id: str = ""
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, simulation_id: str = ""):
+        if data is not None:
+            self.__dict__.update(data)
             return
-        self.__dict__.update(data)
-
-    def __init__(self, simulation_id: str = ""):
         self.simulation_id = simulation_id
 
 
@@ -330,12 +307,10 @@ class GetCurrentStageReq:
     simulation_id: str = ""  # 仿真ID
     junction_id: str = ""  # movementId
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, simulation_id: str = "", junction_id: str = ""):
+        if data is not None:
+            self.__dict__.update(data)
             return
-        self.__dict__.update(data)
-
-    def __init__(self, simulation_id: str = "", junction_id: str = ""):
         self.simulation_id = simulation_id
         self.junction_id = junction_id
 
@@ -346,14 +321,12 @@ class GetCurrentStageRes:
     movement_ids: List[str] = field(default_factory=list)  # 当前阶段包含的绿灯流向
     countdown: int = 0  # 倒计时(s)
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, movement_ids: List[str] = None, countdown: int = 0):
+        if data is not None:
             self.movement_ids = []
+            for key, value in data.items():
+                setattr(self, key, value)
             return
-        for key, value in data.items():
-            setattr(self, key, value)
-
-    def __init__(self, movement_ids: List[str] = None, countdown: int = 0):
         self.movement_ids = movement_ids if movement_ids is not None else []
         self.countdown = countdown
 
@@ -364,12 +337,10 @@ class GetMovementSignalReq:
     simulation_id: str = ""  # 仿真ID
     movement_id: str = ""  # movementId
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, simulation_id: str = "", movement_id: str = ""):
+        if data is not None:
+            self.__dict__.update(data)
             return
-        self.__dict__.update(data)
-
-    def __init__(self, simulation_id: str = "", movement_id: str = ""):
         self.simulation_id = simulation_id
         self.movement_id = movement_id
 
@@ -380,13 +351,11 @@ class GetMovementSignalRes:
     current_signal: int = 0  # 当前灯色
     countdown: int = 0  # 倒计时(s)
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, current_signal: int = 0, countdown: int = 0):
+        if data is not None:
+            for key, value in data.items():
+                setattr(self, key, value)
             return
-        for key, value in data.items():
-            setattr(self, key, value)
-
-    def __init__(self, current_signal: int = 0, countdown: int = 0):
         self.current_signal = current_signal
         self.countdown = countdown
 
@@ -415,12 +384,10 @@ class GetSignalPlanReq:
     simulation_id: str = ""
     junction_id: str = ""
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, simulation_id: str = "", junction_id: str = ""):
+        if data is not None:
+            self.__dict__.update(data)
             return
-        self.__dict__.update(data)
-
-    def __init__(self, simulation_id: str = "", junction_id: str = ""):
         self.simulation_id = simulation_id
         self.junction_id = junction_id
 
@@ -433,16 +400,14 @@ class GetSignalPlanRes:
     offset: int = 0
     stages: List[GetSignalPlanRes_Stage] = field(default_factory=list)
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, junction_id: str = "", cycle: int = 0, offset: int = 0, stages: List[GetSignalPlanRes_Stage] = None):
+        if data is not None:
             self.stages = []
+            _stages = data.pop("stages", [])
+            for key, value in data.items():
+                setattr(self, key, value)
+            self.stages = [GetSignalPlanRes_Stage(stage) for stage in _stages]
             return
-        stages = data.pop("stages", [])
-        for key, value in data.items():
-            setattr(self, key, value)
-        self.stages = [GetSignalPlanRes_Stage(stage) for stage in stages]
-
-    def __init__(self, junction_id: str = "", cycle: int = 0, offset: int = 0, stages: List[GetSignalPlanRes_Stage] = None):
         self.junction_id = junction_id
         self.cycle = cycle
         self.offset = offset
@@ -455,12 +420,10 @@ class GetMovementListReq:
     simulation_id: str = ""
     junction_id: str = ""
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, simulation_id: str = "", junction_id: str = ""):
+        if data is not None:
+            self.__dict__.update(data)
             return
-        self.__dict__.update(data)
-
-    def __init__(self, simulation_id: str = "", junction_id: str = ""):
         self.simulation_id = simulation_id
         self.junction_id = junction_id
 
@@ -470,16 +433,14 @@ class GetMovementListRes:
     """Response for getting movement list."""
     list: List[Movement] = field(default_factory=list)  # movement 列表
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, list: List[Movement] = None):
+        if data is not None:
             self.list = []
+            for key, value in data.items():
+                if key == "list":
+                    value = [Movement(item) for item in value]
+                setattr(self, key, value)
             return
-        for key, value in data.items():
-            if key == "list":
-                value = [Movement(item) for item in value]
-            setattr(self, key, value)
-
-    def __init__(self, list: List[Movement] = None):
         self.list = list if list is not None else []
 
 
@@ -518,12 +479,10 @@ class GetTestVehicleIdListReq:
     """Request for getting test vehicle ID list."""
     simulation_id: str = ""  # 仿真ID
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, simulation_id: str = ""):
+        if data is not None:
+            self.__dict__.update(data)
             return
-        self.__dict__.update(data)
-
-    def __init__(self, simulation_id: str = ""):
         self.simulation_id = simulation_id
 
 
@@ -532,14 +491,12 @@ class GetTestVehicleIdListRes:
     """Response for getting test vehicle ID list."""
     list: List[str] = field(default_factory=list)
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, list: List[str] = None):
+        if data is not None:
             self.list = []
+            for key, value in data.items():
+                setattr(self, key, value)
             return
-        for key, value in data.items():
-            setattr(self, key, value)
-
-    def __init__(self, list: List[str] = None):
         self.list = list if list is not None else []
 
 
@@ -549,12 +506,10 @@ class GetVehicleBaseInfoReq:
     simulation_id: str = ""
     id_list: List[str] = field(default_factory=list)
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, simulation_id: str = "", id_list: List[str] = None):
+        if data is not None:
+            self.__dict__.update(data)
             return
-        self.__dict__.update(data)
-
-    def __init__(self, simulation_id: str = "", id_list: List[str] = None):
         self.simulation_id = simulation_id
         self.id_list = id_list if id_list is not None else []
 
@@ -604,12 +559,10 @@ class GetVehiclePositionReq:
     simulation_id: str = ""
     id_list: List[str] = field(default_factory=list)
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, simulation_id: str = "", id_list: List[str] = None):
+        if data is not None:
+            self.__dict__.update(data)
             return
-        self.__dict__.update(data)
-
-    def __init__(self, simulation_id: str = "", id_list: List[str] = None):
         self.simulation_id = simulation_id
         self.id_list = id_list if id_list is not None else []
 
@@ -619,16 +572,14 @@ class GetVehiclePositionRes:
     """Response for getting vehicle position."""
     position_dict: Dict[str, Position] = field(default_factory=dict)
 
-    def __init__(self, data: dict = None):
-        if data is None:
+    def __init__(self, data: dict = None, position_dict: Dict[str, Position] = None):
+        if data is not None:
             self.position_dict = {}
+            _position_dict = data.pop("position_dict", {})
+            for key, value in data.items():
+                setattr(self, key, value)
+            self.position_dict = {k: Position(v) for k, v in _position_dict.items()}
             return
-        position_dict = data.pop("position_dict", {})
-        for key, value in data.items():
-            setattr(self, key, value)
-        self.position_dict = {k: Position(v) for k, v in position_dict.items()}
-
-    def __init__(self, position_dict: Dict[str, Position] = None):
         self.position_dict = position_dict if position_dict is not None else {}
 
 
@@ -672,12 +623,10 @@ class GetVehicleControlInfoReq:
     simulation_id: str = ""
     id_list: List[str] = field(default_factory=list)
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, simulation_id: str = "", id_list: List[str] = None):
+        if data is not None:
+            self.__dict__.update(data)
             return
-        self.__dict__.update(data)
-
-    def __init__(self, simulation_id: str = "", id_list: List[str] = None):
         self.simulation_id = simulation_id
         self.id_list = id_list if id_list is not None else []
 
@@ -687,16 +636,14 @@ class GetVehicleControlInfoRes:
     """Response for getting vehicle control information."""
     control_info_dict: Dict[str, ControlInfo] = field(default_factory=dict)
 
-    def __init__(self, data: dict = None):
-        if data is None:
+    def __init__(self, data: dict = None, control_info_dict: Dict[str, ControlInfo] = None):
+        if data is not None:
             self.control_info_dict = {}
+            _control_info_dict = data.pop("control_info_dict", {})
+            for key, value in data.items():
+                setattr(self, key, value)
+            self.control_info_dict = {k: ControlInfo(v) for k, v in _control_info_dict.items()}
             return
-        control_info_dict = data.pop("control_info_dict", {})
-        for key, value in data.items():
-            setattr(self, key, value)
-        self.control_info_dict = {k: ControlInfo(v) for k, v in control_info_dict.items()}
-
-    def __init__(self, control_info_dict: Dict[str, ControlInfo] = None):
         self.control_info_dict = control_info_dict if control_info_dict is not None else {}
 
 
@@ -748,16 +695,14 @@ class GetVehiclePerceptionInfoRes:
     """Response for getting vehicle perception information."""
     list: List[GetVehiclePerceptionInfoRes_PerceptionObj] = field(default_factory=list)
 
-    def __init__(self, data: dict = None):
-        if data is None:
+    def __init__(self, data: dict = None, list: List[GetVehiclePerceptionInfoRes_PerceptionObj] = None):
+        if data is not None:
             self.list = []
+            _list = data.pop("list", [])
+            for key, value in data.items():
+                setattr(self, key, value)
+            self.list = [GetVehiclePerceptionInfoRes_PerceptionObj(item) for item in _list]
             return
-        list = data.pop("list", [])
-        for key, value in data.items():
-            setattr(self, key, value)
-        self.list = [GetVehiclePerceptionInfoRes_PerceptionObj(item) for item in list]
-
-    def __init__(self, list: List[GetVehiclePerceptionInfoRes_PerceptionObj] = None):
         self.list = list if list is not None else []
 
 
@@ -835,12 +780,10 @@ class GetVehicleNavigationInfoReq:
     simulation_id: str = ""
     vehicle_id: str = ""
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, simulation_id: str = "", vehicle_id: str = ""):
+        if data is not None:
+            self.__dict__.update(data)
             return
-        self.__dict__.update(data)
-
-    def __init__(self, simulation_id: str = "", vehicle_id: str = ""):
         self.simulation_id = simulation_id
         self.vehicle_id = vehicle_id
 

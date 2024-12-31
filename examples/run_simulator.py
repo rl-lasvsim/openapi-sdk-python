@@ -21,7 +21,7 @@ def main():
     )
 
     # Get scene list from training task
-    res = api_client.train_task.get_scene_id_list(16448)
+    res = api_client.train_task.get_scene_id_list(168)
     print(f"Training task scene list: {res}\n")
 
     # Initialize simulator with first scene
