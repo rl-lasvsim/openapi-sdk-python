@@ -21,7 +21,11 @@ class Point:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
-        return cls(**data)
+        return cls(
+            x=data.get('x', 0.0),
+            y=data.get('y', 0.0),
+            z=data.get('z', 0.0)
+        )
 
 
 @dataclass
@@ -42,7 +46,12 @@ class ObjBaseInfo:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
-        return cls(**data)
+        return cls(
+            width=data.get('width', 0.0),
+            height=data.get('height', 0.0),
+            length=data.get('length', 0.0),
+            weight=data.get('weight', 0.0)
+        )
 
 
 @dataclass
@@ -65,7 +74,13 @@ class DynamicInfo:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
-        return cls(**data)
+        return cls(
+            front_wheel_stiffness=data.get('front_wheel_stiffness', 0.0),
+            rear_wheel_stiffness=data.get('rear_wheel_stiffness', 0.0),
+            front_axle_to_center=data.get('front_axle_to_center', 0.0),
+            rear_axle_to_center=data.get('rear_axle_to_center', 0.0),
+            yaw_moment_of_inertia=data.get('yaw_moment_of_inertia', 0.0)
+        )
 
 
 @dataclass
@@ -90,6 +105,21 @@ class Position:
         self.dis_to_lane_end = dis_to_lane_end
         self.position_type = position_type
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            point=Point.from_dict(data.get('point')),
+            phi=data.get('phi', 0.0),
+            lane_id=data.get('lane_id', ''),
+            link_id=data.get('link_id', ''),
+            junction_id=data.get('junction_id', ''),
+            segment_id=data.get('segment_id', ''),
+            dis_to_lane_end=data.get('dis_to_lane_end'),
+            position_type=data.get('position_type', 0)
+        )
+
 
 @dataclass
 class ObjMovingInfo:
@@ -108,6 +138,19 @@ class ObjMovingInfo:
         self.v_acc = v_acc
         self.w = w
         self.w_acc = w_acc
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            u=data.get('u', 0.0),
+            u_acc=data.get('u_acc', 0.0),
+            v=data.get('v', 0.0),
+            v_acc=data.get('v_acc', 0.0),
+            w=data.get('w', 0.0),
+            w_acc=data.get('w_acc', 0.0)
+        )
 
 
 @dataclass
@@ -128,6 +171,19 @@ class ControlInfo:
         self.rl_torque = rl_torque
         self.rr_torque = rr_torque
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            ste_wheel=data.get('ste_wheel', 0.0),
+            lon_acc=data.get('lon_acc', 0.0),
+            fl_torque=data.get('fl_torque', 0.0),
+            fr_torque=data.get('fr_torque', 0.0),
+            rl_torque=data.get('rl_torque', 0.0),
+            rr_torque=data.get('rr_torque', 0.0)
+        )
+
 
 @dataclass
 class ReferenceLine:
@@ -145,6 +201,18 @@ class ReferenceLine:
         self.lane_idxes = lane_idxes if lane_idxes is not None else []
         self.opposite = opposite
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            lane_ids=data.get('lane_ids', []),
+            lane_types=data.get('lane_types', []),
+            points=[Point.from_dict(p) for p in data.get('points', [])],
+            lane_idxes=data.get('lane_idxes', []),
+            opposite=data.get('opposite', False)
+        )
+
 
 @dataclass
 class NavigationInfo:
@@ -155,6 +223,15 @@ class NavigationInfo:
     def __init__(self, link_nav: List[str] = None, destination: Optional[Position] = None):
         self.link_nav = link_nav if link_nav is not None else []
         self.destination = destination
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            link_nav=data.get('link_nav', []),
+            destination=Position.from_dict(data.get('destination'))
+        )
 
 
 @dataclass
@@ -174,6 +251,19 @@ class Movement:
         self.downstream_link_id = downstream_link_id
         self.junction_id = junction_id
         self.flow_direction = flow_direction
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            map_id=data.get('map_id', 0),
+            movement_id=data.get('movement_id', ''),
+            upstream_link_id=data.get('upstream_link_id', ''),
+            downstream_link_id=data.get('downstream_link_id', ''),
+            junction_id=data.get('junction_id', ''),
+            flow_direction=data.get('flow_direction', '')
+        )
 
 
 @dataclass
@@ -218,6 +308,15 @@ class InitRes:
         self.simulation_id = simulation_id
         self.simulation_addr = simulation_addr
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            simulation_addr=data.get('simulation_addr', '')
+        )
+
 
 @dataclass
 class StopReq:
@@ -226,13 +325,24 @@ class StopReq:
 
     def __init__(self, simulation_id: str = ""):
         self.simulation_id = simulation_id
-
+        
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
 
 @dataclass
 class StopRes:
     """Response for stopping simulator."""
     def __init__(self):
         pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
 
 
 @dataclass
@@ -246,8 +356,15 @@ class StepReq:
 
 @dataclass
 class StepRes:
+    """Response for stepping simulator."""
     def __init__(self):
         pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
 
 
 @dataclass
@@ -271,6 +388,15 @@ class GetCurrentStageRes:
         self.movement_ids = movement_ids if movement_ids is not None else []
         self.countdown = countdown
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            movement_ids=data.get('movement_ids', []),
+            countdown=data.get('countdown', 0)
+        )
+
 
 @dataclass
 class GetMovementSignalReq:
@@ -293,6 +419,15 @@ class GetMovementSignalRes:
         self.current_signal = current_signal
         self.countdown = countdown
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            current_signal=data.get('current_signal', 0),
+            countdown=data.get('countdown', 0)
+        )
+
 
 @dataclass
 class GetSignalPlanRes_Stage:
@@ -304,6 +439,15 @@ class GetSignalPlanRes_Stage:
         self.movement_ids = movement_ids if movement_ids is not None else []
         self.duration = duration
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            movement_ids=data.get('movement_ids', []),
+            duration=data.get('duration', 0)
+        )
+
 
 @dataclass
 class GetSignalPlanReq:
@@ -314,6 +458,15 @@ class GetSignalPlanReq:
     def __init__(self, simulation_id: str = "", junction_id: str = ""):
         self.simulation_id = simulation_id
         self.junction_id = junction_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            junction_id=data.get('junction_id', '')
+        )
 
 
 @dataclass
@@ -330,6 +483,17 @@ class GetSignalPlanRes:
         self.offset = offset
         self.stages = stages if stages is not None else []
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            junction_id=data.get('junction_id', ''),
+            cycle=data.get('cycle', 0),
+            offset=data.get('offset', 0),
+            stages=[GetSignalPlanRes_Stage.from_dict(item) for item in data.get('stages', [])]
+        )
+
 
 @dataclass
 class GetMovementListReq:
@@ -341,6 +505,15 @@ class GetMovementListReq:
         self.simulation_id = simulation_id
         self.junction_id = junction_id
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            junction_id=data.get('junction_id', '')
+        )
+
 
 @dataclass
 class GetMovementListRes:
@@ -349,6 +522,14 @@ class GetMovementListRes:
 
     def __init__(self, list: List[Movement] = None):
         self.list = list if list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            list=[Movement.from_dict(item) for item in data.get('list', [])]
+        )
 
 
 @dataclass
@@ -359,6 +540,14 @@ class GetVehicleIdListReq:
     def __init__(self, simulation_id: str = ""):
         self.simulation_id = simulation_id
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', '')
+        )
+
 
 @dataclass
 class GetVehicleIdListRes:
@@ -367,6 +556,14 @@ class GetVehicleIdListRes:
 
     def __init__(self, list: List[str] = None):
         self.list = list if list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            list=data.get('list', [])
+        )
 
 
 @dataclass
@@ -377,6 +574,14 @@ class GetTestVehicleIdListReq:
     def __init__(self, simulation_id: str = ""):
         self.simulation_id = simulation_id
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', '')
+        )
+
 
 @dataclass
 class GetTestVehicleIdListRes:
@@ -385,6 +590,14 @@ class GetTestVehicleIdListRes:
 
     def __init__(self, list: List[str] = None):
         self.list = list if list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            list=data.get('list', [])
+        )
 
 
 @dataclass
@@ -397,6 +610,15 @@ class GetVehicleBaseInfoReq:
         self.simulation_id = simulation_id
         self.id_list = id_list if id_list is not None else []
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            id_list=data.get('id_list', [])
+        )
+
 
 @dataclass
 class GetVehicleBaseInfoRes_VehicleBaseInfo:
@@ -408,6 +630,15 @@ class GetVehicleBaseInfoRes_VehicleBaseInfo:
         self.base_info = base_info
         self.dynamic_info = dynamic_info
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            base_info=ObjBaseInfo.from_dict(data.get('base_info')),
+            dynamic_info=DynamicInfo.from_dict(data.get('dynamic_info'))
+        )
+
 
 @dataclass
 class GetVehicleBaseInfoRes:
@@ -416,6 +647,14 @@ class GetVehicleBaseInfoRes:
 
     def __init__(self, info_dict: Dict[str, GetVehicleBaseInfoRes_VehicleBaseInfo] = None):
         self.info_dict = info_dict if info_dict is not None else {}
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            info_dict={k: GetVehicleBaseInfoRes_VehicleBaseInfo.from_dict(v) for k, v in data.get('info_dict', {}).items()}
+        )
 
 
 @dataclass
@@ -428,6 +667,15 @@ class GetVehiclePositionReq:
         self.simulation_id = simulation_id
         self.id_list = id_list if id_list is not None else []
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            id_list=data.get('id_list', [])
+        )
+
 
 @dataclass
 class GetVehiclePositionRes:
@@ -436,6 +684,14 @@ class GetVehiclePositionRes:
 
     def __init__(self, position_dict: Dict[str, Position] = None):
         self.position_dict = position_dict if position_dict is not None else {}
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            position_dict={k: Position.from_dict(v) for k, v in data.get('position_dict', {}).items()}
+        )
 
 
 @dataclass
@@ -448,6 +704,15 @@ class GetVehicleMovingInfoReq:
         self.simulation_id = simulation_id
         self.id_list = id_list if id_list is not None else []
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            id_list=data.get('id_list', [])
+        )
+
 
 @dataclass
 class GetVehicleMovingInfoRes:
@@ -456,6 +721,14 @@ class GetVehicleMovingInfoRes:
 
     def __init__(self, moving_info_dict: Dict[str, ObjMovingInfo] = None):
         self.moving_info_dict = moving_info_dict if moving_info_dict is not None else {}
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            moving_info_dict={k: ObjMovingInfo.from_dict(v) for k, v in data.get('moving_info_dict', {}).items()}
+        )
 
 
 @dataclass
@@ -468,6 +741,15 @@ class GetVehicleControlInfoReq:
         self.simulation_id = simulation_id
         self.id_list = id_list if id_list is not None else []
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            id_list=data.get('id_list', [])
+        )
+
 
 @dataclass
 class GetVehicleControlInfoRes:
@@ -476,6 +758,14 @@ class GetVehicleControlInfoRes:
 
     def __init__(self, control_info_dict: Dict[str, ControlInfo] = None):
         self.control_info_dict = control_info_dict if control_info_dict is not None else {}
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            control_info_dict={k: ControlInfo.from_dict(v) for k, v in data.get('control_info_dict', {}).items()}
+        )
 
 
 @dataclass
@@ -487,6 +777,15 @@ class GetVehiclePerceptionInfoReq:
     def __init__(self, simulation_id: str = "", vehicle_id: str = ""):
         self.simulation_id = simulation_id
         self.vehicle_id = vehicle_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', '')
+        )
 
 
 @dataclass
@@ -503,6 +802,17 @@ class GetVehiclePerceptionInfoRes_PerceptionObj:
         self.moving_info = moving_info
         self.position = position
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            obj_id=data.get('obj_id', ''),
+            base_info=ObjBaseInfo.from_dict(data.get('base_info')),
+            moving_info=ObjMovingInfo.from_dict(data.get('moving_info')),
+            position=Position.from_dict(data.get('position'))
+        )
+
 
 @dataclass
 class GetVehiclePerceptionInfoRes:
@@ -511,6 +821,14 @@ class GetVehiclePerceptionInfoRes:
 
     def __init__(self, list: List[GetVehiclePerceptionInfoRes_PerceptionObj] = None):
         self.list = list if list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            list=[GetVehiclePerceptionInfoRes_PerceptionObj.from_dict(item) for item in data.get('list', [])]
+        )
 
 
 @dataclass
@@ -523,6 +841,15 @@ class GetVehicleReferenceLinesReq:
         self.simulation_id = simulation_id
         self.vehicle_id = vehicle_id
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', '')
+        )
+
 
 @dataclass
 class GetVehicleReferenceLinesRes:
@@ -531,6 +858,14 @@ class GetVehicleReferenceLinesRes:
 
     def __init__(self, reference_lines: List[ReferenceLine] = None):
         self.reference_lines = reference_lines if reference_lines is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            reference_lines=[ReferenceLine.from_dict(item) for item in data.get('reference_lines', [])]
+        )
 
 
 @dataclass
@@ -543,6 +878,15 @@ class GetVehiclePlanningInfoReq:
         self.simulation_id = simulation_id
         self.vehicle_id = vehicle_id
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', '')
+        )
+
 
 @dataclass
 class GetVehiclePlanningInfoRes:
@@ -551,6 +895,14 @@ class GetVehiclePlanningInfoRes:
 
     def __init__(self, planning_path: List[Point] = None):
         self.planning_path = planning_path if planning_path is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            planning_path=[Point.from_dict(p) for p in data.get('planning_path', [])]
+        )
 
 
 @dataclass
@@ -563,6 +915,15 @@ class GetVehicleNavigationInfoReq:
         self.simulation_id = simulation_id
         self.vehicle_id = vehicle_id
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', '')
+        )
+
 
 @dataclass
 class GetVehicleNavigationInfoRes:
@@ -571,6 +932,14 @@ class GetVehicleNavigationInfoRes:
 
     def __init__(self, navigation_info: Optional[NavigationInfo] = None):
         self.navigation_info = navigation_info
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            navigation_info=NavigationInfo.from_dict(data.get('navigation_info'))
+        )
 
 
 @dataclass
@@ -583,6 +952,15 @@ class GetVehicleCollisionStatusReq:
         self.simulation_id = simulation_id
         self.vehicle_id = vehicle_id
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', '')
+        )
+
 
 @dataclass
 class GetVehicleCollisionStatusRes:
@@ -591,6 +969,14 @@ class GetVehicleCollisionStatusRes:
 
     def __init__(self, collision_status: bool = False):
         self.collision_status = collision_status
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            collision_status=data.get('collision_status', False)
+        )
 
 
 @dataclass
@@ -603,6 +989,15 @@ class GetVehicleTargetSpeedReq:
         self.simulation_id = simulation_id
         self.vehicle_id = vehicle_id
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', '')
+        )
+
 
 @dataclass
 class GetVehicleTargetSpeedRes:
@@ -611,6 +1006,14 @@ class GetVehicleTargetSpeedRes:
 
     def __init__(self, target_speed: float = 0.0):
         self.target_speed = target_speed
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            target_speed=data.get('target_speed', 0.0)
+        )
 
 
 @dataclass
@@ -625,12 +1028,15 @@ class SetVehiclePlanningInfoReq:
         self.vehicle_id = vehicle_id
         self.planning_path = planning_path if planning_path is not None else []
 
-
-@dataclass
-class SetVehiclePlanningInfoRes:
-    """Response for setting vehicle planning information."""
-    def __init__(self):
-        pass
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', ''),
+            planning_path=[Point.from_dict(p) for p in data.get('planning_path', [])]
+        )
 
 
 @dataclass
@@ -647,12 +1053,16 @@ class SetVehicleControlInfoReq:
         self.ste_wheel = ste_wheel
         self.lon_acc = lon_acc
 
-
-@dataclass
-class SetVehicleControlInfoRes:
-    """Response for setting vehicle control information."""
-    def __init__(self):
-        pass
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', ''),
+            ste_wheel=data.get('ste_wheel'),
+            lon_acc=data.get('lon_acc')
+        )
 
 
 @dataclass
@@ -669,12 +1079,16 @@ class SetVehiclePositionReq:
         self.point = point
         self.phi = phi
 
-
-@dataclass
-class SetVehiclePositionRes:
-    """Response for setting vehicle position."""
-    def __init__(self):
-        pass
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', ''),
+            point=Point.from_dict(data.get('point')),
+            phi=data.get('phi')
+        )
 
 
 @dataclass
@@ -699,12 +1113,20 @@ class SetVehicleMovingInfoReq:
         self.v_acc = v_acc
         self.w_acc = w_acc
 
-
-@dataclass
-class SetVehicleMovingInfoRes:
-    """Response for setting vehicle moving information."""
-    def __init__(self):
-        pass
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', ''),
+            u=data.get('u'),
+            v=data.get('v'),
+            w=data.get('w'),
+            u_acc=data.get('u_acc'),
+            v_acc=data.get('v_acc'),
+            w_acc=data.get('w_acc')
+        )
 
 
 @dataclass
@@ -721,12 +1143,16 @@ class SetVehicleBaseInfoReq:
         self.base_info = base_info
         self.dynamic_info = dynamic_info
 
-
-@dataclass
-class SetVehicleBaseInfoRes:
-    """Response for setting vehicle base information."""
-    def __init__(self):
-        pass
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', ''),
+            base_info=ObjBaseInfo.from_dict(data.get('base_info')),
+            dynamic_info=DynamicInfo.from_dict(data.get('dynamic_info'))
+        )
 
 
 @dataclass
@@ -741,12 +1167,15 @@ class SetVehicleRouteNavReq:
         self.vehicle_id = vehicle_id
         self.route_nav = route_nav if route_nav is not None else []
 
-
-@dataclass
-class SetVehicleRouteNavRes:
-    """Response for setting vehicle route navigation."""
-    def __init__(self):
-        pass
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', ''),
+            route_nav=data.get('route_nav', [])
+        )
 
 
 @dataclass
@@ -761,12 +1190,15 @@ class SetVehicleLinkNavReq:
         self.vehicle_id = vehicle_id
         self.link_nav = link_nav if link_nav is not None else []
 
-
-@dataclass
-class SetVehicleLinkNavRes:
-    """Response for setting vehicle link navigation."""
-    def __init__(self):
-        pass
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', ''),
+            link_nav=data.get('link_nav', [])
+        )
 
 
 @dataclass
@@ -781,12 +1213,15 @@ class SetVehicleLaneNavReq:
         self.vehicle_id = vehicle_id
         self.lane_nav = lane_nav if lane_nav is not None else []
 
-
-@dataclass
-class SetVehicleLaneNavRes:
-    """Response for setting vehicle lane navigation."""
-    def __init__(self):
-        pass
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', ''),
+            lane_nav=[LaneNav.from_dict(nav) for nav in data.get('lane_nav', [])]
+        )
 
 
 @dataclass
@@ -801,50 +1236,15 @@ class SetVehicleDestinationReq:
         self.vehicle_id = vehicle_id
         self.destination = destination
 
-
-@dataclass
-class SetVehicleDestinationRes:
-    """Response for setting vehicle destination."""
-    def __init__(self):
-        pass
-
-
-@dataclass
-class GetPedIdListReq:
-    """Request for getting pedestrian ID list."""
-    simulation_id: str = ""  # 仿真ID
-
-    def __init__(self, simulation_id: str = ""):
-        self.simulation_id = simulation_id
-
-
-@dataclass
-class GetPedIdListRes:
-    """Response for getting pedestrian ID list."""
-    list: List[str] = field(default_factory=list)  # 行人ID列表
-
-    def __init__(self, list: List[str] = None):
-        self.list = list if list is not None else []
-
-
-@dataclass
-class GetPedBaseInfoReq:
-    """Request for getting pedestrian base information."""
-    simulation_id: str = ""
-    ped_id_list: List[str] = field(default_factory=list)
-
-    def __init__(self, simulation_id: str = "", ped_id_list: List[str] = None):
-        self.simulation_id = simulation_id
-        self.ped_id_list = ped_id_list if ped_id_list is not None else []
-
-
-@dataclass
-class GetPedBaseInfoRes:
-    """Response for getting pedestrian base information."""
-    base_info_dict: Dict[str, ObjBaseInfo] = field(default_factory=dict)
-
-    def __init__(self, base_info_dict: Dict[str, ObjBaseInfo] = None):
-        self.base_info_dict = base_info_dict if base_info_dict is not None else {}
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', ''),
+            destination=Point.from_dict(data.get('destination'))
+        )
 
 
 @dataclass
@@ -861,50 +1261,16 @@ class SetPedPositionReq:
         self.point = point
         self.phi = phi
 
-
-@dataclass
-class SetPedPositionRes:
-    """Response for setting pedestrian position."""
-    def __init__(self):
-        pass
-
-
-@dataclass
-class GetNMVIdListReq:
-    """Request for getting non-motor vehicle ID list."""
-    simulation_id: str = ""  # 仿真ID
-
-    def __init__(self, simulation_id: str = ""):
-        self.simulation_id = simulation_id
-
-
-@dataclass
-class GetNMVIdListRes:
-    """Response for getting non-motor vehicle ID list."""
-    list: List[str] = field(default_factory=list)  # 非机动车ID列表
-
-    def __init__(self, list: List[str] = None):
-        self.list = list if list is not None else []
-
-
-@dataclass
-class GetNMVBaseInfoReq:
-    """Request for getting non-motor vehicle base information."""
-    simulation_id: str = ""
-    nmv_id_list: List[str] = field(default_factory=list)
-
-    def __init__(self, simulation_id: str = "", nmv_id_list: List[str] = None):
-        self.simulation_id = simulation_id
-        self.nmv_id_list = nmv_id_list if nmv_id_list is not None else []
-
-
-@dataclass
-class GetNMVBaseInfoRes:
-    """Response for getting non-motor vehicle base information."""
-    base_info_dict: Dict[str, ObjBaseInfo] = field(default_factory=dict)
-
-    def __init__(self, base_info_dict: Dict[str, ObjBaseInfo] = None):
-        self.base_info_dict = base_info_dict if base_info_dict is not None else {}
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            ped_id=data.get('ped_id', ''),
+            point=Point.from_dict(data.get('point')),
+            phi=data.get('phi')
+        )
 
 
 @dataclass
@@ -921,9 +1287,298 @@ class SetNMVPositionReq:
         self.point = point
         self.phi = phi
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            nmv_id=data.get('nmv_id', ''),
+            point=Point.from_dict(data.get('point')),
+            phi=data.get('phi')
+        )
+
+
+@dataclass
+class GetPedIdListReq:
+    """Request for getting pedestrian ID list."""
+    simulation_id: str = ""  # 仿真ID
+
+    def __init__(self, simulation_id: str = ""):
+        self.simulation_id = simulation_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', '')
+        )
+
+
+@dataclass
+class GetPedIdListRes:
+    """Response for getting pedestrian ID list."""
+    list: List[str] = field(default_factory=list)  # 行人ID列表
+
+    def __init__(self, list: List[str] = None):
+        self.list = list if list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            list=data.get('list', [])
+        )
+
+
+@dataclass
+class GetPedBaseInfoReq:
+    """Request for getting pedestrian base information."""
+    simulation_id: str = ""
+    ped_id_list: List[str] = field(default_factory=list)
+
+    def __init__(self, simulation_id: str = "", ped_id_list: List[str] = None):
+        self.simulation_id = simulation_id
+        self.ped_id_list = ped_id_list if ped_id_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            ped_id_list=data.get('ped_id_list', [])
+        )
+
+
+@dataclass
+class GetPedBaseInfoRes:
+    """Response for getting pedestrian base information."""
+    base_info_dict: Dict[str, ObjBaseInfo] = field(default_factory=dict)
+
+    def __init__(self, base_info_dict: Dict[str, ObjBaseInfo] = None):
+        self.base_info_dict = base_info_dict if base_info_dict is not None else {}
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            base_info_dict={k: ObjBaseInfo.from_dict(v) for k, v in data.get('base_info_dict', {}).items()}
+        )
+
+
+@dataclass
+class GetNMVIdListReq:
+    """Request for getting non-motor vehicle ID list."""
+    simulation_id: str = ""  # 仿真ID
+
+    def __init__(self, simulation_id: str = ""):
+        self.simulation_id = simulation_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', '')
+        )
+
+
+@dataclass
+class GetNMVIdListRes:
+    """Response for getting non-motor vehicle ID list."""
+    list: List[str] = field(default_factory=list)  # 非机动车ID列表
+
+    def __init__(self, list: List[str] = None):
+        self.list = list if list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            list=data.get('list', [])
+        )
+
+
+@dataclass
+class GetNMVBaseInfoReq:
+    """Request for getting non-motor vehicle base information."""
+    simulation_id: str = ""
+    nmv_id_list: List[str] = field(default_factory=list)
+
+    def __init__(self, simulation_id: str = "", nmv_id_list: List[str] = None):
+        self.simulation_id = simulation_id
+        self.nmv_id_list = nmv_id_list if nmv_id_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            nmv_id_list=data.get('nmv_id_list', [])
+        )
+
+
+@dataclass
+class GetNMVBaseInfoRes:
+    """Response for getting non-motor vehicle base information."""
+    base_info_dict: Dict[str, ObjBaseInfo] = field(default_factory=dict)
+
+    def __init__(self, base_info_dict: Dict[str, ObjBaseInfo] = None):
+        self.base_info_dict = base_info_dict if base_info_dict is not None else {}
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            base_info_dict={k: ObjBaseInfo.from_dict(v) for k, v in data.get('base_info_dict', {}).items()}
+        )
+
+
+@dataclass
+class SetVehiclePlanningInfoRes:
+    """Response for setting vehicle planning information."""
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
+
+
+@dataclass
+class SetVehicleControlInfoRes:
+    """Response for setting vehicle control information."""
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
+
+
+@dataclass
+class SetVehiclePositionRes:
+    """Response for setting vehicle position."""
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
+
+
+@dataclass
+class SetVehicleMovingInfoRes:
+    """Response for setting vehicle moving information."""
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
+
+
+@dataclass
+class SetVehicleBaseInfoRes:
+    """Response for setting vehicle base information."""
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
+
+
+@dataclass
+class SetVehicleRouteNavRes:
+    """Response for setting vehicle route navigation."""
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
+
+
+@dataclass
+class SetVehicleLinkNavRes:
+    """Response for setting vehicle link navigation."""
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
+
+
+@dataclass
+class SetVehicleLaneNavRes:
+    """Response for setting vehicle lane navigation."""
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
+
+
+@dataclass
+class SetVehicleDestinationRes:
+    """Response for setting vehicle destination."""
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
+
+
+@dataclass
+class SetPedPositionRes:
+    """Response for setting pedestrian position."""
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
+
 
 @dataclass
 class SetNMVPositionRes:
     """Response for setting non-motor vehicle position."""
     def __init__(self):
         pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()

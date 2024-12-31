@@ -27,8 +27,8 @@ def main():
     # Initialize simulator with first scene
     simulator_instance = api_client.init_simulator_from_config(
         SimulatorConfig(
-            scenario_id=res.scene_id_list[0],
-            scenario_version=res.scene_version_list[0]
+            scen_id=res.scene_id_list[0],
+            scen_ver=res.scene_version_list[0]
         )
     )
 
