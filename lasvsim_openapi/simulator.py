@@ -2,6 +2,7 @@
 Simulator module for the lasvsim API.
 """
 from typing import Dict, List, Optional
+from dataclasses import asdict
 
 from lasvsim_openapi.http_client import HttpClient
 from lasvsim_openapi.simulator_model import (
@@ -595,7 +596,7 @@ class Simulator:
             {
                 "simulation_id": self.simulation_id,
                 "vehicle_id": vehicle_id,
-                "planning_path": planning_path
+                "planning_path": [asdict(p) for p in planning_path]
             },
             SetVehiclePlanningInfoRes
         )
@@ -616,7 +617,7 @@ class Simulator:
         """
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/vehicle/position/set",
-            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "point": point, "phi": phi},
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "point": asdict(point), "phi": phi},
             SetVehiclePositionRes
         )
 
@@ -654,7 +655,7 @@ class Simulator:
         """
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/vehicle/destination/set",
-            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "destination": destination},
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "destination": asdict(destination)},
             SetVehicleDestinationRes
         )
 
@@ -708,7 +709,7 @@ class Simulator:
         """
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/pedestrian/position/set",
-            {"simulation_id": self.simulation_id, "ped_id": ped_id, "point": point, "phi": phi},
+            {"simulation_id": self.simulation_id, "ped_id": ped_id, "point": asdict(point), "phi": phi},
             SetPedPositionRes
         )
 
@@ -762,6 +763,6 @@ class Simulator:
         """
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/non_motor_vehicle/position/set",
-            {"simulation_id": self.simulation_id, "nmv_id": nmv_id, "point": point, "phi": phi},
+            {"simulation_id": self.simulation_id, "nmv_id": nmv_id, "point": asdict(point), "phi": phi},
             SetNMVPositionRes
         )
