@@ -275,13 +275,11 @@ class InitRes:
     simulation_id: str = ""
     simulation_addr: str = ""
 
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self,data: dict = None, simulation_id: str = "", simulation_addr: str = ""):
+        if data is not None:
+            self.__dict__.update(data)
             return
-        for key, value in data.items():
-            setattr(self, key, value)
-
-    def __init__(self, simulation_id: str = "", simulation_addr: str = ""):
+        
         self.simulation_id = simulation_id
         self.simulation_addr = simulation_addr
 
