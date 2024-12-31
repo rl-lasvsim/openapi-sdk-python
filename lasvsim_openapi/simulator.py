@@ -471,31 +471,18 @@ class Simulator:
             GetVehicleTargetSpeedRes
         )
 
-    def set_vehicle_planning_info(self, vehicle_id: str, info: Dict) -> SetVehiclePlanningInfoRes:
-        """Set vehicle planning information.
-        
-        Args:
-            vehicle_id: Vehicle ID
-            info: Planning information dictionary
-            
-        Returns:
-            Set vehicle planning information response
-            
-        Raises:
-            APIError: If the request fails
-        """
-        return self.http_client.post(
-            "/openapi/cosim/v2/simulation/vehicle/planning_info/set",
-            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "info": info},
-            SetVehiclePlanningInfoRes
-        )
-
-    def set_vehicle_control_info(self, vehicle_id: str, info: Dict) -> SetVehicleControlInfoRes:
+    def set_vehicle_control_info(
+        self,
+        vehicle_id: str,
+        ste_wheel: Optional[float] = None,
+        lon_acc: Optional[float] = None
+    ) -> SetVehicleControlInfoRes:
         """Set vehicle control information.
         
         Args:
             vehicle_id: Vehicle ID
-            info: Control information dictionary
+            ste_wheel: Optional steering wheel angle
+            lon_acc: Optional longitudinal acceleration
             
         Returns:
             Set vehicle control information response
@@ -505,35 +492,35 @@ class Simulator:
         """
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/vehicle/control_info/set",
-            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "info": info},
+            {
+                "simulation_id": self.simulation_id,
+                "vehicle_id": vehicle_id,
+                "ste_wheel": ste_wheel,
+                "lon_acc": lon_acc
+            },
             SetVehicleControlInfoRes
         )
 
-    def set_vehicle_position(self, vehicle_id: str, position: Point) -> SetVehiclePositionRes:
-        """Set vehicle position.
-        
-        Args:
-            vehicle_id: Vehicle ID
-            position: Position point
-            
-        Returns:
-            Set vehicle position response
-            
-        Raises:
-            APIError: If the request fails
-        """
-        return self.http_client.post(
-            "/openapi/cosim/v2/simulation/vehicle/position/set",
-            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "position": position},
-            SetVehiclePositionRes
-        )
-
-    def set_vehicle_moving_info(self, vehicle_id: str, info: DynamicInfo) -> SetVehicleMovingInfoRes:
+    def set_vehicle_moving_info(
+        self,
+        vehicle_id: str,
+        u: Optional[float] = None,
+        v: Optional[float] = None,
+        w: Optional[float] = None,
+        u_acc: Optional[float] = None,
+        v_acc: Optional[float] = None,
+        w_acc: Optional[float] = None
+    ) -> SetVehicleMovingInfoRes:
         """Set vehicle moving information.
         
         Args:
             vehicle_id: Vehicle ID
-            info: Dynamic information
+            u: Optional longitudinal velocity
+            v: Optional lateral velocity
+            w: Optional yaw rate
+            u_acc: Optional longitudinal acceleration
+            v_acc: Optional lateral acceleration
+            w_acc: Optional yaw acceleration
             
         Returns:
             Set vehicle moving information response
@@ -543,16 +530,31 @@ class Simulator:
         """
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/vehicle/moving_info/set",
-            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "info": info},
+            {
+                "simulation_id": self.simulation_id,
+                "vehicle_id": vehicle_id,
+                "u": u,
+                "v": v,
+                "w": w,
+                "u_acc": u_acc,
+                "v_acc": v_acc,
+                "w_acc": w_acc
+            },
             SetVehicleMovingInfoRes
         )
 
-    def set_vehicle_base_info(self, vehicle_id: str, info: ObjBaseInfo) -> SetVehicleBaseInfoRes:
+    def set_vehicle_base_info(
+        self,
+        vehicle_id: str,
+        base_info: Optional[ObjBaseInfo] = None,
+        dynamic_info: Optional[DynamicInfo] = None
+    ) -> SetVehicleBaseInfoRes:
         """Set vehicle base information.
         
         Args:
             vehicle_id: Vehicle ID
-            info: Base information
+            base_info: Optional base information
+            dynamic_info: Optional dynamic information
             
         Returns:
             Set vehicle base information response
@@ -562,8 +564,60 @@ class Simulator:
         """
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/vehicle/base_info/set",
-            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "info": info},
+            {
+                "simulation_id": self.simulation_id,
+                "vehicle_id": vehicle_id,
+                "base_info": base_info,
+                "dynamic_info": dynamic_info
+            },
             SetVehicleBaseInfoRes
+        )
+
+    def set_vehicle_planning_info(
+        self,
+        vehicle_id: str,
+        planning_path: List[Point]
+    ) -> SetVehiclePlanningInfoRes:
+        """Set vehicle planning information.
+        
+        Args:
+            vehicle_id: Vehicle ID
+            planning_path: List of planning path points
+            
+        Returns:
+            Set vehicle planning information response
+            
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/vehicle/planning_info/set",
+            {
+                "simulation_id": self.simulation_id,
+                "vehicle_id": vehicle_id,
+                "planning_path": planning_path
+            },
+            SetVehiclePlanningInfoRes
+        )
+
+    def set_vehicle_position(self, vehicle_id: str, point: Point, phi: Optional[float] = None) -> SetVehiclePositionRes:
+        """Set vehicle position.
+        
+        Args:
+            vehicle_id: Vehicle ID
+            point: Position point with x, y, z coordinates
+            phi: Optional heading angle in radians
+            
+        Returns:
+            Set vehicle position response
+            
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/vehicle/position/set",
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "point": point, "phi": phi},
+            SetVehiclePositionRes
         )
 
     def set_vehicle_link_nav(self, vehicle_id: str, link_id_list: List[str]) -> SetVehicleLinkNavRes:
@@ -638,12 +692,13 @@ class Simulator:
             GetPedBaseInfoRes
         )
 
-    def set_ped_position(self, ped_id: str, position: Point) -> SetPedPositionRes:
+    def set_ped_position(self, ped_id: str, point: Point, phi: Optional[float] = None) -> SetPedPositionRes:
         """Set pedestrian position.
         
         Args:
             ped_id: Pedestrian ID
-            position: Position point
+            point: Position point with x, y, z coordinates
+            phi: Optional heading angle in radians
             
         Returns:
             Set pedestrian position response
@@ -653,7 +708,7 @@ class Simulator:
         """
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/pedestrian/position/set",
-            {"simulation_id": self.simulation_id, "ped_id": ped_id, "position": position},
+            {"simulation_id": self.simulation_id, "ped_id": ped_id, "point": point, "phi": phi},
             SetPedPositionRes
         )
 
@@ -691,12 +746,13 @@ class Simulator:
             GetNMVBaseInfoRes
         )
 
-    def set_nmv_position(self, nmv_id: str, position: Point) -> SetNMVPositionRes:
+    def set_nmv_position(self, nmv_id: str, point: Point, phi: Optional[float] = None) -> SetNMVPositionRes:
         """Set non-motor vehicle position.
         
         Args:
             nmv_id: Non-motor vehicle ID
-            position: Position point
+            point: Position point with x, y, z coordinates
+            phi: Optional heading angle in radians
             
         Returns:
             Set non-motor vehicle position response
@@ -706,6 +762,6 @@ class Simulator:
         """
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/non_motor_vehicle/position/set",
-            {"simulation_id": self.simulation_id, "nmv_id": nmv_id, "position": position},
+            {"simulation_id": self.simulation_id, "nmv_id": nmv_id, "point": point, "phi": phi},
             SetNMVPositionRes
         )
