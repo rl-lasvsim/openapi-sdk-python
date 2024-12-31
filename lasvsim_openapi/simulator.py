@@ -358,7 +358,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/vehicle/control_info/get",
+            "/openapi/cosim/v2/simulation/vehicle/control/get",
             {"simulation_id": self.simulation_id, "id_list": vehicle_id_list},
             GetVehicleControlInfoRes
         )
@@ -376,7 +376,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/vehicle/perception_info/get",
+            "/openapi/cosim/v2/simulation/vehicle/perception/get",
             {"simulation_id": self.simulation_id, "id_list": vehicle_id_list},
             GetVehiclePerceptionInfoRes
         )
@@ -394,7 +394,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/vehicle/reference_lines/get",
+            "/openapi/cosim/v2/simulation/vehicle/reference_line/get",
             {"simulation_id": self.simulation_id, "id_list": vehicle_id_list},
             GetVehicleReferenceLinesRes
         )
@@ -412,7 +412,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/vehicle/planning_info/get",
+            "/openapi/cosim/v2/simulation/vehicle/planning/get",
             {"simulation_id": self.simulation_id, "id_list": vehicle_id_list},
             GetVehiclePlanningInfoRes
         )
@@ -430,7 +430,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/vehicle/navigation_info/get",
+            "/openapi/cosim/v2/simulation/vehicle/navigation/get",
             {"simulation_id": self.simulation_id, "id_list": vehicle_id_list},
             GetVehicleNavigationInfoRes
         )
@@ -448,7 +448,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/vehicle/collision_status/get",
+            "/openapi/cosim/v2/simulation/vehicle/collision/get",
             {"simulation_id": self.simulation_id, "id_list": vehicle_id_list},
             GetVehicleCollisionStatusRes
         )
@@ -491,7 +491,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/vehicle/control_info/set",
+            "/openapi/cosim/v2/simulation/vehicle/control/set",
             {
                 "simulation_id": self.simulation_id,
                 "vehicle_id": vehicle_id,
@@ -591,7 +591,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/vehicle/planning_info/set",
+            "/openapi/cosim/v2/simulation/vehicle/planning/set",
             {
                 "simulation_id": self.simulation_id,
                 "vehicle_id": vehicle_id,
