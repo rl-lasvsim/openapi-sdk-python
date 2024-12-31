@@ -35,14 +35,17 @@ def main():
     print(
         f"Initialized simulator with ID: {simulator_instance.simulation_id}\n")
 
+    # Get vehicle information
+    vehicle_ids = simulator_instance.get_vehicle_id_list().list
+    print(f"Vehicle IDs: {vehicle_ids}\n")
+
     # Run simulation steps
     for i in range(10):
+        simulator_instance.set_vehicle_control_info(vehicle_id=vehicle_ids[0],lon_acc=0.6)
         step_res = simulator_instance.step()
         print(f"Step {i} result: {step_res}")
 
-    # Get vehicle information
-    vehicle_ids = simulator_instance.get_vehicle_id_list()
-    print(f"Vehicle IDs: {vehicle_ids}\n")
+
 
     # Stop simulation
     res = simulator_instance.stop()
