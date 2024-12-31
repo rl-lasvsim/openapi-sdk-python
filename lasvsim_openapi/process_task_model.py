@@ -11,12 +11,11 @@ class CopyRecordReq:
     task_id: int = 0  # 任务ID
     record_id: int = 0  # 剧本ID
     
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, task_id: int = 0, record_id: int = 0):
+        if data is not None:
+            self.__dict__.update(data)
             return
-        self.__dict__.update(data)
         
-    def __init__(self, task_id: int = 0, record_id: int = 0):
         self.task_id = task_id
         self.record_id = record_id
 
@@ -41,12 +40,11 @@ class GetRecordScenarioReq:
     task_id: int = 0  # 任务ID
     record_id: int = 0  # 剧本ID
     
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, task_id: int = 0, record_id: int = 0):
+        if data is not None:
+            self.__dict__.update(data)
             return
-        self.__dict__.update(data)
         
-    def __init__(self, task_id: int = 0, record_id: int = 0):
         self.task_id = task_id
         self.record_id = record_id
 
@@ -68,12 +66,11 @@ class GetTaskRecordIdsReq:
     """Request for getting task record IDs."""
     task_id: int = 0
     
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, task_id: int = 0):
+        if data is not None:
+            self.__dict__.update(data)
             return
-        self.__dict__.update(data)
         
-    def __init__(self, task_id: int = 0):
         self.task_id = task_id
 
 

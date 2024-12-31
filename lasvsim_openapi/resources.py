@@ -14,12 +14,11 @@ class GetHdMapReq:
     scen_id: str = ""
     scen_ver: str = ""
     
-    def __init__(self, data: dict = None) -> None:
-        if data is None:
+    def __init__(self, data: dict = None, scen_id: str = "", scen_ver: str = ""):
+        if data is not None:
+            self.__dict__.update(data)
             return
-        self.__dict__.update(data)
         
-    def __init__(self, scen_id: str = "", scen_ver: str = ""):
         self.scen_id = scen_id
         self.scen_ver = scen_ver
 
