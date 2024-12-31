@@ -11,13 +11,15 @@ class CopyRecordReq:
     task_id: int = 0  # 任务ID
     record_id: int = 0  # 剧本ID
     
-    def __init__(self, data: dict = None, task_id: int = 0, record_id: int = 0):
-        if data is not None:
-            self.__dict__.update(data)
-            return
-        
+    def __init__(self, task_id: int = 0, record_id: int = 0):
         self.task_id = task_id
         self.record_id = record_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(**data)
 
 
 @dataclass
@@ -28,10 +30,14 @@ class CopyRecordRes:
     scen_ver: str = ""
     new_record_id: int = 0
     
-    def __init__(self, data: dict = None) -> None:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
         if data is None:
-            return
-        self.__dict__.update(data)
+            return None
+        return cls(**data)
 
 
 @dataclass
@@ -40,13 +46,15 @@ class GetRecordScenarioReq:
     task_id: int = 0  # 任务ID
     record_id: int = 0  # 剧本ID
     
-    def __init__(self, data: dict = None, task_id: int = 0, record_id: int = 0):
-        if data is not None:
-            self.__dict__.update(data)
-            return
-        
+    def __init__(self, task_id: int = 0, record_id: int = 0):
         self.task_id = task_id
         self.record_id = record_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(**data)
 
 
 @dataclass
@@ -55,10 +63,14 @@ class GetRecordScenarioRes:
     scen_id: str = ""
     scen_ver: str = ""
     
-    def __init__(self, data: dict = None) -> None:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
         if data is None:
-            return
-        self.__dict__.update(data)
+            return None
+        return cls(**data)
 
 
 @dataclass
@@ -66,12 +78,14 @@ class GetTaskRecordIdsReq:
     """Request for getting task record IDs."""
     task_id: int = 0
     
-    def __init__(self, data: dict = None, task_id: int = 0):
-        if data is not None:
-            self.__dict__.update(data)
-            return
-        
+    def __init__(self, task_id: int = 0):
         self.task_id = task_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(**data)
 
 
 @dataclass
@@ -79,8 +93,11 @@ class GetTaskRecordIdsRes:
     """Response for getting task record IDs."""
     record_ids: List[int] = field(default_factory=list)
     
-    def __init__(self, data: dict = None) -> None:
+    def __init__(self,record_ids: List[int] = None):
+        self.record_ids = record_ids
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
         if data is None:
-            self.record_ids = []
-            return
-        self.__dict__.update(data)
+            return None
+        return cls(**data)

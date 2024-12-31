@@ -1,7 +1,7 @@
 """
 HTTP client module for the lasvsim API.
 """
-from typing import Any, Dict, Generic, Optional, Type, TypeVar,Tuple
+from typing import Any, Dict, Callable, Optional, Type, TypeVar,Tuple
 import requests
 
 
@@ -97,6 +97,7 @@ class HttpClient():
         Returns:
             A new HttpClient instance with the same configuration
         """
+
         return HttpClient(self.config, dict(self.headers))
 
     def _handle_response(self, response: requests.Response, out_type: Optional[Type[T]] = None) -> Optional[T]:

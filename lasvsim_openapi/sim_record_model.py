@@ -12,13 +12,15 @@ class GetRecordIdsReq:
     scen_id: str = ""
     scen_ver: str = ""
 
-    def __init__(self, data: dict = None, scen_id: str = "", scen_ver: str = ""):
-        if data is not None:
-            self.__dict__.update(data)
-            return
-        
+    def __init__(self, scen_id: str = "", scen_ver: str = ""):
         self.scen_id = scen_id
         self.scen_ver = scen_ver
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(**data)
 
 
 @dataclass
@@ -26,12 +28,14 @@ class GetRecordIdsRes:
     """Response for getting record IDs."""
     record_ids: List[str] = field(default_factory=list)
     
-    def __init__(self, data: dict = None, record_ids: List[str] = None):
-        if data is not None:
-            self.__dict__.update(data)
-            return
-        
+    def __init__(self, record_ids: List[str] = None):
         self.record_ids = record_ids if record_ids is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(record_ids=data.get("record_ids", []))
 
 
 @dataclass
@@ -46,13 +50,7 @@ class Track:
     timestamp: int = 0
     position: Optional[Position] = None
     
-    def __init__(self, data: dict = None, x: float = 0.0, y: float = 0.0, z: float = 0.0, phi: float = 0.0, lane_id: str = "", position_type: str = "", timestamp: int = 0, position: Optional[Position] = None):
-        if data is not None:
-            position = data.pop("position", None)
-            self.__dict__.update(data)
-            self.position = None if position is None else Position(position)
-            return
-        
+    def __init__(self, x: float = 0.0, y: float = 0.0, z: float = 0.0, phi: float = 0.0, lane_id: str = "", position_type: str = "", timestamp: int = 0, position: Optional[Position] = None):
         self.x = x
         self.y = y
         self.z = z
@@ -61,6 +59,15 @@ class Track:
         self.position_type = position_type
         self.timestamp = timestamp
         self.position = position
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        position = data.pop("position", None)
+        instance = cls(**data)
+        instance.position = None if position is None else Position.from_dict(position)
+        return instance
 
 
 @dataclass
@@ -71,17 +78,20 @@ class TrackResult:
     timestamp: int = 0  # 时间戳
     result: Optional[Track] = None  # 轨迹信息
 
-    def __init__(self, data: dict = None, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: Optional[Track] = None):
-        if data is not None:
-            result = data.pop("result", None)
-            self.__dict__.update(data)
-            self.result = None if result is None else Track(result)
-            return
-        
+    def __init__(self, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: Optional[Track] = None):
         self.record_id = record_id
         self.obj_id = obj_id
         self.timestamp = timestamp
         self.result = result
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        result = data.pop("result", None)
+        instance = cls(**data)
+        instance.result = None if result is None else Track.from_dict(result)
+        return instance
 
 
 @dataclass
@@ -90,13 +100,15 @@ class GetTrackResultsReq:
     id: str = ""
     obj_id: str = ""
 
-    def __init__(self, data: dict = None, id: str = "", obj_id: str = ""):
-        if data is not None:
-            self.__dict__.update(data)
-            return
-        
+    def __init__(self, id: str = "", obj_id: str = ""):
         self.id = id
         self.obj_id = obj_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(**data)
 
 
 @dataclass
@@ -104,14 +116,17 @@ class GetTrackResultsRes:
     """Response for getting track results."""
     data: List[TrackResult] = field(default_factory=list)
 
-    def __init__(self, data: dict = None, data_list: List[TrackResult] = None):
-        if data is not None:
-            data_list = data.pop("data", [])
-            self.__dict__.update(data)
-            self.data = [TrackResult(d) for d in data_list]
-            return
-        
+    def __init__(self, data_list: List[TrackResult] = None):
         self.data = data_list if data_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        data_list = data.pop("data", [])
+        instance = cls()
+        instance.data = [TrackResult.from_dict(d) for d in data_list]
+        return instance
 
 
 @dataclass
@@ -134,13 +149,7 @@ class SensorObj:
     obj_type: int = 0
     position: Optional[Position] = None
 
-    def __init__(self, data: dict = None, id: str = "", speed: float = 0.0, x: float = 0.0, y: float = 0.0, z: float = 0.0, length: float = 0.0, width: float = 0.0, height: float = 0.0, phi: float = 0.0, exterior_light: str = "", risk_2_ego: int = 0, lon_acc: float = 0.0, lat_speed: float = 0.0, obj_id: str = "", obj_type: int = 0, position: Optional[Position] = None):
-        if data is not None:
-            position = data.pop("position", None)
-            self.__dict__.update(data)
-            self.position = None if position is None else Position(position)
-            return
-        
+    def __init__(self, id: str = "", speed: float = 0.0, x: float = 0.0, y: float = 0.0, z: float = 0.0, length: float = 0.0, width: float = 0.0, height: float = 0.0, phi: float = 0.0, exterior_light: str = "", risk_2_ego: int = 0, lon_acc: float = 0.0, lat_speed: float = 0.0, obj_id: str = "", obj_type: int = 0, position: Optional[Position] = None):
         self.id = id
         self.speed = speed
         self.x = x
@@ -158,6 +167,15 @@ class SensorObj:
         self.obj_type = obj_type
         self.position = position
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        position = data.pop("position", None)
+        instance = cls(**data)
+        instance.position = None if position is None else Position.from_dict(position)
+        return instance
+
 
 @dataclass
 class SensorResult:
@@ -167,17 +185,20 @@ class SensorResult:
     timestamp: int = 0
     result: List[SensorObj] = field(default_factory=list)
 
-    def __init__(self, data: dict = None, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: List[SensorObj] = None):
-        if data is not None:
-            result = data.pop("result", [])
-            self.__dict__.update(data)
-            self.result = [SensorObj(item) for item in result]
-            return
-        
+    def __init__(self, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: List[SensorObj] = None):
         self.record_id = record_id
         self.obj_id = obj_id
         self.timestamp = timestamp
         self.result = result if result is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        result = data.pop("result", [])
+        instance = cls(**data)
+        instance.result = [SensorObj.from_dict(item) for item in result]
+        return instance
 
 
 @dataclass
@@ -186,13 +207,15 @@ class GetSensorResultsReq:
     id: str = ""
     obj_id: str = ""
 
-    def __init__(self, data: dict = None, id: str = "", obj_id: str = ""):
-        if data is not None:
-            self.__dict__.update(data)
-            return
-        
+    def __init__(self, id: str = "", obj_id: str = ""):
         self.id = id
         self.obj_id = obj_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(**data)
 
 
 @dataclass
@@ -200,14 +223,17 @@ class GetSensorResultsRes:
     """Response for getting sensor results."""
     data: List[SensorResult] = field(default_factory=list)
 
-    def __init__(self, data: dict = None, data_list: List[SensorResult] = None):
-        if data is not None:
-            data_list = data.pop("data", [])
-            self.__dict__.update(data)
-            self.data = [SensorResult(d) for d in data_list]
-            return
-        
+    def __init__(self, data_list: List[SensorResult] = None):
         self.data = data_list if data_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        data_list = data.pop("data", [])
+        instance = cls()
+        instance.data = [SensorResult.from_dict(d) for d in data_list]
+        return instance
 
 
 @dataclass
@@ -226,13 +252,7 @@ class Step:
     timestamp: int = 0
     position: Optional[Position] = None
 
-    def __init__(self, data: dict = None, speed: float = 0.0, acc: float = 0.0, mileage: float = 0.0, ste_wheel: float = 0.0, turn_signal: str = "", v: float = 0.0, lat_acc: float = 0.0, w: float = 0.0, w_acc: float = 0.0, reference_speed: float = 0.0, timestamp: int = 0, position: Optional[Position] = None):
-        if data is not None:
-            position = data.pop("position", None)
-            self.__dict__.update(data)
-            self.position = None if position is None else Position(position)
-            return
-        
+    def __init__(self, speed: float = 0.0, acc: float = 0.0, mileage: float = 0.0, ste_wheel: float = 0.0, turn_signal: str = "", v: float = 0.0, lat_acc: float = 0.0, w: float = 0.0, w_acc: float = 0.0, reference_speed: float = 0.0, timestamp: int = 0, position: Optional[Position] = None):
         self.speed = speed
         self.acc = acc
         self.mileage = mileage
@@ -246,6 +266,15 @@ class Step:
         self.timestamp = timestamp
         self.position = position
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        position = data.pop("position", None)
+        instance = cls(**data)
+        instance.position = None if position is None else Position.from_dict(position)
+        return instance
+
 
 @dataclass
 class StepResult:
@@ -255,17 +284,20 @@ class StepResult:
     timestamp: int = 0
     result: Optional[Step] = None
 
-    def __init__(self, data: dict = None, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: Optional[Step] = None):
-        if data is not None:
-            result = data.pop("result", None)
-            self.__dict__.update(data)
-            self.result = None if result is None else Step(result)
-            return
-        
+    def __init__(self, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: Optional[Step] = None):
         self.record_id = record_id
         self.obj_id = obj_id
         self.timestamp = timestamp
         self.result = result
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        result = data.pop("result", None)
+        instance = cls(**data)
+        instance.result = None if result is None else Step.from_dict(result)
+        return instance
 
 
 @dataclass
@@ -274,14 +306,15 @@ class GetStepResultsReq:
     id: str = ""
     obj_id: str = ""
 
-    def __init__(self, data: dict = None, id: str = "", obj_id: str = ""):
-        if data is not None:
-            for key, value in data.items():
-                setattr(self, key, value)
-            return
-        
+    def __init__(self, id: str = "", obj_id: str = ""):
         self.id = id
         self.obj_id = obj_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(**data)
 
 
 @dataclass
@@ -289,14 +322,17 @@ class GetStepResultsRes:
     """Response for getting step results."""
     data: List[StepResult] = field(default_factory=list)
 
-    def __init__(self, data: dict = None, data_list: List[StepResult] = None):
-        if data is not None:
-            data_list = data.pop("data", [])
-            self.__dict__.update(data)
-            self.data = [StepResult(d) for d in data_list]
-            return
-        
+    def __init__(self, data_list: List[StepResult] = None):
         self.data = data_list if data_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        data_list = data.pop("data", [])
+        instance = cls()
+        instance.data = [StepResult.from_dict(d) for d in data_list]
+        return instance
 
 
 @dataclass
@@ -317,14 +353,17 @@ class Path:
     """Path information."""
     points: List[PathPoint] = field(default_factory=list)
 
-    def __init__(self, data: dict = None, points: List[PathPoint] = None):
-        if data is not None:
-            points = data.pop("points", [])
-            self.__dict__.update(data)
-            self.points = [PathPoint(p) for p in points]
-            return
-        
+    def __init__(self, points: List[PathPoint] = None):
         self.points = points if points is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        points = data.get("points", [])
+        instance = cls()
+        instance.points = [PathPoint(**point) for point in points]
+        return instance
 
 
 @dataclass
@@ -335,17 +374,20 @@ class PathResult:
     timestamp: int = 0
     result: List[Path] = field(default_factory=list)
 
-    def __init__(self, data: dict = None, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: List[Path] = None):
-        if data is not None:
-            result = data.pop("result", [])
-            self.__dict__.update(data)
-            self.result = [Path(p) for p in result]
-            return
-        
+    def __init__(self, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: List[Path] = None):
         self.record_id = record_id
         self.obj_id = obj_id
         self.timestamp = timestamp
         self.result = result if result is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        result = data.pop("result", [])
+        instance = cls(**data)
+        instance.result = [Path.from_dict(item) for item in result]
+        return instance
 
 
 @dataclass
@@ -354,14 +396,15 @@ class GetPathResultsReq:
     id: str = ""
     obj_id: str = ""
 
-    def __init__(self, data: dict = None, id: str = "", obj_id: str = ""):
-        if data is not None:
-            for key, value in data.items():
-                setattr(self, key, value)
-            return
-        
+    def __init__(self, id: str = "", obj_id: str = ""):
         self.id = id
         self.obj_id = obj_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(**data)
 
 
 @dataclass
@@ -369,14 +412,17 @@ class GetPathResultsRes:
     """Response for getting path results."""
     data: List[PathResult] = field(default_factory=list)
 
-    def __init__(self, data: dict = None, data_list: List[PathResult] = None):
-        if data is not None:
-            data_list = data.pop("data", [])
-            self.__dict__.update(data)
-            self.data = [PathResult(d) for d in data_list]
-            return
-        
+    def __init__(self, data_list: List[PathResult] = None):
         self.data = data_list if data_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        data_list = data.pop("data", [])
+        instance = cls()
+        instance.data = [PathResult.from_dict(d) for d in data_list]
+        return instance
 
 
 @dataclass
@@ -388,20 +434,24 @@ class ReferenceLine:
     line_idxs: List[int] = field(default_factory=list)
     opposite: bool = False
 
-    def __init__(self, data: dict = None, points: List[PathPoint] = None, line_ids: List[str] = None, line_types: List[str] = None, line_idxs: List[int] = None, opposite: bool = False):
-        if data is not None:
-            self.points = [PathPoint(**point) for point in data.get("points", [])]
-            self.line_ids = data.get("line_ids", [])
-            self.line_types = data.get("line_types", [])
-            self.line_idxs = data.get("line_idxs", [])
-            self.opposite = data.get("opposite", False)
-            return
-        
+    def __init__(self, points: List[PathPoint] = None, line_ids: List[str] = None, line_types: List[str] = None, line_idxs: List[int] = None, opposite: bool = False):
         self.points = points if points is not None else []
         self.line_ids = line_ids if line_ids is not None else []
         self.line_types = line_types if line_types is not None else []
         self.line_idxs = line_idxs if line_idxs is not None else []
         self.opposite = opposite
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        instance = cls()
+        instance.points = [PathPoint(**point) for point in data.get("points", [])]
+        instance.line_ids = data.get("line_ids", [])
+        instance.line_types = data.get("line_types", [])
+        instance.line_idxs = data.get("line_idxs", [])
+        instance.opposite = data.get("opposite", False)
+        return instance
 
 
 @dataclass
@@ -412,17 +462,20 @@ class ReferenceLineResult:
     timestamp: int = 0
     result: List[ReferenceLine] = field(default_factory=list)
 
-    def __init__(self, data: dict = None, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: List[ReferenceLine] = None):
-        if data is not None:
-            result = data.pop("result", [])
-            self.__dict__.update(data)
-            self.result = [ReferenceLine(item) for item in result]
-            return
-        
+    def __init__(self, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: List[ReferenceLine] = None):
         self.record_id = record_id
         self.obj_id = obj_id
         self.timestamp = timestamp
         self.result = result if result is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        result = data.pop("result", [])
+        instance = cls(**data)
+        instance.result = [ReferenceLine.from_dict(item) for item in result]
+        return instance
 
 
 @dataclass
@@ -431,14 +484,15 @@ class GetReferenceLineResultsReq:
     id: str = ""
     obj_id: str = ""
 
-    def __init__(self, data: dict = None, id: str = "", obj_id: str = ""):
-        if data is not None:
-            for key, value in data.items():
-                setattr(self, key, value)
-            return
-        
+    def __init__(self, id: str = "", obj_id: str = ""):
         self.id = id
         self.obj_id = obj_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(**data)
 
 
 @dataclass
@@ -446,11 +500,14 @@ class GetReferenceLineResultsRes:
     """Response for getting reference line results."""
     data: List[ReferenceLineResult] = field(default_factory=list)
 
-    def __init__(self, data: dict = None, data_list: List[ReferenceLineResult] = None):
-        if data is not None:
-            data_list = data.pop("data", [])
-            self.__dict__.update(data)
-            self.data = [ReferenceLineResult(d) for d in data_list]
-            return
-        
+    def __init__(self, data_list: List[ReferenceLineResult] = None):
         self.data = data_list if data_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        data_list = data.pop("data", [])
+        instance = cls()
+        instance.data = [ReferenceLineResult.from_dict(d) for d in data_list]
+        return instance

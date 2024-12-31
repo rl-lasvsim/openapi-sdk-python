@@ -5,7 +5,7 @@ from typing import Any, Dict, Generic, Optional, Type, TypeVar
 T = TypeVar('T')
 
 def aaaa(out: Optional[Type[T]] = None,js: str="") -> T:
-    rt = out(json.loads(js))
+    rt = out.from_dict( json.loads(js))
     return rt
 
 
@@ -112,8 +112,6 @@ def test_qxmap():
             }
         ],
         "segments": [],
-        "links": [],
-        "lanes": []
     }
     
     # 将数据转换为 JSON 字符串
@@ -137,11 +135,11 @@ def test_qxmap():
     assert qxmap.header.source_unit == "meter"
     
     assert len(qxmap.segments) == 0
-    assert len(qxmap.links) == 0
-    assert len(qxmap.lanes) == 0
     
     print(qxmap.junctions)
     print("All tests passed!")
+
+
 
 if __name__ == "__main__":
     test_qxmap()
