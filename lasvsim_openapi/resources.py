@@ -61,10 +61,8 @@ class Resources:
         Raises:
             APIError: If the request fails
         """
-        req = GetHdMapReq(scen_id=scen_id, scen_ver=scen_ver)
-        
         return self.http_client.post(
             "/openapi/resource/v2/scenario/map/get",
-            {"scen_id": req.scen_id, "scen_ver": req.scen_ver},
+            {"scen_id": scen_id, "scen_ver": scen_ver},
             GetHdMapRes
         )

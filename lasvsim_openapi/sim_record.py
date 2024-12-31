@@ -45,11 +45,9 @@ class SimRecord:
         Raises:
             APIError: If the request fails
         """
-        req = GetRecordIdsReq(scen_id=scen_id, scen_ver=scen_ver)
-        
         return self.http_client.post(
             "/openapi/sim_record/v1/ids/get",
-            {"scen_id": req.scen_id, "scen_ver": req.scen_ver},
+            {"scen_id": scen_id, "scen_ver": scen_ver},
             GetRecordIdsRes
         )
 
@@ -66,11 +64,9 @@ class SimRecord:
         Raises:
             APIError: If the request fails
         """
-        req = GetTrackResultsReq(id=id, obj_id=obj_id)
-        
         return self.http_client.post(
             "/openapi/sim_record/v2/track/get",
-            {"id": req.id, "obj_id": req.obj_id},
+            {"id": id, "obj_id": obj_id},
             GetTrackResultsRes
         )
 
@@ -87,11 +83,9 @@ class SimRecord:
         Raises:
             APIError: If the request fails
         """
-        req = GetSensorResultsReq(id=id, obj_id=obj_id)
-        
         return self.http_client.post(
             "/openapi/sim_record/v1/sensor_result/get",
-            {"id": req.id, "obj_id": req.obj_id},
+            {"id": id, "obj_id": obj_id},
             GetSensorResultsRes
         )
 
@@ -108,11 +102,9 @@ class SimRecord:
         Raises:
             APIError: If the request fails
         """
-        req = GetStepResultsReq(id=id, obj_id=obj_id)
-        
         return self.http_client.post(
             "/openapi/sim_record/v1/step_result/get",
-            {"id": req.id, "obj_id": req.obj_id},
+            {"id": id, "obj_id": obj_id},
             GetStepResultsRes
         )
 
@@ -129,11 +121,9 @@ class SimRecord:
         Raises:
             APIError: If the request fails
         """
-        req = GetPathResultsReq(id=id, obj_id=obj_id)
-        
         return self.http_client.post(
             "/openapi/sim_record/v2/path/get",
-            {"id": req.id, "obj_id": req.obj_id},
+            {"id": id, "obj_id": obj_id},
             GetPathResultsRes
         )
 
@@ -150,10 +140,8 @@ class SimRecord:
         Raises:
             APIError: If the request fails
         """
-        req = GetReferenceLineResultsReq(id=id, obj_id=obj_id)
-        
         return self.http_client.post(
             "/openapi/sim_record/v2/reference_line/get",
-            {"id": req.id, "obj_id": req.obj_id},
+            {"id": id, "obj_id": obj_id},
             GetReferenceLineResultsRes
         )
