@@ -276,7 +276,8 @@ class StopReq:
 @dataclass
 class StopRes:
     """Response for stopping simulator."""
-    pass
+    def __init__(self, data: dict = None):
+        pass
 
 
 @dataclass
@@ -840,7 +841,8 @@ class SetVehiclePlanningInfoReq:
 @dataclass
 class SetVehiclePlanningInfoRes:
     """Response for setting vehicle planning information."""
-    pass
+    def __init__(self, data: dict = None):
+        pass
 
 
 @dataclass
@@ -864,7 +866,8 @@ class SetVehicleControlInfoReq:
 @dataclass
 class SetVehicleControlInfoRes:
     """Response for setting vehicle control information."""
-    pass
+    def __init__(self, data: dict = None):
+        pass
 
 
 @dataclass
@@ -888,7 +891,8 @@ class SetVehiclePositionReq:
 @dataclass
 class SetVehiclePositionRes:
     """Response for setting vehicle position."""
-    pass
+    def __init__(self, data: dict = None):
+        pass
 
 
 @dataclass
@@ -920,7 +924,8 @@ class SetVehicleMovingInfoReq:
 @dataclass
 class SetVehicleMovingInfoRes:
     """Response for setting vehicle moving information."""
-    pass
+    def __init__(self, data: dict = None):
+        pass
 
 
 @dataclass
@@ -944,7 +949,8 @@ class SetVehicleBaseInfoReq:
 @dataclass
 class SetVehicleBaseInfoRes:
     """Response for setting vehicle base information."""
-    pass
+    def __init__(self, data: dict = None):
+        pass
 
 
 @dataclass
@@ -966,7 +972,8 @@ class SetVehicleRouteNavReq:
 @dataclass
 class SetVehicleRouteNavRes:
     """Response for setting vehicle route navigation."""
-    pass
+    def __init__(self, data: dict = None):
+        pass
 
 
 @dataclass
@@ -988,7 +995,8 @@ class SetVehicleLinkNavReq:
 @dataclass
 class SetVehicleLinkNavRes:
     """Response for setting vehicle link navigation."""
-    pass
+    def __init__(self, data: dict = None):
+        pass
 
 
 @dataclass
@@ -1010,7 +1018,8 @@ class SetVehicleLaneNavReq:
 @dataclass
 class SetVehicleLaneNavRes:
     """Response for setting vehicle lane navigation."""
-    pass
+    def __init__(self, data: dict = None):
+        pass
 
 
 @dataclass
@@ -1032,7 +1041,8 @@ class SetVehicleDestinationReq:
 @dataclass
 class SetVehicleDestinationRes:
     """Response for setting vehicle destination."""
-    pass
+    def __init__(self, data: dict = None):
+        pass
 
 
 @dataclass
@@ -1110,7 +1120,8 @@ class SetPedPositionReq:
 @dataclass
 class SetPedPositionRes:
     """Response for setting pedestrian position."""
-    pass
+    def __init__(self, data: dict = None):
+        pass
 
 
 @dataclass
@@ -1188,4 +1199,5 @@ class SetNMVPositionReq:
 @dataclass
 class SetNMVPositionRes:
     """Response for setting non-motor vehicle position."""
-    pass
+    def __init__(self, data: dict = None):
+        pass
