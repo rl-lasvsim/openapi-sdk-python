@@ -11,7 +11,6 @@ import os
 
 def main():
     print("Running simulator example...\n")
-    print(Qxmap({}))
     # Initialize the client
     api_client = Client(
         HttpConfig(
@@ -24,6 +23,9 @@ def main():
     res = api_client.train_task.get_scene_id_list(168)
     print(f"Training task scene list: {res}\n")
 
+    print("Setting vehicle control info...",api_client.resources.get_hd_map(res.scene_id_list[0],res.scene_version_list[0]).map.junctions)
+
+    return
     # Initialize simulator with first scene
     simulator_instance = api_client.init_simulator_from_config(
         SimulatorConfig(

@@ -966,6 +966,7 @@ class Qxmap:
         buildings = data.get("buildings", [])
         trees = data.get("trees", [])
         lamps = data.get("lamps", [])
+        cls.id = data.get("id", "")
 
         cls.header = None if header is None else Header.from_dict(header)
         cls.junctions = [Junction.from_dict(j) for j in junctions]
