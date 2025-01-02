@@ -74,6 +74,14 @@ from lasvsim_openapi.simulator_model import (
     GetNMVBaseInfoRes,
     SetNMVPositionReq,
     SetNMVPositionRes,
+    GetStepSpawnIdListReq,
+    GetStepSpawnIdListRes,
+    GetParticipantBaseInfoReq,
+    GetParticipantBaseInfoRes,
+    GetParticipantMovingInfoReq,
+    GetParticipantMovingInfoRes,
+    NextStageReq,
+    NextStageRes,
 )
 
 
@@ -765,4 +773,82 @@ class Simulator:
             "/openapi/cosim/v2/simulation/non_motor_vehicle/position/set",
             {"simulation_id": self.simulation_id, "nmv_id": nmv_id, "point": asdict(point), "phi": phi},
             SetNMVPositionRes
+        )
+
+    def get_step_spawn_id_list(self) -> GetStepSpawnIdListRes:
+        """Get step spawn ID list.
+        
+        Returns:
+            Step spawn ID list response
+            
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/participant/step_spawn_ids/get",
+            {"simulation_id": self.simulation_id},
+            GetStepSpawnIdListRes
+        )
+
+    def get_participant_base_info(self, participant_id_list: List[str]) -> GetParticipantBaseInfoRes:
+        """Get participant base information.
+        
+        Args:
+            participant_id_list: List of participant IDs
+            
+        Returns:
+            Participant base information response
+            
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/participant/base_info/get",
+            {
+                "simulation_id": self.simulation_id,
+                "participant_id_list": participant_id_list
+            },
+            GetParticipantBaseInfoRes
+        )
+
+    def get_participant_moving_info(self, participant_id_list: List[str]) -> GetParticipantMovingInfoRes:
+        """Get participant moving information.
+        
+        Args:
+            participant_id_list: List of participant IDs
+            
+        Returns:
+            Participant moving information response
+            
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/participant/moving_info/get",
+            {
+                "simulation_id": self.simulation_id,
+                "participant_id_list": participant_id_list
+            },
+            GetParticipantMovingInfoRes
+        )
+
+    def next_stage(self, junction_id: str) -> NextStageRes:
+        """Move to next stage.
+        
+        Args:
+            junction_id: Junction ID
+            
+        Returns:
+            Next stage response
+            
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/stage/next",
+            {
+                "simulation_id": self.simulation_id,
+                "junction_id": junction_id
+            },
+            NextStageRes
         )

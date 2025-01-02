@@ -297,6 +297,16 @@ class InitReq:
         self.scen_ver = scen_ver
         self.sim_record_id = sim_record_id
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            scen_id=data.get('scen_id', ''),
+            scen_ver=data.get('scen_ver', ''),
+            sim_record_id=data.get('sim_record_id', '')
+        )
+
 
 @dataclass
 class InitRes:
@@ -357,6 +367,40 @@ class StepReq:
 @dataclass
 class StepRes:
     """Response for stepping simulator."""
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
+
+
+@dataclass
+class ResetReq:
+    """Request for resetting simulator."""
+    simulation_id: str = ""
+    reset_traffic_flow: bool = False
+
+    def __init__(self, simulation_id: str = "", reset_traffic_flow: bool = False):
+        self.simulation_id = simulation_id
+        self.reset_traffic_flow = reset_traffic_flow
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            reset_traffic_flow=data.get('reset_traffic_flow', False)
+        )
+
+
+@dataclass
+class ResetRes:
+    """Response for resetting simulator."""
+
     def __init__(self):
         pass
 
@@ -1574,6 +1618,251 @@ class SetPedPositionRes:
 @dataclass
 class SetNMVPositionRes:
     """Response for setting non-motor vehicle position."""
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
+
+@dataclass
+class GetStepSpawnIdListReq:
+    """Request for getting step spawn ID list."""
+    simulation_id: str = ""
+
+    def __init__(self, simulation_id: str = ""):
+        self.simulation_id = simulation_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', '')
+        )
+
+
+@dataclass
+class GetStepSpawnIdListRes:
+    """Response for getting step spawn ID list."""
+    id_list: List[str] = field(default_factory=list)
+
+    def __init__(self, id_list: List[str] = None):
+        self.id_list = id_list if id_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            id_list=data.get('id_list', [])
+        )
+
+
+@dataclass
+class GetParticipantBaseInfoReq:
+    """Request for getting participant base information."""
+    simulation_id: str = ""
+    participant_id_list: List[str] = field(default_factory=list)
+
+    def __init__(self, simulation_id: str = "", participant_id_list: List[str] = None):
+        self.simulation_id = simulation_id
+        self.participant_id_list = participant_id_list if participant_id_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            participant_id_list=data.get('participant_id_list', [])
+        )
+
+
+@dataclass
+class GetParticipantBaseInfoRes:
+    """Response for getting participant base information."""
+    base_info_dict: Dict[str, ObjBaseInfo] = field(default_factory=dict)
+
+    def __init__(self, base_info_dict: Dict[str, ObjBaseInfo] = None):
+        self.base_info_dict = base_info_dict if base_info_dict is not None else {}
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        base_info_dict = {}
+        for k, v in data.get('base_info_dict', {}).items():
+            base_info_dict[k] = ObjBaseInfo.from_dict(v)
+        return cls(base_info_dict=base_info_dict)
+
+
+@dataclass
+class GetParticipantMovingInfoReq:
+    """Request for getting participant moving information."""
+    simulation_id: str = ""
+    participant_id_list: List[str] = field(default_factory=list)
+
+    def __init__(self, simulation_id: str = "", participant_id_list: List[str] = None):
+        self.simulation_id = simulation_id
+        self.participant_id_list = participant_id_list if participant_id_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            participant_id_list=data.get('participant_id_list', [])
+        )
+
+
+@dataclass
+class GetParticipantMovingInfoRes:
+    """Response for getting participant moving information."""
+    moving_info_dict: Dict[str, ObjMovingInfo] = field(default_factory=dict)
+
+    def __init__(self, moving_info_dict: Dict[str, ObjMovingInfo] = None):
+        self.moving_info_dict = moving_info_dict if moving_info_dict is not None else {}
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        moving_info_dict = {}
+        for k, v in data.get('moving_info_dict', {}).items():
+            moving_info_dict[k] = ObjMovingInfo.from_dict(v)
+        return cls(moving_info_dict=moving_info_dict)
+
+@dataclass
+class GetSignalPlanReq:
+    """Request for getting signal plan."""
+    simulation_id: str = ""
+    junction_id: str = ""
+
+    def __init__(self, simulation_id: str = "", junction_id: str = ""):
+        self.simulation_id = simulation_id
+        self.junction_id = junction_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            junction_id=data.get('junction_id', '')
+        )
+
+
+@dataclass
+class GetSignalPlanRes_Stage:
+    """Stage information for signal plan."""
+    movement_ids: List[str] = field(default_factory=list)
+    duration: int = 0
+
+    def __init__(self, movement_ids: List[str] = None, duration: int = 0):
+        self.movement_ids = movement_ids if movement_ids is not None else []
+        self.duration = duration
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            movement_ids=data.get('movement_ids', []),
+            duration=data.get('duration', 0)
+        )
+
+
+@dataclass
+class GetSignalPlanRes:
+    """Response for getting signal plan."""
+    junction_id: str = ""
+    cycle: int = 0
+    offset: int = 0
+    stages: List[GetSignalPlanRes_Stage] = field(default_factory=list)
+
+    def __init__(self, junction_id: str = "", cycle: int = 0, offset: int = 0, stages: List[GetSignalPlanRes_Stage] = None):
+        self.junction_id = junction_id
+        self.cycle = cycle
+        self.offset = offset
+        self.stages = stages if stages is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            junction_id=data.get('junction_id', ''),
+            cycle=data.get('cycle', 0),
+            offset=data.get('offset', 0),
+            stages=[GetSignalPlanRes_Stage.from_dict(stage) for stage in data.get('stages', [])]
+        )
+
+
+@dataclass
+class GetMovementListReq:
+    """Request for getting movement list."""
+    simulation_id: str = ""
+    junction_id: str = ""
+
+    def __init__(self, simulation_id: str = "", junction_id: str = ""):
+        self.simulation_id = simulation_id
+        self.junction_id = junction_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            junction_id=data.get('junction_id', '')
+        )
+
+
+@dataclass
+class GetMovementListRes:
+    """Response for getting movement list."""
+    list: List[Movement] = field(default_factory=list)
+
+    def __init__(self, list: List[Movement] = None):
+        self.list = list if list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            list=[Movement.from_dict(item) for item in data.get('list', [])]
+        )
+
+
+@dataclass
+class NextStageReq:
+    """Request for moving to next stage."""
+    simulation_id: str = ""
+    junction_id: str = ""
+
+    def __init__(self, simulation_id: str = "", junction_id: str = ""):
+        self.simulation_id = simulation_id
+        self.junction_id = junction_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            junction_id=data.get('junction_id', '')
+        )
+
+
+@dataclass
+class NextStageRes:
+    """Response for moving to next stage."""
+
     def __init__(self):
         pass
 
