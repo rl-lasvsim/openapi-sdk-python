@@ -30,8 +30,11 @@ class CopyRecordRes:
     scen_ver: str = ""
     new_record_id: int = 0
     
-    def __init__(self):
-        pass
+    def __init__(self, sim_record_id: str = "", scen_id: str = "", scen_ver: str = "", new_record_id: int = 0):
+        self.sim_record_id = sim_record_id
+        self.scen_id = scen_id
+        self.scen_ver = scen_ver
+        self.new_record_id = new_record_id
 
     @classmethod
     def from_dict(cls, data: dict = None):

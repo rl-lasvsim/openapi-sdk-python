@@ -80,6 +80,8 @@ from lasvsim_openapi.simulator_model import (
     GetParticipantBaseInfoRes,
     GetParticipantMovingInfoReq,
     GetParticipantMovingInfoRes,
+    GetParticipantPositionReq,
+    GetParticipantPositionRes,
     NextStageReq,
     NextStageRes,
 )
@@ -830,6 +832,27 @@ class Simulator:
                 "participant_id_list": participant_id_list
             },
             GetParticipantMovingInfoRes
+        )
+
+    def get_participant_position(self, participant_id_list: List[str]) -> GetParticipantPositionRes:
+        """Get participant position information.
+        
+        Args:
+            participant_id_list: List of participant IDs (maximum 1000 IDs)
+            
+        Returns:
+            Participant position response
+            
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/participant/position/get",
+            {
+                "simulation_id": self.simulation_id,
+                "participant_id_list": participant_id_list
+            },
+            GetParticipantPositionRes
         )
 
     def next_stage(self, junction_id: str) -> NextStageRes:

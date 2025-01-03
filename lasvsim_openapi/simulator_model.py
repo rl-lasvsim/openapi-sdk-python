@@ -3,6 +3,7 @@ Simulator model module for the lasvsim API.
 """
 from typing import Dict, List, Optional
 from dataclasses import dataclass, field
+from enum import IntEnum
 
 
 @dataclass
@@ -342,6 +343,7 @@ class StopReq:
             return None
         return cls()
 
+
 @dataclass
 class StopRes:
     """Response for stopping simulator."""
@@ -367,14 +369,21 @@ class StepReq:
 @dataclass
 class StepRes:
     """Response for stepping simulator."""
-    def __init__(self):
-        pass
+    code: StepCode = StepCode.RUNNING
+    message: str = ""
+
+    def __init__(self, code: StepCode = StepCode.RUNNING, message: str = ""):
+        self.code = code
+        self.message = message
 
     @classmethod
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
-        return cls()
+        return cls(
+            code=StepCode(data.get('code', 0)),
+            message=data.get('message', '')
+        )
 
 
 @dataclass
@@ -1871,3 +1880,63 @@ class NextStageRes:
         if data is None:
             return None
         return cls()
+
+class StepCode(IntEnum):
+    """Step status code.
+    0: running
+    1001: finished normally
+    1002: failed
+    """
+    RUNNING = 0
+    FINISHED = 1001
+    FAILED = 1002
+
+    def is_running(self) -> bool:
+        """Check if step is running."""
+        return 0 <= self.value <= 100
+
+    def is_stopped(self) -> bool:
+        """Check if step is stopped."""
+        return self.value == self.FINISHED
+
+    def is_unpassed(self) -> bool:
+        """Check if step is unpassed."""
+        return self.value == self.FAILED
+
+
+@dataclass
+class GetParticipantPositionReq:
+    """Request for getting participant position information."""
+    simulation_id: str = ""
+    participant_id_list: List[str] = field(default_factory=list)  # Maximum 1000 IDs
+
+    def __init__(self, simulation_id: str = "", participant_id_list: List[str] = None):
+        self.simulation_id = simulation_id
+        self.participant_id_list = participant_id_list if participant_id_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            participant_id_list=data.get('participant_id_list', [])
+        )
+
+
+@dataclass
+class GetParticipantPositionRes:
+    """Response for getting participant position information."""
+    position_dict: Dict[str, Position] = field(default_factory=dict)
+
+    def __init__(self, position_dict: Dict[str, Position] = None):
+        self.position_dict = position_dict if position_dict is not None else {}
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        position_dict = {}
+        for k, v in data.get('position_dict', {}).items():
+            position_dict[k] = Position.from_dict(v)
+        return cls(position_dict=position_dict)
