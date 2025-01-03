@@ -365,6 +365,27 @@ class StepReq:
     def __init__(self, simulation_id: str = ""):
         self.simulation_id = simulation_id
 
+class StepCode(IntEnum):
+    """Step status code.
+    0: running
+    1001: finished normally
+    1002: failed
+    """
+    RUNNING = 0
+    FINISHED = 1001
+    FAILED = 1002
+
+    def is_running(self) -> bool:
+        """Check if step is running."""
+        return 0 <= self.value <= 100
+
+    def is_stopped(self) -> bool:
+        """Check if step is stopped."""
+        return self.value == self.FINISHED
+
+    def is_unpassed(self) -> bool:
+        """Check if step is unpassed."""
+        return self.value == self.FAILED
 
 @dataclass
 class StepRes:
@@ -1880,29 +1901,6 @@ class NextStageRes:
         if data is None:
             return None
         return cls()
-
-class StepCode(IntEnum):
-    """Step status code.
-    0: running
-    1001: finished normally
-    1002: failed
-    """
-    RUNNING = 0
-    FINISHED = 1001
-    FAILED = 1002
-
-    def is_running(self) -> bool:
-        """Check if step is running."""
-        return 0 <= self.value <= 100
-
-    def is_stopped(self) -> bool:
-        """Check if step is stopped."""
-        return self.value == self.FINISHED
-
-    def is_unpassed(self) -> bool:
-        """Check if step is unpassed."""
-        return self.value == self.FAILED
-
 
 @dataclass
 class GetParticipantPositionReq:
