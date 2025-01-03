@@ -15,7 +15,7 @@ def parse_requirements(filename):
 
 setup(
     name="lasvsim-openapi",
-    version="0.1.10",
+    version="0.1.11.a",
     description="Lasvsim OpenAPI SDK for Python - A client library for accessing Lasvsim's simulation platform",
     long_description=long_description,
     long_description_content_type="text/markdown",
