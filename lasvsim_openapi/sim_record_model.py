@@ -26,16 +26,16 @@ class GetRecordIdsReq:
 @dataclass
 class GetRecordIdsRes:
     """Response for getting record IDs."""
-    record_ids: List[str] = field(default_factory=list)
+    ids: List[str] = field(default_factory=list)
     
-    def __init__(self, record_ids: List[str] = None):
-        self.record_ids = record_ids if record_ids is not None else []
+    def __init__(self, ids: List[str] = None):
+        self.ids = ids if ids is not None else []
 
     @classmethod
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
-        return cls(record_ids=data.get("record_ids", []))
+        return cls(ids=data.get("ids", []))
 
 
 @dataclass

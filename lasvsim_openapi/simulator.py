@@ -84,6 +84,8 @@ from lasvsim_openapi.simulator_model import (
     GetParticipantPositionRes,
     NextStageReq,
     NextStageRes,
+    ResetReq,
+    ResetRes,
 )
 
 
@@ -198,6 +200,24 @@ class Simulator:
             StopRes
         )
 
+    def reset(self, reset_traffic_flow: bool = False) -> ResetRes:
+        """Reset simulator.
+        
+        Args:
+            reset_traffic_flow: Whether to reset traffic flow
+            
+        Returns:
+            Reset response
+            
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/reset",
+            {"simulation_id": self.simulation_id, "reset_traffic_flow": reset_traffic_flow},
+            ResetRes
+        )
+
     # --------- 地图部分 ---------
     def get_current_stage(self, junction_id: str) -> GetCurrentStageRes:
         """Get current stage.
@@ -212,7 +232,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/stage/get",
+            "/openapi/cosim/v2/simulation/map/traffic_light/current_stage/get",
             {"simulation_id": self.simulation_id, "junction_id": junction_id},
             GetCurrentStageRes
         )
@@ -230,7 +250,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/movement/signal/get",
+            "/openapi/cosim/v2/simulation/map/traffic_light/phase_info/get",
             {"simulation_id": self.simulation_id, "movement_id": movement_id},
             GetMovementSignalRes
         )
@@ -248,7 +268,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/signal_plan/get",
+            "/openapi/cosim/v2/simulation/map/traffic_light/signal_plan/get",
             {"simulation_id": self.simulation_id, "junction_id": junction_id},
             GetSignalPlanRes
         )
@@ -266,7 +286,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/movement/list/get",
+            "/openapi/cosim/v2/simulation/map/movement/list/get",
             {"simulation_id": self.simulation_id, "junction_id": junction_id},
             GetMovementListRes
         )
@@ -374,111 +394,111 @@ class Simulator:
             GetVehicleControlInfoRes
         )
 
-    def get_vehicle_perception_info(self, vehicle_id_list: List[str]) -> GetVehiclePerceptionInfoRes:
+    def get_vehicle_perception_info(self, vehicle_id: str) -> GetVehiclePerceptionInfoRes:
         """Get vehicle perception information.
         
         Args:
-            vehicle_id_list: List of vehicle IDs
-            
+            vehicle_id: Vehicle ID
+
         Returns:
-            Vehicle perception information response
-            
+            GetVehiclePerceptionInfoRes: Vehicle perception information
+
         Raises:
             APIError: If the request fails
         """
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/vehicle/perception/get",
-            {"simulation_id": self.simulation_id, "id_list": vehicle_id_list},
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id},
             GetVehiclePerceptionInfoRes
         )
 
-    def get_vehicle_reference_lines(self, vehicle_id_list: List[str]) -> GetVehicleReferenceLinesRes:
+    def get_vehicle_reference_lines(self, vehicle_id: str) -> GetVehicleReferenceLinesRes:
         """Get vehicle reference lines.
         
         Args:
-            vehicle_id_list: List of vehicle IDs
-            
+            vehicle_id: Vehicle ID
+
         Returns:
-            Vehicle reference lines response
-            
+            GetVehicleReferenceLinesRes: Vehicle reference lines
+
         Raises:
             APIError: If the request fails
         """
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/vehicle/reference_line/get",
-            {"simulation_id": self.simulation_id, "id_list": vehicle_id_list},
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id},
             GetVehicleReferenceLinesRes
         )
 
-    def get_vehicle_planning_info(self, vehicle_id_list: List[str]) -> GetVehiclePlanningInfoRes:
+    def get_vehicle_planning_info(self, vehicle_id: str) -> GetVehiclePlanningInfoRes:
         """Get vehicle planning information.
         
         Args:
-            vehicle_id_list: List of vehicle IDs
-            
+            vehicle_id: Vehicle ID
+
         Returns:
-            Vehicle planning information response
-            
+            GetVehiclePlanningInfoRes: Vehicle planning information
+
         Raises:
             APIError: If the request fails
         """
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/vehicle/planning/get",
-            {"simulation_id": self.simulation_id, "id_list": vehicle_id_list},
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id},
             GetVehiclePlanningInfoRes
         )
 
-    def get_vehicle_navigation_info(self, vehicle_id_list: List[str]) -> GetVehicleNavigationInfoRes:
+    def get_vehicle_navigation_info(self, vehicle_id: str) -> GetVehicleNavigationInfoRes:
         """Get vehicle navigation information.
         
         Args:
-            vehicle_id_list: List of vehicle IDs
-            
+            vehicle_id: Vehicle ID
+
         Returns:
-            Vehicle navigation information response
-            
+            GetVehicleNavigationInfoRes: Vehicle navigation information
+
         Raises:
             APIError: If the request fails
         """
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/vehicle/navigation/get",
-            {"simulation_id": self.simulation_id, "id_list": vehicle_id_list},
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id},
             GetVehicleNavigationInfoRes
         )
 
-    def get_vehicle_collision_status(self, vehicle_id_list: List[str]) -> GetVehicleCollisionStatusRes:
+    def get_vehicle_collision_status(self, vehicle_id: str) -> GetVehicleCollisionStatusRes:
         """Get vehicle collision status.
         
         Args:
-            vehicle_id_list: List of vehicle IDs
-            
+            vehicle_id: Vehicle ID
+
         Returns:
-            Vehicle collision status response
-            
+            GetVehicleCollisionStatusRes: Vehicle collision status
+
         Raises:
             APIError: If the request fails
         """
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/vehicle/collision/get",
-            {"simulation_id": self.simulation_id, "id_list": vehicle_id_list},
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id},
             GetVehicleCollisionStatusRes
         )
 
-    def get_vehicle_target_speed(self, vehicle_id_list: List[str]) -> GetVehicleTargetSpeedRes:
+    def get_vehicle_target_speed(self, vehicle_id: str) -> GetVehicleTargetSpeedRes:
         """Get vehicle target speed.
         
         Args:
-            vehicle_id_list: List of vehicle IDs
-            
+            vehicle_id: Vehicle ID
+
         Returns:
-            Vehicle target speed response
-            
+            GetVehicleTargetSpeedRes: Vehicle target speed
+
         Raises:
             APIError: If the request fails
         """
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/vehicle/target_speed/get",
-            {"simulation_id": self.simulation_id, "id_list": vehicle_id_list},
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id},
             GetVehicleTargetSpeedRes
         )
 
@@ -578,8 +598,8 @@ class Simulator:
             {
                 "simulation_id": self.simulation_id,
                 "vehicle_id": vehicle_id,
-                "base_info": base_info,
-                "dynamic_info": dynamic_info
+                "base_info": asdict(base_info),
+                "dynamic_info": asdict(dynamic_info)
             },
             SetVehicleBaseInfoRes
         )
@@ -680,7 +700,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/pedestrian/id_list/get",
+            "/openapi/cosim/v2/simulation/ped/id_list/get",
             {"simulation_id": self.simulation_id},
             GetPedIdListRes
         )
@@ -698,7 +718,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/pedestrian/base_info/get",
+            "/openapi/cosim/v2/simulation/ped/base_info/get",
             {"simulation_id": self.simulation_id, "id_list": ped_id_list},
             GetPedBaseInfoRes
         )
@@ -718,7 +738,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/pedestrian/position/set",
+            "/openapi/cosim/v2/simulation/ped/position/set",
             {"simulation_id": self.simulation_id, "ped_id": ped_id, "point": asdict(point), "phi": phi},
             SetPedPositionRes
         )
@@ -734,7 +754,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/non_motor_vehicle/id_list/get",
+            "/openapi/cosim/v2/simulation/nmv/id_list/get",
             {"simulation_id": self.simulation_id},
             GetNMVIdListRes
         )
@@ -752,7 +772,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/non_motor_vehicle/base_info/get",
+            "/openapi/cosim/v2/simulation/nmv/base_info/get",
             {"simulation_id": self.simulation_id, "id_list": nmv_id_list},
             GetNMVBaseInfoRes
         )
@@ -772,7 +792,7 @@ class Simulator:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/non_motor_vehicle/position/set",
+            "/openapi/cosim/v2/simulation/nmv/position/set",
             {"simulation_id": self.simulation_id, "nmv_id": nmv_id, "point": asdict(point), "phi": phi},
             SetNMVPositionRes
         )

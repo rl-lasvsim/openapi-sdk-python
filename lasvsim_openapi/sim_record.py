@@ -65,7 +65,7 @@ class SimRecord:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/sim_record/v2/track/get",
+            "/openapi/sim_record/v1/track_result/get",
             {"id": id, "obj_id": obj_id},
             GetTrackResultsRes
         )
@@ -122,7 +122,7 @@ class SimRecord:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/sim_record/v2/path/get",
+            "/openapi/sim_record/v1/path_result/get",
             {"id": id, "obj_id": obj_id},
             GetPathResultsRes
         )
@@ -141,7 +141,7 @@ class SimRecord:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/sim_record/v2/reference_line/get",
+            "/openapi/sim_record/v1/reference_line_result/get",
             {"id": id, "obj_id": obj_id},
             GetReferenceLineResultsRes
         )

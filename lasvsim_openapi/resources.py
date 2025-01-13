@@ -28,10 +28,10 @@ class GetHdMapReq:
 @dataclass
 class GetHdMapRes:
     """Response for getting HD map."""
-    map: Optional[Qxmap] = None
+    data: Optional[Qxmap] = None
     
     def __init__(self):
-        self.map = None
+        self.data = None
 
     @classmethod
     def from_dict(cls, data: dict = None):
@@ -39,7 +39,7 @@ class GetHdMapRes:
             return None
         map_data = data.pop("data", None)
         instance = cls()
-        instance.map = None if map_data is None else Qxmap.from_dict(map_data)
+        instance.data = None if map_data is None else Qxmap.from_dict(map_data)
         return instance
 
 class Resources:

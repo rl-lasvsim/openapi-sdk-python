@@ -66,8 +66,9 @@ class GetRecordScenarioRes:
     scen_id: str = ""
     scen_ver: str = ""
     
-    def __init__(self):
-        pass
+    def __init__(self,scen_id: str = "", scen_ver: str = ""):
+        self.scen_id = scen_id
+        self.scen_ver = scen_ver
 
     @classmethod
     def from_dict(cls, data: dict = None):
