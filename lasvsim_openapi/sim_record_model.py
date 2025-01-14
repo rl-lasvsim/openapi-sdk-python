@@ -1,284 +1,513 @@
-from dataclasses import dataclass
-from typing import List
-from typing import Dict
+"""
+Simulation record model module for the lasvsim API.
+"""
+from typing import List, Optional
+from dataclasses import dataclass, field
+from lasvsim_openapi.simulator_model import Position
 
 
-# ----record_id----
 @dataclass
-class GetRecordIdsResp:
-    ids: List[str] = None
+class GetRecordIdsReq:
+    """Request for getting record IDs."""
+    scen_id: str = ""
+    scen_ver: str = ""
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
+    def __init__(self, scen_id: str = "", scen_ver: str = ""):
+        self.scen_id = scen_id
+        self.scen_ver = scen_ver
 
-        self.__dict__ = data
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(**data)
 
 
-# ----GetTrackResultsResp----
+@dataclass
+class GetRecordIdsRes:
+    """Response for getting record IDs."""
+    ids: List[str] = field(default_factory=list)
+    
+    def __init__(self, ids: List[str] = None):
+        self.ids = ids if ids is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(ids=data.get("ids", []))
+
+
 @dataclass
 class Track:
-    x: float = None
-    y: float = None
-    z: float = None
-    phi: float = None
-    lane_id: str = None
-    position_type: str = None
+    """Track information."""
+    x: float = 0.0
+    y: float = 0.0
+    z: float = 0.0
+    phi: float = 0.0
+    lane_id: str = ""  # 车道ID，允许为空
+    position_type: str = ""
+    timestamp: int = 0
+    position: Optional[Position] = None
+    
+    def __init__(self, x: float = 0.0, y: float = 0.0, z: float = 0.0, phi: float = 0.0, lane_id: str = "", position_type: str = "", timestamp: int = 0, position: Optional[Position] = None):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.phi = phi
+        self.lane_id = lane_id
+        self.position_type = position_type
+        self.timestamp = timestamp
+        self.position = position
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
-
-        self.__dict__ = data
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        position = data.pop("position", None)
+        instance = cls(**data)
+        instance.position = None if position is None else Position.from_dict(position)
+        return instance
 
 
 @dataclass
 class TrackResult:
-    record_id: str = None
-    obj_id: str = None
-    timestamp: int = None
-    result: Track = None
+    """Track result information."""
+    record_id: str = ""  # 记录的业务ID
+    obj_id: str = ""  # 对象ID
+    timestamp: int = 0  # 时间戳
+    result: Optional[Track] = None  # 轨迹信息
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
+    def __init__(self, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: Optional[Track] = None):
+        self.record_id = record_id
+        self.obj_id = obj_id
+        self.timestamp = timestamp
+        self.result = result
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
         result = data.pop("result", None)
-        self.__dict__ = data
-
-        self.result = None if result == None else Track(result)
+        instance = cls(**data)
+        instance.result = None if result is None else Track.from_dict(result)
+        return instance
 
 
 @dataclass
-class GetTrackResultsResp:
-    data: List[TrackResult] = None
+class GetTrackResultsReq:
+    """Request for getting track results."""
+    id: str = ""
+    obj_id: str = ""
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
+    def __init__(self, id: str = "", obj_id: str = ""):
+        self.id = id
+        self.obj_id = obj_id
 
-        result = data.pop("data", None)
-        self.__dict__ = data
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(**data)
 
-        self.data = None if result == None else [TrackResult(r) for r in result]
+
+@dataclass
+class GetTrackResultsRes:
+    """Response for getting track results."""
+    data: List[TrackResult] = field(default_factory=list)
+
+    def __init__(self, data_list: List[TrackResult] = None):
+        self.data = data_list if data_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        data_list = data.pop("data", [])
+        instance = cls()
+        instance.data = [TrackResult.from_dict(d) for d in data_list]
+        return instance
 
 
-# ----GetSensorResultsResp----
 @dataclass
 class SensorObj:
-    id: str = None
-    speed: float = None
-    x: float = None
-    y: float = None
-    z: float = None
-    length: float = None
-    width: float = None
-    height: float = None
-    phi: float = None
-    exterior_light: str = None
-    risk_2_ego: int = None
-    lon_acc: float = None
-    v: float = None
-    lat_acc: float = None
-    w: float = None
-    w_acc: float = None
-    lane_id: str = None
-    position_type: str = None
+    """Sensor object information."""
+    id: str = ""
+    speed: float = 0.0
+    x: float = 0.0
+    y: float = 0.0
+    z: float = 0.0
+    length: float = 0.0
+    width: float = 0.0
+    height: float = 0.0
+    phi: float = 0.0
+    exterior_light: str = ""
+    risk_2_ego: int = 0
+    lon_acc: float = 0.0
+    lat_speed: float = 0.0
+    obj_id: str = ""
+    obj_type: int = 0
+    position: Optional[Position] = None
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
+    def __init__(self, id: str = "", speed: float = 0.0, x: float = 0.0, y: float = 0.0, z: float = 0.0, length: float = 0.0, width: float = 0.0, height: float = 0.0, phi: float = 0.0, exterior_light: str = "", risk_2_ego: int = 0, lon_acc: float = 0.0, lat_speed: float = 0.0, obj_id: str = "", obj_type: int = 0, position: Optional[Position] = None):
+        self.id = id
+        self.speed = speed
+        self.x = x
+        self.y = y
+        self.z = z
+        self.length = length
+        self.width = width
+        self.height = height
+        self.phi = phi
+        self.exterior_light = exterior_light
+        self.risk_2_ego = risk_2_ego
+        self.lon_acc = lon_acc
+        self.lat_speed = lat_speed
+        self.obj_id = obj_id
+        self.obj_type = obj_type
+        self.position = position
 
-        self.__dict__ = data
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        position = data.pop("position", None)
+        instance = cls(**data)
+        instance.position = None if position is None else Position.from_dict(position)
+        return instance
 
 
 @dataclass
 class SensorResult:
-    record_id: str = None
-    obj_id: str = None
-    timestamp: int = None
-    result: List[SensorObj] = None
+    """Sensor result information."""
+    record_id: str = ""
+    obj_id: str = ""
+    timestamp: int = 0
+    result: List[SensorObj] = field(default_factory=list)
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
+    def __init__(self, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: List[SensorObj] = None):
+        self.record_id = record_id
+        self.obj_id = obj_id
+        self.timestamp = timestamp
+        self.result = result if result is not None else []
 
-        result = data.pop("result", None)
-        self.__dict__ = data
-
-        self.result = None if result == None else [SensorObj(r) for r in result]
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        result = data.pop("result", [])
+        instance = cls(**data)
+        instance.result = [SensorObj.from_dict(item) for item in result]
+        return instance
 
 
 @dataclass
-class GetSensorResultsResp:
-    data: List[TrackResult] = None
+class GetSensorResultsReq:
+    """Request for getting sensor results."""
+    id: str = ""
+    obj_id: str = ""
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
+    def __init__(self, id: str = "", obj_id: str = ""):
+        self.id = id
+        self.obj_id = obj_id
 
-        result = data.pop("data", None)
-        self.__dict__ = data
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(**data)
 
-        self.data = None if result == None else [SensorResult(r) for r in result]
+
+@dataclass
+class GetSensorResultsRes:
+    """Response for getting sensor results."""
+    data: List[SensorResult] = field(default_factory=list)
+
+    def __init__(self, data_list: List[SensorResult] = None):
+        self.data = data_list if data_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        data_list = data.pop("data", [])
+        instance = cls()
+        instance.data = [SensorResult.from_dict(d) for d in data_list]
+        return instance
 
 
-# ----GetStepResultsResp----
 @dataclass
 class Step:
-    speed: float = None
-    acc: float = None
-    mileage: float = None
-    ste_wheel: float = None
-    turn_signal: str = None
-    v: float = None
-    lat_acc: float = None
-    w: float = None
-    wcc: float = None
-    reference_speed: float = None
+    """Step information."""
+    speed: float = 0.0
+    acc: float = 0.0
+    mileage: float = 0.0
+    ste_wheel: float = 0.0
+    turn_signal: str = ""
+    v: float = 0.0
+    lat_acc: float = 0.0
+    w: float = 0.0
+    w_acc: float = 0.0
+    reference_speed: float = 0.0
+    timestamp: int = 0
+    position: Optional[Position] = None
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
+    def __init__(self, speed: float = 0.0, acc: float = 0.0, mileage: float = 0.0, ste_wheel: float = 0.0, turn_signal: str = "", v: float = 0.0, lat_acc: float = 0.0, w: float = 0.0, w_acc: float = 0.0, reference_speed: float = 0.0, timestamp: int = 0, position: Optional[Position] = None):
+        self.speed = speed
+        self.acc = acc
+        self.mileage = mileage
+        self.ste_wheel = ste_wheel
+        self.turn_signal = turn_signal
+        self.v = v
+        self.lat_acc = lat_acc
+        self.w = w
+        self.w_acc = w_acc
+        self.reference_speed = reference_speed
+        self.timestamp = timestamp
+        self.position = position
 
-        self.__dict__ = data
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        position = data.pop("position", None)
+        instance = cls(**data)
+        instance.position = None if position is None else Position.from_dict(position)
+        return instance
 
 
 @dataclass
 class StepResult:
-    record_id: str = None
-    obj_id: str = None
-    timestamp: int = None
-    result: Step = None
+    """Step result information."""
+    record_id: str = ""
+    obj_id: str = ""
+    timestamp: int = 0
+    result: Optional[Step] = None
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
+    def __init__(self, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: Optional[Step] = None):
+        self.record_id = record_id
+        self.obj_id = obj_id
+        self.timestamp = timestamp
+        self.result = result
 
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
         result = data.pop("result", None)
-        self.__dict__ = data
-
-        self.result = None if result == None else Step(result)
+        instance = cls(**data)
+        instance.result = None if result is None else Step.from_dict(result)
+        return instance
 
 
 @dataclass
-class GetStepResultsResp:
-    data: List[StepResult] = None
+class GetStepResultsReq:
+    """Request for getting step results."""
+    id: str = ""
+    obj_id: str = ""
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
+    def __init__(self, id: str = "", obj_id: str = ""):
+        self.id = id
+        self.obj_id = obj_id
 
-        result = data.pop("data", None)
-        self.__dict__ = data
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(**data)
 
-        self.data = None if result == None else [StepResult(r) for r in result]
+
+@dataclass
+class GetStepResultsRes:
+    """Response for getting step results."""
+    data: List[StepResult] = field(default_factory=list)
+
+    def __init__(self, data_list: List[StepResult] = None):
+        self.data = data_list if data_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        data_list = data.pop("data", [])
+        instance = cls()
+        instance.data = [StepResult.from_dict(d) for d in data_list]
+        return instance
 
 
-# ----GetPathResultsResp----
 @dataclass
 class PathPoint:
-    x: float = None
-    y: float = None
-    z: float = None
+    """Path point information."""
+    x: float = 0.0
+    y: float = 0.0
+    z: float = 0.0
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
-
-        self.__dict__ = data
+    def __init__(self, x: float = 0.0, y: float = 0.0, z: float = 0.0):
+        self.x = x
+        self.y = y
+        self.z = z
 
 
 @dataclass
 class Path:
-    point: List[PathPoint] = None
+    """Path information."""
+    points: List[PathPoint] = field(default_factory=list)
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
+    def __init__(self, points: List[PathPoint] = None):
+        self.points = points if points is not None else []
 
-        result = data.pop("point", None)
-        self.__dict__ = data
-
-        self.point = None if result == None else [PathPoint(r) for r in result]
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        points = data.get("points", [])
+        instance = cls()
+        instance.points = [PathPoint(**point) for point in points]
+        return instance
 
 
 @dataclass
 class PathResult:
-    record_id: str = None
-    obj_id: str = None
-    timestamp: int = None
-    result: List[Path] = None
+    """Path result information."""
+    record_id: str = ""
+    obj_id: str = ""
+    timestamp: int = 0
+    result: List[Path] = field(default_factory=list)
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
+    def __init__(self, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: List[Path] = None):
+        self.record_id = record_id
+        self.obj_id = obj_id
+        self.timestamp = timestamp
+        self.result = result if result is not None else []
 
-        result = data.pop("result", None)
-        self.__dict__ = data
-
-        self.result = None if result == None else [Path(r) for r in result]
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        result = data.pop("result", [])
+        instance = cls(**data)
+        instance.result = [Path.from_dict(item) for item in result]
+        return instance
 
 
 @dataclass
-class GetPathResultsResp:
-    data: List[PathResult] = None
+class GetPathResultsReq:
+    """Request for getting path results."""
+    id: str = ""
+    obj_id: str = ""
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
+    def __init__(self, id: str = "", obj_id: str = ""):
+        self.id = id
+        self.obj_id = obj_id
 
-        result = data.pop("data", None)
-        self.__dict__ = data
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(**data)
 
-        self.data = None if result == None else [PathResult(r) for r in result]
+
+@dataclass
+class GetPathResultsRes:
+    """Response for getting path results."""
+    data: List[PathResult] = field(default_factory=list)
+
+    def __init__(self, data_list: List[PathResult] = None):
+        self.data = data_list if data_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        data_list = data.pop("data", [])
+        instance = cls()
+        instance.data = [PathResult.from_dict(d) for d in data_list]
+        return instance
 
 
-# ------ReferenceLineResult---------
 @dataclass
 class ReferenceLine:
-    points: List[PathPoint] = None
-    line_ids: List[str] = None
-    line_types: List[str] = None
-    line_idxs: List[int] = None
-    opposite: bool = None
+    """Reference line information."""
+    points: List[PathPoint] = field(default_factory=list)
+    line_ids: List[str] = field(default_factory=list)
+    line_types: List[str] = field(default_factory=list)
+    line_idxs: List[int] = field(default_factory=list)
+    opposite: bool = False
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
+    def __init__(self, points: List[PathPoint] = None, line_ids: List[str] = None, line_types: List[str] = None, line_idxs: List[int] = None, opposite: bool = False):
+        self.points = points if points is not None else []
+        self.line_ids = line_ids if line_ids is not None else []
+        self.line_types = line_types if line_types is not None else []
+        self.line_idxs = line_idxs if line_idxs is not None else []
+        self.opposite = opposite
 
-        result = data.pop("points", None)
-        self.__dict__ = data
-
-        self.points = None if result == None else [PathPoint(r) for r in result]
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        instance = cls()
+        instance.points = [PathPoint(**point) for point in data.get("points", [])]
+        instance.line_ids = data.get("line_ids", [])
+        instance.line_types = data.get("line_types", [])
+        instance.line_idxs = data.get("line_idxs", [])
+        instance.opposite = data.get("opposite", False)
+        return instance
 
 
 @dataclass
 class ReferenceLineResult:
-    record_id: str = None
-    obj_id: str = None
-    timestamp: int = None
-    result: List[ReferenceLine] = None
+    """Reference line result information."""
+    record_id: str = ""
+    obj_id: str = ""
+    timestamp: int = 0
+    result: List[ReferenceLine] = field(default_factory=list)
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
+    def __init__(self, record_id: str = "", obj_id: str = "", timestamp: int = 0, result: List[ReferenceLine] = None):
+        self.record_id = record_id
+        self.obj_id = obj_id
+        self.timestamp = timestamp
+        self.result = result if result is not None else []
 
-        result = data.pop("result", None)
-        self.__dict__ = data
-
-        self.result = None if result == None else [ReferenceLine(r) for r in result]
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        result = data.pop("result", [])
+        instance = cls(**data)
+        instance.result = [ReferenceLine.from_dict(item) for item in result]
+        return instance
 
 
 @dataclass
-class GetReferenceLineResultsResp:
-    data: List[ReferenceLineResult] = None
+class GetReferenceLineResultsReq:
+    """Request for getting reference line results."""
+    id: str = ""
+    obj_id: str = ""
 
-    def __init__(self, data: dict) -> None:
-        if data == None:
-            return
+    def __init__(self, id: str = "", obj_id: str = ""):
+        self.id = id
+        self.obj_id = obj_id
 
-        result = data.pop("data", None)
-        self.__dict__ = data
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(**data)
 
-        self.data = None if result == None else [ReferenceLineResult(r) for r in result]
+
+@dataclass
+class GetReferenceLineResultsRes:
+    """Response for getting reference line results."""
+    data: List[ReferenceLineResult] = field(default_factory=list)
+
+    def __init__(self, data_list: List[ReferenceLineResult] = None):
+        self.data = data_list if data_list is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        data_list = data.pop("data", [])
+        instance = cls()
+        instance.data = [ReferenceLineResult.from_dict(d) for d in data_list]
+        return instance
