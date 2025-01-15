@@ -1938,3 +1938,122 @@ class GetParticipantPositionRes:
         for k, v in data.get('position_dict', {}).items():
             position_dict[k] = Position.from_dict(v)
         return cls(position_dict=position_dict)
+
+class SensorType(IntEnum):
+    """Sensor type enum."""
+    UNKNOWN = 0
+    CAMERA = 1
+    LIDAR = 2
+    RADAR = 3
+
+
+@dataclass
+class SensorErrorConfig:
+    """Sensor error configuration."""
+    location_sigma: float = 0.0  # Position variance
+    phi_sigma: float = 0.0  # Heading angle variance
+    size_sigma: float = 0.0  # Size variance
+    velocity_sigma: float = 0.0  # Velocity variance
+
+    def __init__(self, location_sigma: float = 0.0, phi_sigma: float = 0.0,
+                 size_sigma: float = 0.0, velocity_sigma: float = 0.0):
+        self.location_sigma = location_sigma
+        self.phi_sigma = phi_sigma
+        self.size_sigma = size_sigma
+        self.velocity_sigma = velocity_sigma
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            location_sigma=data.get('location_sigma', 0.0),
+            phi_sigma=data.get('phi_sigma', 0.0),
+            size_sigma=data.get('size_sigma', 0.0),
+            velocity_sigma=data.get('velocity_sigma', 0.0)
+        )
+
+
+@dataclass
+class SensorConfig:
+    """Sensor configuration."""
+    sensor_id: str = ""
+    sensor_type: SensorType = SensorType.UNKNOWN
+    detect_angle: float = 0.0  # Detection angle (sector central angle)
+    detect_range: float = 0.0  # Detection range (sector radius)
+    install_x: float = 0.0  # Longitudinal offset relative to vehicle center of mass
+    install_y: float = 0.0  # Lateral offset relative to vehicle center of mass
+    install_phi: float = 0.0  # Installation angle relative to vehicle heading
+    sensor_error: Optional[SensorErrorConfig] = None  # Sensor perception error accuracy
+    install_lon: float = 0.0  # Longitudinal offset relative to vehicle center of mass
+    install_lat: float = 0.0  # Lateral offset relative to vehicle center of mass
+
+    def __init__(self, sensor_id: str = "", sensor_type: SensorType = SensorType.UNKNOWN,
+                 detect_angle: float = 0.0, detect_range: float = 0.0,
+                 install_x: float = 0.0, install_y: float = 0.0,
+                 install_phi: float = 0.0, sensor_error: Optional[SensorErrorConfig] = None,
+                 install_lon: float = 0.0, install_lat: float = 0.0):
+        self.sensor_id = sensor_id
+        self.sensor_type = sensor_type
+        self.detect_angle = detect_angle
+        self.detect_range = detect_range
+        self.install_x = install_x
+        self.install_y = install_y
+        self.install_phi = install_phi
+        self.sensor_error = sensor_error
+        self.install_lon = install_lon
+        self.install_lat = install_lat
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            sensor_id=data.get('sensor_id', ''),
+            sensor_type=SensorType(data.get('sensor_type', 0)),
+            detect_angle=data.get('detect_angle', 0.0),
+            detect_range=data.get('detect_range', 0.0),
+            install_x=data.get('install_x', 0.0),
+            install_y=data.get('install_y', 0.0),
+            install_phi=data.get('install_phi', 0.0),
+            sensor_error=SensorErrorConfig.from_dict(data.get('sensor_error')),
+            install_lon=data.get('install_lon', 0.0),
+            install_lat=data.get('install_lat', 0.0)
+        )
+
+
+@dataclass
+class GetVehicleSensorConfigReq:
+    """Request for getting vehicle sensor configuration."""
+    simulation_id: str = ""
+    vehicle_id: str = ""
+
+    def __init__(self, simulation_id: str = "", vehicle_id: str = ""):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get('simulation_id', ''),
+            vehicle_id=data.get('vehicle_id', '')
+        )
+
+
+@dataclass
+class GetVehicleSensorConfigRes:
+    """Response for getting vehicle sensor configuration."""
+    sensors_config: List[SensorConfig] = field(default_factory=list)
+
+    def __init__(self, sensors_config: List[SensorConfig] = None):
+        self.sensors_config = sensors_config if sensors_config is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            sensors_config=[SensorConfig.from_dict(x) for x in data.get('sensors_config', [])]
+        )

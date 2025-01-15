@@ -86,6 +86,8 @@ from lasvsim_openapi.simulator_model import (
     NextStageRes,
     ResetReq,
     ResetRes,
+    GetVehicleSensorConfigReq,
+    GetVehicleSensorConfigRes,
 )
 
 
@@ -500,6 +502,27 @@ class Simulator:
             "/openapi/cosim/v2/simulation/vehicle/target_speed/get",
             {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id},
             GetVehicleTargetSpeedRes
+        )
+
+    def get_vehicle_sensor_config(self, vehicle_id: str) -> GetVehicleSensorConfigRes:
+        """Get vehicle sensor configuration.
+        
+        Args:
+            vehicle_id: Vehicle ID
+            
+        Returns:
+            Vehicle sensor configuration response
+            
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/vehicle/sensor_config/get",
+            {
+                "simulation_id": self.simulation_id,
+                "vehicle_id": vehicle_id
+            },
+            GetVehicleSensorConfigRes
         )
 
     def set_vehicle_control_info(

@@ -530,3 +530,14 @@ def test_participant_info_with_empty_lists(simulator: Simulator):
     # Test position
     res = simulator.get_participant_position([])
     assert len(res.position_dict) == 0
+
+
+def test_get_vehicle_sensor_config(simulator: Simulator):
+    """Test getting vehicle sensor configuration."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0, "not found vehicle id list"
+
+    # Then test getting vehicle sensor configuration
+    sensor_config_res = simulator.get_vehicle_sensor_config(res.list[0])
+    assert sensor_config_res is not None, "sensor config response should not be None"
