@@ -1096,11 +1096,13 @@ class SetVehiclePlanningInfoReq:
     simulation_id: str = ""
     vehicle_id: str = ""
     planning_path: List[Point] = field(default_factory=list)
+    speed: List[float] = field(default_factory=list)  # Trajectory point speeds
 
-    def __init__(self, simulation_id: str = "", vehicle_id: str = "", planning_path: List[Point] = None):
+    def __init__(self, simulation_id: str = "", vehicle_id: str = "", planning_path: List[Point] = None, speed: List[float] = None):
         self.simulation_id = simulation_id
         self.vehicle_id = vehicle_id
         self.planning_path = planning_path if planning_path is not None else []
+        self.speed = speed if speed is not None else []
 
     @classmethod
     def from_dict(cls, data: dict = None):
@@ -1109,7 +1111,8 @@ class SetVehiclePlanningInfoReq:
         return cls(
             simulation_id=data.get('simulation_id', ''),
             vehicle_id=data.get('vehicle_id', ''),
-            planning_path=[Point.from_dict(p) for p in data.get('planning_path', [])]
+            planning_path=[Point.from_dict(x) for x in data.get('planning_path', [])],
+            speed=data.get('speed', [])
         )
 
 

@@ -630,16 +630,18 @@ class Simulator:
     def set_vehicle_planning_info(
         self,
         vehicle_id: str,
-        planning_path: List[Point]
+        planning_path: List[Point],
+        speed: List[float]
     ) -> SetVehiclePlanningInfoRes:
         """Set vehicle planning information.
         
         Args:
             vehicle_id: Vehicle ID
             planning_path: List of planning path points
+            speed: List of speeds for each trajectory point
             
         Returns:
-            Set vehicle planning information response
+            Vehicle planning info response
             
         Raises:
             APIError: If the request fails
@@ -649,7 +651,8 @@ class Simulator:
             {
                 "simulation_id": self.simulation_id,
                 "vehicle_id": vehicle_id,
-                "planning_path": [asdict(p) for p in planning_path]
+                "planning_path": [asdict(p) for p in planning_path],
+                "speed": speed
             },
             SetVehiclePlanningInfoRes
         )
