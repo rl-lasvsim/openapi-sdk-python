@@ -42,11 +42,13 @@ new_record = cli.process_task.copy_record(task_id, record_id)
 print("拷贝剧本成功")
 
 # 3. 通过拷贝的场景Id、Version和SimRecordId初始化仿真器
-simulator = cli.init_simulator_from_config({
-    "scen_id": new_record.scen_id,
-    "scen_ver": new_record.scen_ver,
-    "sim_record_id": new_record.sim_record_id,
-})
+simulator = cli.init_simulator_from_config(
+    SimulatorConfig(
+        scen_id=new_record.scen_id,
+        scen_ver=new_record.scen_ver,
+        sim_record_id=new_record.sim_record_id,
+    )
+)
 print("初始化仿真器成功")
 
 try:
@@ -54,17 +56,25 @@ try:
     test_vehicle_list = simulator.get_test_vehicle_id_list()
     print("测试车辆ID列表:", test_vehicle_list)
 
+    # 记录仿真器运行状态(True: 运行中; False: 运行结束), 任务运行过程中持续更新该状态
+    is_running = True
+
     # 使测试车辆环形行驶
-    for i in range(50):
+    while is_running:
         # 设置方向盘转角10度, 纵向加速度0.05
         ste_wheel = 10.0
         lon_acc = 0.05
+
         # 设置车辆的控制信息
-        simulator.set_vehicle_control_info(test_vehicle_list.list[0], ste_wheel, lon_acc)
+        simulator.set_vehicle_control_info(
+            test_vehicle_list.list[0], ste_wheel, lon_acc
+        )
 
         # 执行仿真器步骤
         step_res = simulator.step()
         print(f"第 {i} 步结果: {step_res}")
+        
+        is_running = step_res.code.is_running()
 
     # 可在此处继续调用其他接口, 查看联合仿真文档: https://www.risenlighten.com/#/union
 
