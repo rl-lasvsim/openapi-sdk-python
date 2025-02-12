@@ -16,6 +16,7 @@ import os
 
 from lasvsim_openapi.client import Client, SimulatorConfig
 from lasvsim_openapi.http_client import HttpConfig
+from lasvsim_openapi.simulator_model import SimulatorConfig
 
 
 def main():
