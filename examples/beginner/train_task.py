@@ -10,6 +10,7 @@ import os
 
 from lasvsim_openapi.client import Client
 from lasvsim_openapi.http_client import HttpConfig
+from lasvsim_openapi.simulator_model import SimulatorConfig
 
 
 def main():
@@ -18,7 +19,7 @@ def main():
     token = os.getenv("QX_TOKEN")  # 登录仿真平台后访问 https://qianxing.risenlighten.com/#/usecenter/personalCenter, 点击最下面按钮复制token
 
     # 登录训练平台, 选择训练任务
-    task_id = 515  # 替换为你的任务ID
+    task_id = 128  # 替换为你的任务ID
 
     # 初始化客户端
     cli = Client(HttpConfig(
@@ -30,10 +31,10 @@ def main():
     scene_id_list = cli.train_task.get_scene_id_list(task_id)
 
     # 通过场景ID和场景Version初始化仿真器(此案例默认使用场景列表中的第一个场景)
-    simulator = cli.init_simulator_from_config({
-        "scen_id": scene_id_list.scene_id_list[0],
-        "scen_ver": scene_id_list.scene_version_list[0],
-    })
+    simulator = cli.init_simulator_from_config(SimulatorConfig(
+        scen_id=scene_id_list.scene_id_list[0],
+        scen_ver=scene_id_list.scene_version_list[0],
+    ))
 
     try:
         # 运行仿真100步

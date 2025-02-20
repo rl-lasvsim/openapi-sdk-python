@@ -86,6 +86,8 @@ from lasvsim_openapi.simulator_model import (
     NextStageRes,
     ResetReq,
     ResetRes,
+    GetVehicleSensorConfigReq,
+    GetVehicleSensorConfigRes,
 )
 
 
@@ -502,6 +504,27 @@ class Simulator:
             GetVehicleTargetSpeedRes
         )
 
+    def get_vehicle_sensor_config(self, vehicle_id: str) -> GetVehicleSensorConfigRes:
+        """Get vehicle sensor configuration.
+        
+        Args:
+            vehicle_id: Vehicle ID
+            
+        Returns:
+            Vehicle sensor configuration response
+            
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/vehicle/sensor_config/get",
+            {
+                "simulation_id": self.simulation_id,
+                "vehicle_id": vehicle_id
+            },
+            GetVehicleSensorConfigRes
+        )
+
     def set_vehicle_control_info(
         self,
         vehicle_id: str,
@@ -607,16 +630,18 @@ class Simulator:
     def set_vehicle_planning_info(
         self,
         vehicle_id: str,
-        planning_path: List[Point]
+        planning_path: List[Point],
+        speed: List[float]
     ) -> SetVehiclePlanningInfoRes:
         """Set vehicle planning information.
         
         Args:
             vehicle_id: Vehicle ID
             planning_path: List of planning path points
+            speed: List of speeds for each trajectory point
             
         Returns:
-            Set vehicle planning information response
+            Vehicle planning info response
             
         Raises:
             APIError: If the request fails
@@ -626,7 +651,8 @@ class Simulator:
             {
                 "simulation_id": self.simulation_id,
                 "vehicle_id": vehicle_id,
-                "planning_path": [asdict(p) for p in planning_path]
+                "planning_path": [asdict(p) for p in planning_path],
+                "speed": speed
             },
             SetVehiclePlanningInfoRes
         )

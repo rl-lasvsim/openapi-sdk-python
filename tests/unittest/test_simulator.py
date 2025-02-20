@@ -231,14 +231,21 @@ def test_set_vehicle_planning_info(simulator: Simulator):
     """Test setting vehicle planning info."""
     # First get vehicle ID list
     res = simulator.get_vehicle_id_list()
-    assert len(res.list) > 0
+    assert len(res.list) > 0, "not found vehicle id list"
 
     # Create test planning path
-    planning_path = [Point(x=0.0, y=0.0, z=0.0)]
+    planning_path = [
+        Point(x=0.0, y=0.0, z=0.0),
+        Point(x=1.0, y=1.0, z=0.0),
+        Point(x=2.0, y=2.0, z=0.0)
+    ]
+    
+    # Create test speeds
+    speeds = [10.0, 15.0, 20.0]  # Speed for each point in m/s
 
     # Test setting vehicle planning info
-    planning_res = simulator.set_vehicle_planning_info(res.list[0], planning_path)
-    assert planning_res is not None
+    planning_res = simulator.set_vehicle_planning_info(res.list[0], planning_path, speeds)
+    assert planning_res is not None, "planning response should not be None"
 
 
 def test_set_vehicle_control_info(simulator: Simulator):
@@ -530,3 +537,14 @@ def test_participant_info_with_empty_lists(simulator: Simulator):
     # Test position
     res = simulator.get_participant_position([])
     assert len(res.position_dict) == 0
+
+
+def test_get_vehicle_sensor_config(simulator: Simulator):
+    """Test getting vehicle sensor configuration."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0, "not found vehicle id list"
+
+    # Then test getting vehicle sensor configuration
+    sensor_config_res = simulator.get_vehicle_sensor_config(res.list[0])
+    assert sensor_config_res is not None, "sensor config response should not be None"
