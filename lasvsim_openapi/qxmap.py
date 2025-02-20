@@ -21,9 +21,10 @@ class Point:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        obj = cls()
         for key, value in data.items():
-            setattr(cls, key, value)
-        return cls
+            setattr(obj, key, value)
+        return obj
 
 
 @dataclass
@@ -46,12 +47,13 @@ class ReferencePoint:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        obj = cls()
         point = data.get("point")
         for key, value in data.items():
             if key != "point":
-                setattr(cls, key, value)
-        cls.point = None if point is None else Point.from_dict(point)
-        return cls
+                setattr(obj, key, value)
+        obj.point = None if point is None else Point.from_dict(point)
+        return obj
 
 
 @dataclass
@@ -72,12 +74,13 @@ class DirectedPoint:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        obj = cls()
         point = data.get("point")
         for key, value in data.items():
             if key != "point":
-                setattr(cls, key, value)
-        cls.point = None if point is None else Point.from_dict(point)
-        return cls
+                setattr(obj, key, value)
+        obj.point = None if point is None else Point.from_dict(point)
+        return obj
 
 
 @dataclass
@@ -92,6 +95,7 @@ class Polygon:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         points = data.get("points", [])
         cls.points = [Point.from_dict(p) for p in points]
         return cls
@@ -109,6 +113,7 @@ class LineString:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         points = data.get("points", [])
         cls.points = [Point.from_dict(p) for p in points]
         return cls
@@ -129,6 +134,7 @@ class Section:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         for key, value in data.items():
             setattr(cls, key, value)
         return cls
@@ -146,6 +152,7 @@ class JunctionPosition:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         for key, value in data.items():
             setattr(cls, key, value)
         return cls
@@ -162,6 +169,7 @@ class RoadPosition:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         for key, value in data.items():
             setattr(cls, key, value)
         return cls
@@ -177,6 +185,7 @@ class ControlPoint:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         point = data.get("point")
         for key, value in data.items():
             if key != "point":
@@ -204,6 +213,7 @@ class Header:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         for key, value in data.items():
             setattr(cls, key, value)
         return cls
@@ -222,6 +232,7 @@ class Width:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         for key, value in data.items():
             setattr(cls, key, value)
         return cls
@@ -237,6 +248,7 @@ class LaneTurn:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         position = data.get("position")
         for key, value in data.items():
             if key != "position":
@@ -260,6 +272,7 @@ class SpeedLimit:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         for key, value in data.items():
             setattr(cls, key, value)
         return cls
@@ -279,6 +292,7 @@ class Stopline:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         shape = data.get("shape")
         for key, value in data.items():
             if key != "shape":
@@ -307,6 +321,7 @@ class LaneMark:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         for key, value in data.items():
             setattr(cls, key, value)
         return cls
@@ -332,12 +347,13 @@ class CenterPoint:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        obj = cls()
         point = data.get("point")
         for key, value in data.items():
             if key != "point":
-                setattr(cls, key, value)
-        cls.point = None if point is None else Point.from_dict(point)
-        return cls
+                setattr(obj, key, value)
+        obj.point = None if point is None else Point.from_dict(point)
+        return obj
 
 
 @dataclass
@@ -384,6 +400,7 @@ class Lane:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         lane_turn = data.get("lane_turn")
         speed_limits = data.get("speed_limits", [])
         stopline = data.get("stopline")
@@ -452,6 +469,7 @@ class Link:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         widths = data.get("widths", [])
         ordered_lanes = data.get("ordered_lanes", [])
         reference_line = data.get("reference_line", [])
@@ -483,6 +501,7 @@ class Movement:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         for key, value in data.items():
             setattr(cls, key, value)
         return cls
@@ -505,6 +524,7 @@ class Connection:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         path = data.get("path")
         for key, value in data.items():
             if key != "path":
@@ -529,6 +549,7 @@ class Crosswalk:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         shape = data.get("shape")
         for key, value in data.items():
             if key != "shape":
@@ -555,6 +576,7 @@ class SignalPlan_MovementSignal_SignalOfGreen:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         for key, value in data.items():
             setattr(cls, key, value)
         return cls
@@ -578,6 +600,7 @@ class SignalPlan_MovementSignal:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         position = data.get("position")
         signal_of_greens = data.get("signal_of_greens", [])
         for key, value in data.items():
@@ -610,6 +633,7 @@ class SignalPlan:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         movement_signals = data.get("movement_signals", {})
         for key, value in data.items():
             if key != "movement_signals":
@@ -655,6 +679,7 @@ class Junction:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         shape = data.get("shape")
         movements = data.get("movements", [])
         connections = data.get("connections", [])
@@ -700,6 +725,7 @@ class TrafficSign:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         position = data.get("position")
         for key, value in data.items():
             if key != "position":
@@ -740,6 +766,7 @@ class Segment:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         ordered_links = data.get("ordered_links", [])
         traffic_signs = data.get("traffic_signs", [])
         for key, value in data.items():
@@ -780,6 +807,7 @@ class Road:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         neighbors = data.get("neighbors", [])
         control_points = data.get("control_points", [])
         reference_line = data.get("reference_line", [])
@@ -822,6 +850,7 @@ class Mapper:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         for key, value in data.items():
             setattr(cls, key, value)
         return cls
@@ -857,6 +886,7 @@ class Building:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         pos = data.get("pos")
         shape = data.get("shape")
         for key, value in data.items():
@@ -895,6 +925,7 @@ class Tree:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         pos = data.get("pos")
         for key, value in data.items():
             if key != "pos":
@@ -931,6 +962,7 @@ class Lamp:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
+        cls = cls()
         pos = data.get("pos")
         for key, value in data.items():
             if key != "pos":
@@ -957,7 +989,7 @@ class Qxmap:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
-        
+        cls = cls()
         header = data.get("header")
         junctions = data.get("junctions", [])
         segments = data.get("segments", [])
