@@ -124,9 +124,11 @@ class HttpClient():
         try:
             response_data = response.json()
             return out_type.from_dict(response_data)
-        except ValueError:
-            raise APIError("Invalid JSON response")
-
+        except ValueError as e:
+            raise APIError(
+                message = f"Error parsing response: {e}",
+                url=f"{response.request.method},{response.url}"
+            )
     def get(self, path: str, params: Dict[str, str] = None, out_type: Optional[Type[T]] = None) -> T:
         """Send GET request.
         
