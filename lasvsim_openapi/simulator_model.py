@@ -2436,7 +2436,7 @@ class Obstacle:
 class SetVehicleObstaclePerceptionInfoReq:
     simulation_id: str = ""
     vehicle_id: str = ""
-    obstacles: List[Obstacle]
+    obstacles: List[Obstacle] = None
 
 
 @dataclass
