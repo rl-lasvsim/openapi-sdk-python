@@ -495,7 +495,18 @@ class Movement:
     upstream_link_id: str = ""
     downstream_link_id: str = ""
     junction_id: str = ""
-    flow_direction: int = 0
+    class Direction(IntEnum):
+        DIRECTION_UNKNOWN = 0
+        # 直行
+        DIRECTION_STRAIGHT = 1
+        # 左转
+        DIRECTION_LEFT = 2
+        # 右转
+        DIRECTION_RIGHT = 3
+        # 掉头
+        DIRECTION_U_TURN = 4
+
+    flow_direction: Direction = Direction.DIRECTION_UNKNOWN
     
     @classmethod
     def from_dict(cls, data: dict = None):
@@ -515,7 +526,18 @@ class Connection:
     movement_id: str = ""
     upstream_lane_id: str = ""
     downstream_lane_id: str = ""
-    flow_direction: int = 0
+    class Direction(IntEnum):
+        DIRECTION_UNKNOWN = 0
+        # 直行
+        DIRECTION_STRAIGHT = 1
+        # 左转
+        DIRECTION_LEFT = 2
+        # 右转
+        DIRECTION_RIGHT = 3
+        # 掉头
+        DIRECTION_U_TURN = 4
+
+    flow_direction: Direction = Direction.DIRECTION_UNKNOWN
     upstream_link_id: str = ""
     downstream_link_id: str = ""
     path: Optional[LineString] = None
