@@ -3,7 +3,77 @@ HD map data structures.
 """
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
+from enum import IntEnum
 
+
+class Header_SourceType(IntEnum):
+    SOURCE_QXMAP = 0
+    SOURCE_APOLLO = 1
+    SOURCE_OPENDRIVE = 2
+    SOURCE_ROAD_EDITOR = 3
+
+
+class Junction_JunctionType(IntEnum):
+    JUNCTION_TYPE_UNKNOWN = 0
+    JUNCTION_TYPE_DEAD_END = 1    # 断头路
+    JUNCTION_TYPE_CROSSING = 2    # 交叉口
+    JUNCTION_TYPE_ROUNDABOUT = 3  # 环岛
+    JUNCTION_TYPE_RAMP_IN = 4     # 匝道入口
+    JUNCTION_TYPE_RAMP_OUT = 5    # 匝道出口
+    JUNCTION_TYPE_VIRTUAL = 6     # 虚拟路口
+
+
+class Link_LinkType(IntEnum):
+    LINK_TYPE_UNKNOWN = 0
+    LINK_TYPE_WAIT_AREA = 1      # 等待区
+    LINK_TYPE_ROUNDABOUT = 2      # 环岛
+    LINK_TYPE_SEGMENT = 3         # 路段
+    LINK_TYPE_JUNCTION = 4        # 路口
+    LINK_TYPE_PRE_TURN_RIGHT = 5  # 提前右转
+    LINK_TYPE_PRE_U_TURN = 6      # 提前掉头
+
+
+class Lane_LaneType(IntEnum):
+    LANE_TYPE_UNKNOWN = 0   # 未知
+    LANE_TYPE_DRIVING = 1   # 普通机动车车道
+    LANE_TYPE_BIKING = 2    # 非机动车道
+    LANE_TYPE_SIDEWALK = 3  # 人行道
+    LANE_TYPE_PARKING = 4   # 停车区
+    LANE_TYPE_BORDER = 5    # 边界线
+    LANE_TYPE_MEDIAN = 6    # 分隔带
+    LANE_TYPE_BUSING = 7    # 公交车道
+    LANE_TYPE_CURB = 8      # 路沿
+    LANE_TYPE_ENTRY = 10    # 加速车道进入段
+    LANE_TYPE_EXIT = 11     # 加速车道退出段
+    LANE_TYPE_RAMP_IN = 12  # 闸道车道进入段
+    LANE_TYPE_RAMP_OUT = 13 # 闸道车道退出段
+
+
+class SpeedLimit_SpeedLimitType(IntEnum):
+    SPEED_LIMIT_UNLIMITED = 0    # 无限制
+    SPEED_LIMIT_LIMITED = 1      # 限制
+    SPEED_LIMIT_MAX_LIMITED = 2  # 限制最大值
+    SPEED_LIMIT_MIN_LIMITED = 3  # 限制最小值
+
+
+class LaneMark_LaneMarkStyle(IntEnum):
+    LANE_MARK_STYLE_UNKNOWN = 0
+    LANE_MARK_STYLE_NONE = 1         # 无
+    LANE_MARK_STYLE_SOLID = 2        # 实线
+    LANE_MARK_STYLE_BROKEN = 3       # 虚线
+    LANE_MARK_STYLE_DOUBLE_SOLID = 4 # 双实线
+    LANE_MARK_STYLE_DOUBLE_BROKEN = 5 # 双虚线
+
+class Direction(IntEnum):
+    DIRECTION_UNKNOWN = 0
+    # 直行
+    DIRECTION_STRAIGHT = 1
+    # 左转
+    DIRECTION_LEFT = 2
+    # 右转
+    DIRECTION_RIGHT = 3
+    # 掉头
+    DIRECTION_U_TURN = 4
 
 @dataclass
 class Point:
@@ -201,7 +271,7 @@ class Header:
     south: float = 0.0
     east: float = 0.0
     west: float = 0.0
-    source_type: int = 0
+    source_type: Header_SourceType = Header_SourceType.SOURCE_QXMAP
     source_version: str = ""
     source_data: str = ""
     source_date: str = ""
@@ -262,7 +332,7 @@ class SpeedLimit:
     """Speed limit information."""
     s: float = 0.0
     length: float = 0.0
-    type: int = 0
+    type: SpeedLimit_SpeedLimitType = SpeedLimit_SpeedLimitType.SPEED_LIMIT_UNLIMITED
     max_value: float = 0.0
     min_value: float = 0.0
     unit: str = ""
@@ -307,10 +377,10 @@ class LaneMark:
     s: float = 0.0
     length: float = 0.0
     is_merge: bool = False
-    style: int = 0
+    style: LaneMark_LaneMarkStyle = LaneMark_LaneMarkStyle.LANE_MARK_STYLE_UNKNOWN
     color: int = 0
     width: float = 0.0
-    styles: List[int] = field(default_factory=list)
+    styles: List[LaneMark_LaneMarkStyle] = field(default_factory=list)
     colors: List[int] = field(default_factory=list)
     
     def __init__(self, s: float = 0.0, length: float = 0.0):
@@ -360,7 +430,7 @@ class CenterPoint:
 class Lane:
     """Lane information."""
     id: str = ""
-    type: int = 0
+    type: Lane_LaneType = Lane_LaneType.LANE_TYPE_UNKNOWN
     lane_num: int = 0
     link_id: str = ""
     lane_turn: Optional[LaneTurn] = None
@@ -495,16 +565,16 @@ class Movement:
     upstream_link_id: str = ""
     downstream_link_id: str = ""
     junction_id: str = ""
-    flow_direction: int = 0
+    flow_direction: Direction = Direction.DIRECTION_UNKNOWN
     
     @classmethod
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
-        cls = cls()
+        obj = cls()
         for key, value in data.items():
-            setattr(cls, key, value)
-        return cls
+            setattr(obj, key, value)
+        return obj
 
 
 @dataclass
@@ -515,7 +585,8 @@ class Connection:
     movement_id: str = ""
     upstream_lane_id: str = ""
     downstream_lane_id: str = ""
-    flow_direction: int = 0
+
+    flow_direction: Direction = Direction.DIRECTION_UNKNOWN
     upstream_link_id: str = ""
     downstream_link_id: str = ""
     path: Optional[LineString] = None
