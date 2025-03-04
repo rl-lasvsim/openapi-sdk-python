@@ -2380,16 +2380,47 @@ class GetVehicleSensorConfigRes:
 class LineString:
     points: List[Point] = field(default_factory=list)
 
+    def __init__(self, points: List[Point] = None):
+        self.points = points if points is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(points=[Point.from_dict(x) for x in data.get("points", [])])
+
 
 @dataclass
 class Polygon:
     points: List[Point] = field(default_factory=list)
+
+    def __init__(self, points: List[Point] = None):
+        self.points = points if points is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(points=[Point.from_dict(x) for x in data.get("points", [])])
 
 
 @dataclass
 class LaneBoundary:
     line: Optional[LineString] = None
     style: str = ""
+
+    def __init__(self, line: Optional[LineString] = None, style: str = ""):
+        self.line = line
+        self.style = style
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            line=LineString.from_dict(data.get("line")),
+            style=data.get("style", ""),
+        )
 
 
 @dataclass
@@ -2402,12 +2433,47 @@ class LocalMap:
     lane_center_lines: List[LineString] = field(default_factory=list)
     virtual_polygons: List[Polygon] = field(default_factory=list)
 
+    def __init__(
+        self,
+        lane_boundaries: List[LaneBoundary] = None,
+        junctions: List[Polygon] = None,
+        crosswalks: List[Polygon] = None,
+        traffic_light_colors: Dict[str, int] = None,
+        stop_lines: List[Polygon] = None,
+        lane_center_lines: List[LineString] = None,
+        virtual_polygons: List[Polygon] = None,
+    ):
+        self.lane_boundaries = lane_boundaries if lane_boundaries is not None else []
+        self.junctions = junctions if junctions is not None else []
+        self.crosswalks = crosswalks if crosswalks is not None else []
+        self.traffic_light_colors = (
+            traffic_light_colors if traffic_light_colors is not None else {}
+        )
+        self.stop_lines = stop_lines if stop_lines is not None else []
+        self.lane_center_lines = (
+            lane_center_lines if lane_center_lines is not None else []
+        )
+        self.virtual_polygons = virtual_polygons if virtual_polygons is not None else []
 
-@dataclass
-class SetVehicleRoadPerceptionInfoReq:
-    simulation_id: str = ""
-    vehicle_id: str = ""
-    noa: Optional[LocalMap] = None
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            lane_boundaries=[
+                LaneBoundary.from_dict(x) for x in data.get("lane_boundaries", [])
+            ],
+            junctions=[Polygon.from_dict(x) for x in data.get("junctions", [])],
+            crosswalks=[Polygon.from_dict(x) for x in data.get("crosswalks", [])],
+            traffic_light_colors=data.get("traffic_light_colors", {}),
+            stop_lines=[Polygon.from_dict(x) for x in data.get("stop_lines", [])],
+            lane_center_lines=[
+                LineString.from_dict(x) for x in data.get("lane_center_lines", [])
+            ],
+            virtual_polygons=[
+                Polygon.from_dict(x) for x in data.get("virtual_polygons", [])
+            ],
+        )
 
 
 @dataclass
@@ -2431,12 +2497,31 @@ class Obstacle:
     moving_info: Optional[ObjMovingInfo] = None
     position: Optional[Position] = None
 
+    def __init__(
+        self,
+        id: str = "",
+        type: int = 0,
+        base_info: Optional[ObjBaseInfo] = None,
+        moving_info: Optional[ObjMovingInfo] = None,
+        position: Optional[Position] = None,
+    ):
+        self.id = id
+        self.type = type
+        self.base_info = base_info
+        self.moving_info = moving_info
+        self.position = position
 
-@dataclass
-class SetVehicleObstaclePerceptionInfoReq:
-    simulation_id: str = ""
-    vehicle_id: str = ""
-    obstacles: List[Obstacle] = None
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            id=data.get("id", ""),
+            type=data.get("type", 0),
+            base_info=ObjBaseInfo.from_dict(data.get("base_info")),
+            moving_info=ObjMovingInfo.from_dict(data.get("moving_info")),
+            position=Position.from_dict(data.get("position")),
+        )
 
 
 @dataclass
@@ -2450,13 +2535,6 @@ class SetVehicleObstaclePerceptionInfoRes:
         if data is None:
             return None
         return cls()
-
-
-@dataclass
-class SetVehicleExtraMetricsReq:
-    simulation_id: str
-    vehicle_id: str
-    metrics: Dict[str, float]
 
 
 @dataclass
@@ -2492,14 +2570,6 @@ class LocalPath:
 
 
 @dataclass
-class SetVehicleLocalPathsReq:
-    simulation_id: str
-    vehicle_id: str
-    local_paths: List[LocalPath] = None
-    choose_idx: Optional[int] = None
-
-
-@dataclass
 class SetVehicleLocalPathsRes:
 
     def __init__(self):
@@ -2510,3 +2580,41 @@ class SetVehicleLocalPathsRes:
         if data is None:
             return None
         return cls()
+
+
+@dataclass
+class GetIdcVehicleNavRes:
+
+    link_path_nav: List[str] = field(default_factory=list)
+    link_junction_nav: List[str] = field(default_factory=list)
+    next_junction_id: str = ""
+    dis_to_next_junction: float = 0.0
+    next_movement_id: str = ""
+
+    def __init__(
+        self,
+        link_path_nav: List[str] = None,
+        link_junction_nav: List[str] = None,
+        next_junction_id="",
+        dis_to_next_junction=0.0,
+        next_movement_id="",
+    ):
+        self.link_path_nav = link_path_nav if link_path_nav is not None else []
+        self.link_junction_nav = (
+            link_junction_nav if link_junction_nav is not None else []
+        )
+        self.next_junction_id = next_junction_id
+        self.dis_to_next_junction = dis_to_next_junction
+        self.next_movement_id = next_movement_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            link_path_nav=data.get("link_path_nav", []),
+            link_junction_nav=data.get("link_junction_nav", []),
+            next_junction_id=data.get("next_junction_id", ""),
+            dis_to_next_junction=data.get("dis_to_next_junction", 0.0),
+            next_movement_id=data.get("next_movement_id", ""),
+        )

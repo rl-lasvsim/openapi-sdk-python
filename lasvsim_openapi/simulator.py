@@ -96,6 +96,7 @@ from lasvsim_openapi.simulator_model import (
     SetVehicleExtraMetricsRes,
     LocalPath,
     SetVehicleLocalPathsRes,
+    GetIdcVehicleNavRes,
 )
 
 
@@ -1046,4 +1047,18 @@ class Simulator:
                 "choose_idx": choose_idx,
             },
             SetVehicleLocalPathsRes,
+        )
+
+    def get_idc_vehicle_nav(
+        self,
+        vehicle_id: str,
+    ) -> GetIdcVehicleNavRes:
+
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/vehicle/idc_vehicle_nav/get",
+            {
+                "simulation_id": self.simulation_id,
+                "vehicle_id": vehicle_id,
+            },
+            GetIdcVehicleNavRes,
         )
