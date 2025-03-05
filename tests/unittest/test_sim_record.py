@@ -43,7 +43,7 @@ def sim_record_test_data(client: Client, scenario_info: Tuple[str, str]) -> Tupl
     assert len(record_res.ids) > 0, "record list should not be empty"
 
     # Get record info
-    record_id = record_res.ids[0]
+    record_id = record_res.ids[-1]
 
     return scen_id, scen_ver, record_id,
 

@@ -141,15 +141,35 @@ class SensorObj:
     width: float = 0.0
     height: float = 0.0
     phi: float = 0.0
+    # 最低位起置1表示灯光点亮:近光灯(0) 远光灯(1) 左转向灯(2) 右转向灯(3)
+    # 紧急报警灯(4) 刹车灯(5) e.g. "000001" 近光灯; "100000" 刹车灯; "111111"
+    # 全亮
     exterior_light: str = ""
+    # 0(无风险); 1(低风险); 2(高风险)
     risk_2_ego: int = 0
+    # 纵向加速度
     lon_acc: float = 0.0
-    lat_speed: float = 0.0
-    obj_id: str = ""
-    obj_type: int = 0
+    # 横向速度
+    v: float = 0.0
+    # 横向加速度
+    lat_acc: float = 0.0
+    # 横摆角速度
+    w: float = 0.0
+    # 横摆角加速度
+    w_acc: float = 0.0
+    # 车道ID，允许为空
+    lane_id: str = ""
+    # POSITION_TYPE_UNKNOWN = 0;
+    # 1. 在车道内
+    # POSITION_TYPE_IN_LANE = 1;
+    # 2. 在路口内
+    # POSITION_TYPE_IN_JUNCTION = 2;
+    # 3. 在道路外
+    # POSITION_TYPE_OUT_ROAD = 3;
+    position_type: str = ""
     position: Optional[Position] = None
 
-    def __init__(self, id: str = "", speed: float = 0.0, x: float = 0.0, y: float = 0.0, z: float = 0.0, length: float = 0.0, width: float = 0.0, height: float = 0.0, phi: float = 0.0, exterior_light: str = "", risk_2_ego: int = 0, lon_acc: float = 0.0, lat_speed: float = 0.0, obj_id: str = "", obj_type: int = 0, position: Optional[Position] = None):
+    def __init__(self, id: str = "", speed: float = 0.0, x: float = 0.0, y: float = 0.0, z: float = 0.0, length: float = 0.0, width: float = 0.0, height: float = 0.0, phi: float = 0.0, exterior_light: str = "", risk_2_ego: int = 0, lon_acc: float = 0.0, v: float = 0.0, lat_acc: float = 0.0, w: float = 0.0, w_acc: float = 0.0, lane_id: str = "", position_type: str = "", position: Optional[Position] = None):
         self.id = id
         self.speed = speed
         self.x = x
@@ -162,9 +182,12 @@ class SensorObj:
         self.exterior_light = exterior_light
         self.risk_2_ego = risk_2_ego
         self.lon_acc = lon_acc
-        self.lat_speed = lat_speed
-        self.obj_id = obj_id
-        self.obj_type = obj_type
+        self.v = v
+        self.lat_acc = lat_acc
+        self.w = w
+        self.w_acc = w_acc
+        self.lane_id = lane_id
+        self.position_type = position_type
         self.position = position
 
     @classmethod
