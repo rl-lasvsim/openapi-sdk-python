@@ -24,7 +24,8 @@ setup(
     url="https://github.com/rl-lasvsim/openapi-sdk-python",
     packages=find_packages(),
     install_requires=[
-        "requests>=2.25.0",
+        "urllib3>=1.26.14",
+        "ujson>=5.10.0",
     ],
     python_requires=">=3.0",
     keywords=["Qianxing", "Lasvsim", "自动驾驶",
