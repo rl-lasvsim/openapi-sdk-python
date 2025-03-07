@@ -21,7 +21,7 @@ class APIError(Exception):
     url: str = ""
     reason: str = ""
 
-    def __init__(self, status_code: int, message: Any, url: str, reason: str = ""):
+    def __init__(self, status_code: int = 0, message: Any = None, url: str = None, reason: str = ""):
         super().__init__(f"APIError {url} {status_code}: {message}")
         self.status_code = status_code
         self.message = message
@@ -120,6 +120,10 @@ class HttpClient():
         """
 
         return HttpClient(self.config, dict(self.headers))
+
+    def close(self):
+        """Close the underlying HTTP connection"""
+        self.http.close()
 
     def _handle_response(self, response: urllib3.HTTPResponse, out_type: Optional[Type[T]] = None) -> Optional[T]:
         if response.status != 200:
