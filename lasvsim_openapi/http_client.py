@@ -143,8 +143,15 @@ class HttpClient():
     
     def do(self, out_type: Optional[Type[T]],method, url, fields=None, headers=None, **urlopen_kw):
         try:
-            response = self.http.request(method, url, fields, headers, **urlopen_kw)
-            return self._handle_response(response,out_type)
+            if 'body' in urlopen_kw:
+                body = urlopen_kw.pop('body')
+                response = self.http.request(method, url, body=body, headers=headers, **urlopen_kw)
+            elif fields:
+                response = self.http.request(method, url, fields=fields, headers=headers, **urlopen_kw)
+            else:
+                response = self.http.request(method, url, headers=headers, **urlopen_kw)
+
+            return self._handle_response(response, out_type)
         except APIError as e:
             e.url = f"{method},{url}"
             raise e

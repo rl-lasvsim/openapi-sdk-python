@@ -24,7 +24,7 @@ setup(
     url="https://github.com/rl-lasvsim/openapi-sdk-python",
     packages=find_packages(),
     install_requires=[
-        "urllib3>=1.26.14",
+        "urllib3>=2.3.0",
         "ujson>=5.10.0",
     ],
     python_requires=">=3.0",
