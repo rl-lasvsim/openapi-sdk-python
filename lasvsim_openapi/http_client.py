@@ -4,7 +4,7 @@ HTTP client module for the lasvsim API.
 from typing import Any, Dict, Callable, Optional, Type, TypeVar,Tuple
 import urllib3
 import ujson
-from urllib.parse import urlparse
+from urllib.parse import urlparse,urljoin
 
 class ErrorReason:
     """Error reason constants."""
@@ -150,6 +150,8 @@ class HttpClient():
     
     def do(self, out_type: Optional[Type[T]],method, url, fields=None, headers=None, **urlopen_kw):
         try:
+            # path join
+            url = self.config.endpoint + url
             if 'body' in urlopen_kw:
                 body = urlopen_kw.pop('body')
                 response = self.http.request(method, url, body=body, headers=headers, **urlopen_kw)
