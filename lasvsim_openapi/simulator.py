@@ -995,7 +995,7 @@ class Simulator:
 
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/vehicle/road_perception/set",
-            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "noa": [asdict(n) for n in noa]},
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "noa": asdict(noa)},
             SetVehicleRoadPerceptionInfoRes,
         )
 
