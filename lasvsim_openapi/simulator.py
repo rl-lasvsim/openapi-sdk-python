@@ -1044,7 +1044,7 @@ class Simulator:
                 "simulation_id": self.simulation_id,
                 "vehicle_id": vehicle_id,
                 "local_paths": [asdict(local_path) for local_path in local_paths],
-                "choose_idx": [asdict(idx) for idx in choose_idx],
+                "choose_idx": choose_idx,
             },
             SetVehicleLocalPathsRes,
         )
