@@ -5,7 +5,7 @@ import pytest
 
 from lasvsim_openapi.client import Client
 from lasvsim_openapi.simulator import Simulator
-from lasvsim_openapi.simulator_model import Point, ObjBaseInfo, DynamicInfo
+from lasvsim_openapi.simulator_model import Point, ObjBaseInfo, DynamicInfo,LocalMap,Obstacle,ObjMovingInfo,Position
 
 
 def test_simulator_initialization(simulator: Simulator):

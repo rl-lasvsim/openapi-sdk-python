@@ -995,7 +995,7 @@ class Simulator:
 
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/vehicle/road_perception/set",
-            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "noa": noa},
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "noa": [asdict(n) for n in noa]},
             SetVehicleRoadPerceptionInfoRes,
         )
 
@@ -1010,7 +1010,7 @@ class Simulator:
             {
                 "simulation_id": self.simulation_id,
                 "vehicle_id": vehicle_id,
-                "obstacles": obstacles,
+                "obstacles": [asdict(obs) for obs in obstacles],
             },
             SetVehicleObstaclePerceptionInfoRes,
         )
@@ -1043,8 +1043,8 @@ class Simulator:
             {
                 "simulation_id": self.simulation_id,
                 "vehicle_id": vehicle_id,
-                "local_paths": local_paths,
-                "choose_idx": choose_idx,
+                "local_paths": [asdict(local_path) for local_path in local_paths],
+                "choose_idx": [asdict(idx) for idx in choose_idx],
             },
             SetVehicleLocalPathsRes,
         )
