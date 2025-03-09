@@ -97,6 +97,7 @@ from lasvsim_openapi.simulator_model import (
     LocalPath,
     SetVehicleLocalPathsRes,
     GetIdcVehicleNavRes,
+    IdcStepRes,
 )
 
 
@@ -1061,4 +1062,22 @@ class Simulator:
                 "vehicle_id": vehicle_id,
             },
             GetIdcVehicleNavRes,
+        )
+    
+    def idc_step(
+        self,
+        vehicle_id: str,
+        ste_wheel: Optional[float] = None,
+        lon_acc: Optional[float] = None,
+    ) -> IdcStepRes:
+
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/idc_step",
+            {
+                "simulation_id": self.simulation_id,
+                "vehicle_id": vehicle_id,
+                "ste_wheel": ste_wheel,
+                "lon_acc": lon_acc,
+            },
+            IdcStepRes,
         )

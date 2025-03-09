@@ -127,14 +127,11 @@ class HttpClient():
 
     def _handle_response(self, response: urllib3.HTTPResponse, out_type: Optional[Type[T]] = None) -> Optional[T]:
         if response.status != 200:
-            if response.status == 401:
-                raise APIError(
-                    status_code=response.status,
-                    message=f"Unauthorized,Message:{response.data}",
-                    reason=ErrorReason.CALL_GRPC_ERR,
-                )
-            
-            error_data = ujson.loads(response.data)
+            try:
+                error_data = ujson.loads(response.data)
+            except Exception as e:
+                error_data = {"message": f'client parse json error:{e},data:{response.data}'}
+
             reason = error_data.get('reason') if isinstance(error_data, dict) else None
             raise APIError(
                 status_code=response.status,
@@ -144,7 +141,6 @@ class HttpClient():
         
         if out_type is None:
             return None
-        
         response_data = ujson.loads(response.data)
         return out_type.from_dict(response_data)
     
