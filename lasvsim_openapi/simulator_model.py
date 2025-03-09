@@ -24,7 +24,10 @@ class Point:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
-        return cls(x=data.get("x", 0.0), y=data.get("y", 0.0), z=data.get("z", 0.0))
+        
+        instance = cls()
+        instance.__dict__ = data
+        return instance
 
 
 @dataclass
@@ -306,13 +309,14 @@ class ReferenceLine:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
-        return cls(
-            lane_ids=data.get("lane_ids", []),
-            lane_types=data.get("lane_types", []),
-            points=[Point.from_dict(p) for p in data.get("points", [])],
-            lane_idxes=data.get("lane_idxes", []),
-            opposite=data.get("opposite", False),
-        )
+        
+        point = data.pop("points", [])
+
+        instance = cls()
+        instance.__dict__ = data
+        instance.points = [Point.from_dict(p) for p in point]
+
+        return instance
 
 
 @dataclass
