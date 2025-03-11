@@ -17,6 +17,8 @@ import os
 from lasvsim_openapi.client import Client, SimulatorConfig
 from lasvsim_openapi.http_client import HttpConfig
 from lasvsim_openapi.simulator_model import SimulatorConfig
+from lasvsim_openapi.simulator_model import LocalMap
+from lasvsim_openapi.simulator_model import Polygon
 
 
 def main():
@@ -28,9 +30,11 @@ def main():
         "QX_TOKEN"
     )  # 登录仿真平台后访问 https://qianxing.risenlighten.com/#/usecenter/personalCenter, 点击最下面按钮复制token
 
+    endpoint = "http://8.146.201.197:30080/test"
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjE2LCJvaWQiOjEwMSwibmFtZSI6IuiCluaxiSIsImlkZW50aXR5Ijoibm9ybWFsIiwicGVybWlzc2lvbnMiOltdLCJpc3MiOiJ1c2VyIiwic3ViIjoiTGFzVlNpbSIsImV4cCI6MTc0MjI2NzMzOCwibmJmIjoxNzQxNjYyNTM4LCJpYXQiOjE3NDE2NjI1MzgsImp0aSI6IjE2In0.naAVrCCuGKtrrlc17lxw2ejo4Qvh5-GqpPvIqk00KdE"
     # 登录仿真平台，选择想要进行联合仿真的任务及剧本
-    task_id = 0  # 替换为你的任务ID
-    record_id = 0  # 替换为你的剧本ID
+    task_id = 8071  # 替换为你的任务ID
+    record_id = 10681  # 替换为你的剧本ID
 
     # 1. 初始化客户端
     cli = Client(
@@ -60,16 +64,36 @@ def main():
         # 记录仿真器运行状态(True: 运行中; False: 运行结束), 任务运行过程中持续更新该状态
         is_running = True
 
+        i = 0
         # 使测试车辆环形行驶
         while is_running:
+            i += 1
             # 设置方向盘转角10度, 纵向加速度0.05
-            ste_wheel = 10.0
-            lon_acc = 0.05
+            # ste_wheel = 10.0
+            # lon_acc = 0.05
 
+            # # 设置车辆的控制信息
+            # simulator.set_vehicle_control_info(
+            #     test_vehicle_list.list[0], ste_wheel, lon_acc
+            # )
             # 设置车辆的控制信息
-            simulator.set_vehicle_control_info(
-                test_vehicle_list.list[0], ste_wheel, lon_acc
+            # simulator.set_vehicle_extra_metrics(
+            #     test_vehicle_list.list[0], {"speed": i, "lon": i + 1}
+            # )
+            simulator.set_vehicle_road_perception_info(
+                test_vehicle_list.list[0],
+                LocalMap(
+                    lane_center_lines=[
+                        Polygon(
+                            points=[(8.75, -400), (8.749999999999998, -25.0316)],
+                            color="red",
+                        ),
+                    ]
+                ),
             )
+
+            res = simulator.get_idc_vehicle_nav(test_vehicle_list.list[0])
+            print(res)
 
             # 执行仿真器步骤
             step_res = simulator.step()

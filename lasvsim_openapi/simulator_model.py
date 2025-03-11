@@ -2393,25 +2393,37 @@ class LineString:
 @dataclass
 class Polygon:
     points: List[Point] = field(default_factory=list)
+    style: str = ""
+    color: str = ""
 
-    def __init__(self, points: List[Point] = None):
+    def __init__(self, points: List[Point] = None, style: str = "", color: str = ""):
         self.points = points if points is not None else []
+        self.style = style
+        self.color = color
 
     @classmethod
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
-        return cls(points=[Point.from_dict(x) for x in data.get("points", [])])
+        return cls(
+            points=[Point.from_dict(x) for x in data.get("points", [])],
+            style=data.get("style", ""),
+            color=data.get("color", ""),
+        )
 
 
 @dataclass
 class LaneBoundary:
     line: Optional[LineString] = None
     style: str = ""
+    color: str = ""
 
-    def __init__(self, line: Optional[LineString] = None, style: str = ""):
+    def __init__(
+        self, line: Optional[LineString] = None, style: str = "", color: str = ""
+    ):
         self.line = line
         self.style = style
+        self.color = color
 
     @classmethod
     def from_dict(cls, data: dict = None):
@@ -2420,6 +2432,7 @@ class LaneBoundary:
         return cls(
             line=LineString.from_dict(data.get("line")),
             style=data.get("style", ""),
+            color=data.get("color", ""),
         )
 
 
@@ -2430,7 +2443,7 @@ class LocalMap:
     crosswalks: List[Polygon] = field(default_factory=list)
     traffic_light_colors: Dict[str, int] = field(default_factory=dict)
     stop_lines: List[Polygon] = field(default_factory=list)
-    lane_center_lines: List[LineString] = field(default_factory=list)
+    lane_center_lines: List[Polygon] = field(default_factory=list)
     virtual_polygons: List[Polygon] = field(default_factory=list)
 
     def __init__(
@@ -2440,7 +2453,7 @@ class LocalMap:
         crosswalks: List[Polygon] = None,
         traffic_light_colors: Dict[str, int] = None,
         stop_lines: List[Polygon] = None,
-        lane_center_lines: List[LineString] = None,
+        lane_center_lines: List[Polygon] = None,
         virtual_polygons: List[Polygon] = None,
     ):
         self.lane_boundaries = lane_boundaries if lane_boundaries is not None else []
@@ -2468,7 +2481,7 @@ class LocalMap:
             traffic_light_colors=data.get("traffic_light_colors", {}),
             stop_lines=[Polygon.from_dict(x) for x in data.get("stop_lines", [])],
             lane_center_lines=[
-                LineString.from_dict(x) for x in data.get("lane_center_lines", [])
+                Polygon.from_dict(x) for x in data.get("lane_center_lines", [])
             ],
             virtual_polygons=[
                 Polygon.from_dict(x) for x in data.get("virtual_polygons", [])
