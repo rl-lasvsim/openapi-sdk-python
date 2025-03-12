@@ -30,9 +30,11 @@ def main():
         "QX_TOKEN"
     )  # 登录仿真平台后访问 https://qianxing.risenlighten.com/#/usecenter/personalCenter, 点击最下面按钮复制token
 
+    endpoint = "http://8.146.201.197:30080/test"
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjE2LCJvaWQiOjEwMSwibmFtZSI6IuiCluaxiSIsImlkZW50aXR5Ijoibm9ybWFsIiwicGVybWlzc2lvbnMiOltdLCJpc3MiOiJ1c2VyIiwic3ViIjoiTGFzVlNpbSIsImV4cCI6MTc0MjI2NzMzOCwibmJmIjoxNzQxNjYyNTM4LCJpYXQiOjE3NDE2NjI1MzgsImp0aSI6IjE2In0.naAVrCCuGKtrrlc17lxw2ejo4Qvh5-GqpPvIqk00KdE"
     # 登录仿真平台，选择想要进行联合仿真的任务及剧本
-    task_id = 0  # 替换为你的任务ID
-    record_id = 0  # 替换为你的剧本ID
+    task_id = 8071  # 替换为你的任务ID
+    record_id = 10681  # 替换为你的剧本ID
 
     # 1. 初始化客户端
     cli = Client(
