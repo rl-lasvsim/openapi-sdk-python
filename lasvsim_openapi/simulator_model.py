@@ -2411,6 +2411,7 @@ class Polygon:
             color=data.get("color", ""),
         )
 
+
 # 停车线
 @dataclass
 class StopLines:
@@ -2434,6 +2435,7 @@ class StopLines:
             style=data.get("style", ""),
             color=data.get("color", ""),
         )
+
 
 # 停车线
 @dataclass
@@ -2459,8 +2461,33 @@ class LaneCenterLines:
             color=data.get("color", ""),
         )
 
+
 @dataclass
 class LaneBoundary:
+    line: Optional[LineString] = None
+    style: str = ""
+    color: str = ""
+
+    def __init__(
+        self, line: Optional[LineString] = None, style: str = "", color: str = ""
+    ):
+        self.line = line
+        self.style = style
+        self.color = color
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            line=LineString.from_dict(data.get("line")),
+            style=data.get("style", ""),
+            color=data.get("color", ""),
+        )
+
+
+@dataclass
+class ReferenceLines:
     line: Optional[LineString] = None
     style: str = ""
     color: str = ""
@@ -2502,6 +2529,7 @@ class LocalMap:
         stop_lines: List[StopLines] = None,
         lane_center_lines: List[LaneCenterLines] = None,
         virtual_polygons: List[Polygon] = None,
+        reference_lines: List[ReferenceLines] = None,
     ):
         self.lane_boundaries = lane_boundaries if lane_boundaries is not None else []
         self.junctions = junctions if junctions is not None else []
@@ -2514,6 +2542,7 @@ class LocalMap:
             lane_center_lines if lane_center_lines is not None else []
         )
         self.virtual_polygons = virtual_polygons if virtual_polygons is not None else []
+        self.reference_lines = reference_lines if reference_lines is not None else []
 
     @classmethod
     def from_dict(cls, data: dict = None):
@@ -2532,6 +2561,9 @@ class LocalMap:
             ],
             virtual_polygons=[
                 Polygon.from_dict(x) for x in data.get("virtual_polygons", [])
+            ],
+            reference_lines=[
+                ReferenceLines.from_dict(x) for x in data.get("reference_lines", [])
             ],
         )
 
