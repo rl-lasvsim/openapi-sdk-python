@@ -463,7 +463,14 @@ class Simulator:
             {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id},
             GetVehicleReferenceLinesRes,
         )
-
+    
+    def get_vehicle_dis_to_link_boundary(self, vehicle_id: str):
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation//vehicle/dis_to_link_boundary/get",
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id},
+            GetVehicleReferenceLinesRes,# TODO: 
+        )
+    
     def get_vehicle_planning_info(self, vehicle_id: str) -> GetVehiclePlanningInfoRes:
         """Get vehicle planning information.
 
@@ -1069,7 +1076,7 @@ class Simulator:
         vehicle_id: str,
         ste_wheel: Optional[float] = None,
         lon_acc: Optional[float] = None,
-    ) -> IdcStepRes:
+    ):
 
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/idc_step",
