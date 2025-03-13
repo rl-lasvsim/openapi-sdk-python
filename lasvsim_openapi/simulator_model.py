@@ -2519,6 +2519,7 @@ class LocalMap:
     stop_lines: List[StopLines] = field(default_factory=list)
     lane_center_lines: List[LaneCenterLines] = field(default_factory=list)
     virtual_polygons: List[Polygon] = field(default_factory=list)
+    reference_lines: List[ReferenceLines] = field(default_factory=list)
 
     def __init__(
         self,
