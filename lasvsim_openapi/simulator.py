@@ -175,7 +175,7 @@ class Simulator:
             InitRes,
         )
 
-        self.init_from_sim(reply.simulation_id, reply.simulation_addr)
+        self.init_from_sim(reply['simulation_id'], reply['simulation_addr'])
 
     def init_from_sim(self, sim_id: str, sim_addr: str):
         """Initialize simulator from existing simulation.
