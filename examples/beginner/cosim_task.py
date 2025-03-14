@@ -69,31 +69,13 @@ def main():
         while is_running:
             i += 1
             # 设置方向盘转角10度, 纵向加速度0.05
-            # ste_wheel = 10.0
-            # lon_acc = 0.05
+            ste_wheel = 10.0
+            lon_acc = 0.05
 
-            # # 设置车辆的控制信息
-            # simulator.set_vehicle_control_info(
-            #     test_vehicle_list.list[0], ste_wheel, lon_acc
-            # )
             # 设置车辆的控制信息
-            # simulator.set_vehicle_extra_metrics(
-            #     test_vehicle_list.list[0], {"speed": i, "lon": i + 1}
-            # )
-            simulator.set_vehicle_road_perception_info(
-                test_vehicle_list.list[0],
-                LocalMap(
-                    lane_center_lines=[
-                        Polygon(
-                            points=[(8.75, -400), (8.749999999999998, -25.0316)],
-                            color="red",
-                        ),
-                    ]
-                ),
+            simulator.set_vehicle_control_info(
+                test_vehicle_list.list[0], ste_wheel, lon_acc
             )
-
-            res = simulator.get_idc_vehicle_nav(test_vehicle_list.list[0])
-            print(res)
 
             # 执行仿真器步骤
             step_res = simulator.step()
