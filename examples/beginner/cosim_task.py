@@ -64,10 +64,9 @@ def main():
         # 记录仿真器运行状态(True: 运行中; False: 运行结束), 任务运行过程中持续更新该状态
         is_running = True
 
-        i = 0
         # 使测试车辆环形行驶
         while is_running:
-            i += 1
+
             # 设置方向盘转角10度, 纵向加速度0.05
             ste_wheel = 10.0
             lon_acc = 0.05
