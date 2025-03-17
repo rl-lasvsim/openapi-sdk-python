@@ -1076,6 +1076,7 @@ class Simulator:
         vehicle_id: str,
         ste_wheel: Optional[float] = None,
         lon_acc: Optional[float] = None,
+        ref_limit: Optional[float] = None,
     ):
 
         return self.http_client.post(
@@ -1085,6 +1086,7 @@ class Simulator:
                 "vehicle_id": vehicle_id,
                 "ste_wheel": ste_wheel,
                 "lon_acc": lon_acc,
+                "ref_limit": ref_limit,
             },
             IdcStepRes,
         )
