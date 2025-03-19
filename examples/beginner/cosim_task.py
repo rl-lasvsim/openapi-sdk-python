@@ -30,7 +30,7 @@ def main():
         "QX_TOKEN"
     )  # 登录仿真平台后访问 https://qianxing.risenlighten.com/#/usecenter/personalCenter, 点击最下面按钮复制token
 
-    endpoint = "http://8.146.201.197:30080/test"
+    endpoint = "http://localhost:8008"
     token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjE2LCJvaWQiOjEwMSwibmFtZSI6IuiCluaxiSIsImlkZW50aXR5Ijoibm9ybWFsIiwicGVybWlzc2lvbnMiOltdLCJpc3MiOiJ1c2VyIiwic3ViIjoiTGFzVlNpbSIsImV4cCI6MTc0MjI2NzMzOCwibmJmIjoxNzQxNjYyNTM4LCJpYXQiOjE3NDE2NjI1MzgsImp0aSI6IjE2In0.naAVrCCuGKtrrlc17lxw2ejo4Qvh5-GqpPvIqk00KdE"
     # 登录仿真平台，选择想要进行联合仿真的任务及剧本
     task_id = 8071  # 替换为你的任务ID
@@ -48,12 +48,27 @@ def main():
     # 仿真结束后可到该剧本下查看结果详情
     new_record = cli.process_task.copy_record(task_id, record_id)
 
+    # 1. 初始化客户端
+    cli = Client(
+        HttpConfig(
+            endpoint=endpoint,  # 接口地址
+            token=token,  # 授权token
+        )
+    )
+
+    # 2. 拷贝剧本, 返回的结构中new_record_id字段就是新创建的剧本ID
+    # 仿真结束后可到该剧本下查看结果详情
+    # new_record = cli.process_task.get_record_scenario(task_id, record_id)
+    new_record = cli.process_task.copy_record(task_id, record_id)
+
     # 3. 通过拷贝的场景Id、Version和SimRecordId初始化仿真器
     simulator = cli.init_simulator_from_config(
         SimulatorConfig(
-            scen_id=new_record.scen_id,
-            scen_ver=new_record.scen_ver,
-            sim_record_id=new_record.sim_record_id,
+            scen_id=new_record['scen_id'],
+            scen_ver=new_record['scen_ver'],
+            sim_record_id=new_record['sim_record_id'],
+            # scen_id=new_record.scen_id,
+            # scen_ver=new_record.scen_ver
         )
     )
 
@@ -61,55 +76,17 @@ def main():
         # 获取测试车辆列表
         test_vehicle_list = simulator.get_test_vehicle_id_list()
 
-        # 记录仿真器运行状态(True: 运行中; False: 运行结束), 任务运行过程中持续更新该状态
-        is_running = True
+        #simulator.step()
+        #simulator.reset()
+        # simulator.reset(reset_traffic_flow=True)
 
-        i = 0
-        # 使测试车辆环形行驶
-        while is_running:
-            i += 1
-            # 设置方向盘转角10度, 纵向加速度0.05
-            # ste_wheel = 10.0
-            # lon_acc = 0.05
-
-            # # 设置车辆的控制信息
-            # simulator.set_vehicle_control_info(
-            #     test_vehicle_list.list[0], ste_wheel, lon_acc
-            # )
-            # 设置车辆的控制信息
-            # simulator.set_vehicle_extra_metrics(
-            #     test_vehicle_list.list[0], {"speed": i, "lon": i + 1}
-            # )
-            simulator.set_vehicle_road_perception_info(
-                test_vehicle_list.list[0],
-                LocalMap(
-                    lane_center_lines=[
-                        Polygon(
-                            points=[(8.75, -400), (8.749999999999998, -25.0316)],
-                            color="red",
-                        ),
-                    ]
-                ),
-            )
-
-            res = simulator.get_idc_vehicle_nav(test_vehicle_list.list[0])
+        for i in range(100):
+            # print(simulator.get_vehicle_reference_lines(test_vehicle_list['list'][0]))
+            a = simulator.idc_step(test_vehicle_list['list'][0],ste_wheel=1,lon_acc=1,ref_limit=10)
+            res = simulator.get_vehicle_reference_lines(test_vehicle_list['list'][0])
             print(res)
-
-            # 执行仿真器步骤
-            step_res = simulator.step()
-            is_running = step_res.code.is_running()
-
-        # 可在此处继续调用其他接口, 查看联合仿真文档: https://www.risenlighten.com/#/union
-
-        # 仿真结束后, 到千行仿真平台对应的taskId/recordId下查看联合仿真结果详情
-        print(
-            f"查看任务: https://qianxing.risenlighten.com/#/configuration/circleTask?id={task_id}"
-        )
-
-        # 如想直接查看本次联合仿真的回放视频, 可访问下面网址：
-        print(
-            f"查看回放: https://qianxing.risenlighten.com/#/sampleRoad/cartest/?id={task_id}&record_id={new_record.new_record_id}&sim_record_id={new_record.sim_record_id}"
-        )
+            simulator.step()
+        simulator.stop()
 
     finally:
         # 停止仿真器, 释放服务器资源
