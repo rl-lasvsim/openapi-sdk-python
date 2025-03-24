@@ -221,7 +221,7 @@ class Simulator:
             StopRes,
         )
 
-    def reset(self, reset_traffic_flow: bool = False,reset_test_vehicle: Dict = None) -> ResetRes:
+    def reset(self, reset_traffic_flow: bool = False,reset_vehicle: Dict = None) -> ResetRes:
         """Reset simulator.
 
         Args:
@@ -238,7 +238,7 @@ class Simulator:
             {
                 "simulation_id": self.simulation_id,
                 "reset_traffic_flow": reset_traffic_flow,
-                "reset_test_vehicle": reset_test_vehicle,
+                "reset_vehicle": reset_vehicle,
             },
             ResetRes,
         )
