@@ -221,7 +221,7 @@ class Simulator:
             StopRes,
         )
 
-    def reset(self, reset_traffic_flow: bool = False,reset_vehicle: Dict = None) -> ResetRes:
+    def reset(self, reset_traffic_flow: bool = False,reset_vehicle: List = None) -> ResetRes:
         """Reset simulator.
 
         Args:
