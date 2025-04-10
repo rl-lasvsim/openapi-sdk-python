@@ -143,9 +143,8 @@ class HttpClient():
         #     return None
         response_data = ujson.loads(response.data)
         return response_data
-        # return out_type.from_dict(response_data)
     
-    def do(self, out_type: Optional[Type[T]],method, url, fields=None, headers=None, **urlopen_kw):
+    def do(self, method, url, fields=None, headers=None, **urlopen_kw):
         try:
             # path join
             url = self.config.endpoint + url
@@ -167,18 +166,18 @@ class HttpClient():
                 url=f"{method},{url}"
             )
 
-    def get(self, path: str, params: Dict[str, str] = None, out_type: Optional[Type[T]] = None) -> T:
+    def get(self, path: str, params: Dict[str, str] = None) -> T:
         try:
-            return self.do(out_type,"GET", path, fields=params, headers=self.headers)
+            return self.do("GET", path, fields=params, headers=self.headers)
         except Exception as e:
             # 兜底打印
             print(f"http request error{e},method:GET,path:{path}")
             raise e
 
-    def post(self, path: str, data: Any = None, out_type: Optional[Type[T]] = None) -> T:
+    def post(self, path: str, data: Any = None) -> T:
         try:
             encoded_data = ujson.dumps(data) if data else None
-            return self.do(out_type,"POST", path, body=encoded_data, headers=self.headers)
+            return self.do("POST", path, body=encoded_data, headers=self.headers)
         except Exception as e:
             # 兜底打印
             print(f"http request error{e},method:POST,path:{path}")
