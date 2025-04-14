@@ -6,6 +6,7 @@ from typing import Dict, List, Optional
 from dataclasses import asdict
 
 from lasvsim_openapi.http_client import HttpClient
+from lasvsim_openapi.simulatorv2 import (SimulatorV2)
 from lasvsim_openapi.simulator_model import (
     Point,
     ObjBaseInfo,
@@ -103,58 +104,15 @@ from lasvsim_openapi.simulator_model import (
 
 class Simulator:
     """Simulator client for the API."""
+    simulator_v2: SimulatorV2 = None
 
-    http_client: HttpClient = None
-    simulation_id: str = ""
+    # def __init__(self, http_client: HttpClient):
+    #     """Initialize simulator client.
 
-    def __init__(self, http_client: HttpClient):
-        """Initialize simulator client.
-
-        Args:
-            http_client: HTTP client instance
-        """
-        self.http_client = http_client.clone()
-
-    @classmethod
-    def from_config(
-        cls, http_client: HttpClient, config: SimulatorConfig
-    ) -> "Simulator":
-        """Create simulator from configuration.
-
-        Args:
-            http_client: HTTP client instance
-            config: Simulator configuration
-
-        Returns:
-            A new simulator instance
-
-        Raises:
-            APIError: If the request fails
-        """
-        simulator = cls(http_client)
-        simulator.init_from_config(config)
-        return simulator
-
-    @classmethod
-    def from_sim(
-        cls, http_client: HttpClient, sim_id: str, sim_addr: str
-    ) -> "Simulator":
-        """Create simulator from existing simulation.
-
-        Args:
-            http_client: HTTP client instance
-            sim_id: Simulation ID
-            sim_addr: Simulation address
-
-        Returns:
-            A new simulator instance
-
-        Raises:
-            APIError: If the request fails
-        """
-        simulator = cls(http_client)
-        simulator.init_from_sim(sim_id, sim_addr)
-        return simulator
+    #     Args:
+    #         http_client: HTTP client instance
+    #     """
+    #     self.simulator_v2 = SimulatorV2(http_client)
 
     def init_from_config(self, sim_config: SimulatorConfig):
         """Initialize simulator from configuration.
@@ -165,17 +123,7 @@ class Simulator:
         Raises:
             APIError: If the request fails
         """
-        reply = self.http_client.post(
-            "/openapi/cosim/v2/simulation/init",
-            {
-                "scen_id": sim_config.scen_id,
-                "scen_ver": sim_config.scen_ver,
-                "sim_record_id": sim_config.sim_record_id,
-            },
-            InitRes,
-        )
-
-        self.init_from_sim(reply['simulation_id'], reply['simulation_addr'])
+        return self.simulator_v2.init_from_config(sim_config)
 
     def init_from_sim(self, sim_id: str, sim_addr: str):
         """Initialize simulator from existing simulation.
@@ -187,9 +135,7 @@ class Simulator:
         Raises:
             APIError: If the request fails
         """
-        self.http_client.headers["x-md-simulation_id"] = sim_id
-        self.http_client.headers["x-md-rl-direct-addr"] = sim_addr
-        self.simulation_id = sim_id
+        return self.simulator_v2.init_from_sim(sim_id, sim_addr)
 
     def step(self) -> StepRes:
         """Step the simulation forward.

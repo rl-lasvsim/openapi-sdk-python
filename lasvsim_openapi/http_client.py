@@ -166,7 +166,7 @@ class HttpClient():
                 url=f"{method},{url}"
             )
 
-    def get(self, path: str, params: Dict[str, str] = None) -> T:
+    def get(self, path: str, params: Dict[str, str] = None):
         try:
             return self.do("GET", path, fields=params, headers=self.headers)
         except Exception as e:
@@ -174,7 +174,7 @@ class HttpClient():
             print(f"http request error{e},method:GET,path:{path}")
             raise e
 
-    def post(self, path: str, data: Any = None) -> T:
+    def post(self, path: str, data: Any = None):
         try:
             encoded_data = ujson.dumps(data) if data else None
             return self.do("POST", path, body=encoded_data, headers=self.headers)
