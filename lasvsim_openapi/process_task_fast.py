@@ -1,23 +1,12 @@
 """
 Process task module for the lasvsim API.
 """
-from typing import Optional
 
 from lasvsim_openapi.http_client import HttpClient
-from lasvsim_openapi.process_task_fast import ProcessTasFast
-from lasvsim_openapi.process_task_model import (
-    CopyRecordReq,
-    CopyRecordRes,
-    GetRecordScenarioReq,
-    GetRecordScenarioRes,
-    GetTaskRecordIdsReq,
-    GetTaskRecordIdsRes,
-)
 
-
-class ProcessTask:
+class ProcessTasFast:
     """Process task client for the API."""
-    process_task_fast: ProcessTasFast
+    http_client: HttpClient = None
 
     def __init__(self, http_client: HttpClient):
         """Initialize process task client.
@@ -25,9 +14,9 @@ class ProcessTask:
         Args:
             http_client: HTTP client instance
         """
-        self.process_task_fast = ProcessTasFast(http_client=http_client)
+        self.http_client = http_client.clone()
 
-    def copy_record(self, task_id: int, record_id: int) -> CopyRecordRes:
+    def copy_record(self, task_id: int, record_id: int):
         """Copy a record.
         
         Args:
@@ -39,11 +28,13 @@ class ProcessTask:
             
         Raises:
             APIError: If the request fails
-        """
-        reply = self.process_task_fast.copy_record(task_id=task_id, record_id=record_id)
-        return CopyRecordRes.from_dict(reply)    
+        """        
+        return self.http_client.post(
+            "/openapi/process_task/v2/record/copy",
+            {"task_id": task_id, "record_id": record_id},
+        )        
 
-    def get_record_scenario(self, task_id: int, record_id: int) -> GetRecordScenarioRes:
+    def get_record_scenario(self, task_id: int, record_id: int):
         """Get record scenario.
         
         Args:
@@ -55,11 +46,13 @@ class ProcessTask:
             
         Raises:
             APIError: If the request fails
-        """
-        reply = self.process_task_fast.get_record_scenario(task_id, record_id)
-        return GetRecordScenarioRes.from_dict(reply)
+        """        
+        return self.http_client.post(
+            "/openapi/process_task/v2/record/scenario/get",
+            {"task_id": task_id, "record_id": record_id},
+        )
 
-    def get_task_record_ids(self, task_id: int) -> GetTaskRecordIdsRes:
+    def get_task_record_ids(self, task_id: int):
         """Get task record IDs.
         
         Args:
@@ -71,5 +64,8 @@ class ProcessTask:
         Raises:
             APIError: If the request fails
         """
-        reply = self.process_task_fast.get_task_record_ids(task_id)
-        return GetTaskRecordIdsRes.from_dict(reply)
+        
+        return self.http_client.post(
+            "/openapi/process_task/v2/record/id_list",
+            {"task_id": task_id},
+        )

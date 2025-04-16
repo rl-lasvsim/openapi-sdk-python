@@ -1,29 +1,12 @@
 """
 Simulation record module for the lasvsim API.
 """
-from typing import Optional
 
 from lasvsim_openapi.http_client import HttpClient
-from lasvsim_openapi.sim_record_model import (
-    GetRecordIdsReq,
-    GetRecordIdsRes,
-    GetTrackResultsReq,
-    GetTrackResultsRes,
-    GetSensorResultsReq,
-    GetSensorResultsRes,
-    GetStepResultsReq,
-    GetStepResultsRes,
-    GetPathResultsReq,
-    GetPathResultsRes,
-    GetReferenceLineResultsReq,
-    GetReferenceLineResultsRes,
-)
-from lasvsim_openapi.sim_record_fast import SimRecordFast
 
-
-class SimRecord:
+class SimRecordFast:
     """Simulation record client for the API."""
-    sim_record_fast: SimRecordFast
+    http_client: HttpClient = None
 
     def __init__(self, http_client: HttpClient):
         """Initialize simulation record client.
@@ -31,9 +14,9 @@ class SimRecord:
         Args:
             http_client: HTTP client instance
         """
-        self.sim_record_fast =SimRecordFast(http_client=http_client)
+        self.http_client = http_client.clone()
 
-    def get_record_ids(self, scen_id: str, scen_ver: str) -> GetRecordIdsRes:
+    def get_record_ids(self, scen_id: str, scen_ver: str):
         """Get record IDs.
         
         Args:
@@ -46,10 +29,12 @@ class SimRecord:
         Raises:
             APIError: If the request fails
         """
-        reply = self.sim_record_fast.get_record_ids(scen_id, scen_ver)
-        return GetRecordIdsRes.from_dict(reply)
+        return self.http_client.post(
+            "/openapi/sim_record/v1/ids/get",
+            {"scen_id": scen_id, "scen_ver": scen_ver},
+        )
 
-    def get_track_results(self, id: str, obj_id: str) -> GetTrackResultsRes:
+    def get_track_results(self, id: str, obj_id: str):
         """Get track results.
         
         Args:
@@ -62,10 +47,12 @@ class SimRecord:
         Raises:
             APIError: If the request fails
         """
-        reply = self.sim_record_fast.get_track_results(id, obj_id)
-        return GetTrackResultsRes.from_dict(reply)
+        return self.http_client.post(
+            "/openapi/sim_record/v1/track_result/get",
+            {"id": id, "obj_id": obj_id},
+        )
 
-    def get_sensor_results(self, id: str, obj_id: str) -> GetSensorResultsRes:
+    def get_sensor_results(self, id: str, obj_id: str):
         """Get sensor results.
         
         Args:
@@ -78,10 +65,12 @@ class SimRecord:
         Raises:
             APIError: If the request fails
         """
-        reply = self.sim_record_fast.get_sensor_results(id, obj_id)
-        return GetSensorResultsRes.from_dict(reply)
+        return self.http_client.post(
+            "/openapi/sim_record/v1/sensor_result/get",
+            {"id": id, "obj_id": obj_id},
+        )
 
-    def get_step_results(self, id: str, obj_id: str) -> GetStepResultsRes:
+    def get_step_results(self, id: str, obj_id: str):
         """Get step results.
         
         Args:
@@ -94,10 +83,12 @@ class SimRecord:
         Raises:
             APIError: If the request fails
         """
-        reply = self.sim_record_fast.get_step_results(id, obj_id)
-        return GetStepResultsRes.from_dict(reply)
+        return self.http_client.post(
+            "/openapi/sim_record/v1/step_result/get",
+            {"id": id, "obj_id": obj_id},
+        )
 
-    def get_path_results(self, id: str, obj_id: str) -> GetPathResultsRes:
+    def get_path_results(self, id: str, obj_id: str):
         """Get path results.
         
         Args:
@@ -110,10 +101,12 @@ class SimRecord:
         Raises:
             APIError: If the request fails
         """
-        reply = self.sim_record_fast.get_path_results(id, obj_id)
-        return GetPathResultsRes.from_dict(reply)
+        return self.http_client.post(
+            "/openapi/sim_record/v1/path_result/get",
+            {"id": id, "obj_id": obj_id},
+        )
 
-    def get_reference_line_results(self, id: str, obj_id: str) -> GetReferenceLineResultsRes:
+    def get_reference_line_results(self, id: str, obj_id: str):
         """Get reference line results.
         
         Args:
@@ -126,5 +119,7 @@ class SimRecord:
         Raises:
             APIError: If the request fails
         """
-        reply = self.sim_record_fast.get_reference_line_results(id, obj_id)
-        return GetReferenceLineResultsRes.from_dict(reply)
+        return self.http_client.post(
+            "/openapi/sim_record/v1/reference_line_result/get",
+            {"id": id, "obj_id": obj_id}
+        )

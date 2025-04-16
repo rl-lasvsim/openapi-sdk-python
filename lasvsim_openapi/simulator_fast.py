@@ -7,7 +7,7 @@ from lasvsim_openapi.simulator_model import (
     ObjBaseInfo,DynamicInfo,Point
 )
 
-class SimulatorV2:    
+class SimulatorFast:    
     """Simulator client for the API."""
 
     http_client: HttpClient = None
