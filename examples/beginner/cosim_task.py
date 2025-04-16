@@ -19,7 +19,7 @@ from lasvsim_openapi.http_client import HttpConfig
 from lasvsim_openapi.simulator_model import SimulatorConfig
 from lasvsim_openapi.simulator_model import LocalMap
 from lasvsim_openapi.simulator_model import Polygon
-
+from lasvsim_openapi.client_fast import ClientFast
 
 def main():
     # 接口地址和授权token
@@ -31,24 +31,15 @@ def main():
     )  # 登录仿真平台后访问 https://qianxing.risenlighten.com/#/usecenter/personalCenter, 点击最下面按钮复制token
 
 
+    task_id_str = os.getenv("QX_TASK_ID")
+    record_id_str = os.getenv("QX_RECORD_ID")
+
     # 登录仿真平台，选择想要进行联合仿真的任务及剧本
-    task_id = 0  # 替换为你的任务ID
-    record_id = 0  # 替换为你的剧本ID
+    task_id = int(task_id_str)  # 替换为你的任务ID
+    record_id = int(record_id_str)  # 替换为你的剧本ID
 
     # 1. 初始化客户端
-    cli = Client(
-        HttpConfig(
-            endpoint=endpoint,  # 接口地址
-            token=token,  # 授权token
-        )
-    )
-
-    # 2. 拷贝剧本, 返回的结构中new_record_id字段就是新创建的剧本ID
-    # 仿真结束后可到该剧本下查看结果详情
-    new_record = cli.process_task.copy_record(task_id, record_id)
-
-    # 1. 初始化客户端
-    cli = Client(
+    cli = ClientFast(
         HttpConfig(
             endpoint=endpoint,  # 接口地址
             token=token,  # 授权token
@@ -74,16 +65,8 @@ def main():
     try:
         # 获取测试车辆列表
         test_vehicle_list = simulator.get_test_vehicle_id_list()
-
-        #simulator.step()
-        #simulator.reset()
-        # simulator.reset(reset_traffic_flow=True)
-
+        print(f"测试车辆列表: {test_vehicle_list}")
         for i in range(100):
-            # print(simulator.get_vehicle_reference_lines(test_vehicle_list['list'][0]))
-            a = simulator.idc_step(test_vehicle_list['list'][0],ste_wheel=1,lon_acc=1,ref_limit=10)
-            res = simulator.get_vehicle_reference_lines(test_vehicle_list['list'][0])
-            print(res)
             simulator.step()
         simulator.stop()
 

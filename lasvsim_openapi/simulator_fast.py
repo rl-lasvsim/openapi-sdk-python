@@ -30,7 +30,7 @@ class SimulatorFast:
             },
         )
 
-        self.http_client.headers["x-md-simulation_id"] = reply['simulation_id'],
+        self.http_client.headers["x-md-simulation_id"] = reply['simulation_id']
         self.http_client.headers["x-md-rl-direct-addr"] =  reply['simulation_addr']
         self.simulation_id =  reply['simulation_id']
     

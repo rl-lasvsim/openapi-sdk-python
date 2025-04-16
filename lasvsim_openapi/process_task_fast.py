@@ -4,7 +4,7 @@ Process task module for the lasvsim API.
 
 from lasvsim_openapi.http_client import HttpClient
 
-class ProcessTasFast:
+class ProcessTaskFast:
     """Process task client for the API."""
     http_client: HttpClient = None
 

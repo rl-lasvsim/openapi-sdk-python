@@ -4,7 +4,7 @@ Process task module for the lasvsim API.
 from typing import Optional
 
 from lasvsim_openapi.http_client import HttpClient
-from lasvsim_openapi.process_task_fast import ProcessTasFast
+from lasvsim_openapi.process_task_fast import ProcessTaskFast
 from lasvsim_openapi.process_task_model import (
     CopyRecordReq,
     CopyRecordRes,
@@ -17,7 +17,7 @@ from lasvsim_openapi.process_task_model import (
 
 class ProcessTask:
     """Process task client for the API."""
-    process_task_fast: ProcessTasFast
+    process_task_fast: ProcessTaskFast
 
     def __init__(self, http_client: HttpClient):
         """Initialize process task client.
@@ -25,7 +25,7 @@ class ProcessTask:
         Args:
             http_client: HTTP client instance
         """
-        self.process_task_fast = ProcessTasFast(http_client=http_client)
+        self.process_task_fast = ProcessTaskFast(http_client=http_client)
 
     def copy_record(self, task_id: int, record_id: int) -> CopyRecordRes:
         """Copy a record.
