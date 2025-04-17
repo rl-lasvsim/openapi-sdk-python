@@ -221,7 +221,7 @@ class Simulator:
             StopRes,
         )
 
-    def reset(self, reset_traffic_flow: bool = False,reset_vehicle: List = None) -> ResetRes:
+    def reset(self, reset_traffic_flow: bool = False,reset_vehicle: List = None,reset_env_ptcs = None) -> ResetRes:
         """Reset simulator.
 
         Args:
@@ -239,6 +239,7 @@ class Simulator:
                 "simulation_id": self.simulation_id,
                 "reset_traffic_flow": reset_traffic_flow,
                 "reset_vehicle": reset_vehicle,
+                "reset_env_ptcs": reset_env_ptcs,
             },
             ResetRes,
         )
