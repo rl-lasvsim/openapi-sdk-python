@@ -67,7 +67,18 @@ def main():
         test_vehicle_list = simulator.get_test_vehicle_id_list()
         print(f"测试车辆列表: {test_vehicle_list}")
         for i in range(100):
-            simulator.step()
+            # 设置方向盘转角10度, 纵向加速度0.05
+            ste_wheel = 1.0
+            lon_acc = 0.05
+
+            # 设置车辆的控制信息
+            simulator.set_vehicle_control_info(
+                test_vehicle_list['list'][0], ste_wheel, lon_acc
+            )
+
+            # 执行仿真器步骤
+            step_res = simulator.step()
+            print(f"第 {i} 步结果: {step_res}")
         simulator.stop()
 
     finally:
