@@ -138,7 +138,7 @@ class Simulator:
         reply = self.simulator_fast.stop()
         return StopRes.from_dict(reply)
 
-    def reset(self, reset_traffic_flow: bool = False,reset_vehicle: List = None) -> ResetRes:
+    def reset(self, reset_traffic_flow: bool = False,reset_vehicle: List = None,reset_env_ptcs = None) -> ResetRes:
         """Reset simulator.
 
         Args:
@@ -150,7 +150,7 @@ class Simulator:
         Raises:
             APIError: If the request fails
         """
-        reply = self.simulator_fast.reset(reset_traffic_flow,reset_vehicle)
+        reply = self.simulator_fast.reset(reset_traffic_flow,reset_vehicle,reset_env_ptcs = reset_env_ptcs)
         return ResetRes.from_dict(reply)
 
     # --------- 地图部分 ---------

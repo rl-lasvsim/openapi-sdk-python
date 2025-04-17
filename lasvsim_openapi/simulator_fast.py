@@ -62,7 +62,7 @@ class SimulatorFast:
             {"simulation_id": self.simulation_id},
         )
         
-    def reset(self, reset_traffic_flow: bool = False, reset_vehicle: List = None) -> dict:
+    def reset(self, reset_traffic_flow: bool = False, reset_vehicle: List = None,reset_env_ptcs = None) -> dict:
         """Reset simulator.
 
         Args:
@@ -81,6 +81,7 @@ class SimulatorFast:
                 "simulation_id": self.simulation_id,
                 "reset_traffic_flow": reset_traffic_flow,
                 "reset_vehicle": reset_vehicle,
+                "reset_env_ptcs":reset_env_ptcs,
             },
         )
         
