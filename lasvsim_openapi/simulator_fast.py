@@ -289,7 +289,7 @@ class SimulatorFast:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/vehicle/reference_lines/get",
+            "/openapi/cosim/v2/simulation/vehicle/reference_line/get",
             {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id},
         )
         
@@ -365,7 +365,7 @@ class SimulatorFast:
             APIError: If the request fails
         """
         return self.http_client.post(
-            "/openapi/cosim/v2/simulation/vehicle/collision_status/get",
+            "/openapi/cosim/v2/simulation/vehicle/collision/get",
             {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id},
         )
         

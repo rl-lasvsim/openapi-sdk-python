@@ -12,13 +12,13 @@ class TrainTask:
 
     train_task_fast: TrainTaskFast
     
-    def __init__(self, fast: TrainTaskFast) -> None:
+    def __init__(self, http_client: HttpClient) -> None:
         """Initialize train task client.
         
         Args:
             http_client: HTTP client.
         """
-        self.train_task_fast = fast
+        self.train_task_fast = TrainTaskFast(http_client)
 
     def get_scene_id_list(self, task_id: int) -> GetSceneIdListRes:
         """Copy record.

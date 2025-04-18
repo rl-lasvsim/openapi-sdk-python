@@ -44,5 +44,5 @@ class ClientFast:
         Returns:
             A new simulator instance
         """
-        simulator = SimulatorFast(http_client=self.http_client,sim_config = sim_config    )
+        simulator = SimulatorFast(http_client=self.http_client, sim_config = sim_config)
         return simulator

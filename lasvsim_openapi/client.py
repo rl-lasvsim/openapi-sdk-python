@@ -26,18 +26,16 @@ class Client:
         Args:
             config: HTTP configuration for the client
         """
-        http_client = HttpClient(config)
-        ClientFast(http_client)
 
-        self.client_fast = ClientFast(http_client)
+        self.client_fast = ClientFast(config)
         self.init_common_client()
 
     def init_common_client(self):
         """Initialize the common client components."""
-        self.train_task = TrainTask(self.client_fast.train_task)
-        self.resources = Resources(self.client_fast.resources)
-        self.process_task = ProcessTask(self.client_fast.process_task)
-        self.sim_record = SimRecord(self.client_fast.sim_record)
+        self.train_task = TrainTask(self.client_fast.http_client)
+        self.resources = Resources(self.client_fast.http_client)
+        self.process_task = ProcessTask(self.client_fast.http_client)
+        self.sim_record = SimRecord(self.client_fast.http_client)
 
     def init_simulator_from_config(self, sim_config: SimulatorConfig) -> Simulator:
         """Initialize a simulator from the given configuration.

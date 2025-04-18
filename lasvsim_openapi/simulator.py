@@ -471,7 +471,7 @@ class Simulator:
         Raises:
             APIError: If the request fails
         """
-        reply = self.client.set_vehicle_moving_info(
+        reply = self.simulator_fast.set_vehicle_moving_info(
             vehicle_id=vehicle_id,
             u=u,
             v=v,
@@ -713,7 +713,7 @@ class Simulator:
             APIError: If the request fails
         """
         reply = self.simulator_fast.get_participant_base_info(participant_id_list)
-        return GetParticipantBaseInfoRes(reply)
+        return GetParticipantBaseInfoRes.from_dict(reply)
 
     def get_participant_moving_info(
         self, participant_id_list: List[str]
@@ -774,7 +774,7 @@ class Simulator:
 
         reply = self.simulator_fast.set_vehicle_road_perception_info(
             vehicle_id,
-            noa,
+            asdict(noa),
         )
         return SetVehicleRoadPerceptionInfoRes.from_dict(reply)
 
@@ -786,14 +786,14 @@ class Simulator:
 
         reply = self.simulator_fast.set_vehicle_obstacle_perception_info(
             vehicle_id,
-            obstacles,
+            [asdict(obstacle) for obstacle in obstacles],
         )
         return SetVehicleObstaclePerceptionInfoRes.from_dict(reply)
 
     def set_vehicle_extra_metrics(
         self,
         vehicle_id: str,
-        metrics: Dict[str, float] = None,
+        metrics: Dict[str, str] = None,
     ) -> SetVehicleExtraMetricsRes:
 
         reply = self.simulator_fast.set_vehicle_extra_metrics(
@@ -811,7 +811,7 @@ class Simulator:
 
         reply = self.simulator_fast.set_vehicle_local_paths(
             vehicle_id,
-            local_paths,
+            [asdict(local_path) for local_path in local_paths],
             choose_idx,
         )
         return SetVehicleLocalPathsRes.from_dict(reply)

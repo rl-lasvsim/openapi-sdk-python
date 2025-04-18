@@ -28,11 +28,11 @@ class ProcessTaskFast:
             
         Raises:
             APIError: If the request fails
-        """        
+        """
         return self.http_client.post(
             "/openapi/process_task/v2/record/copy",
             {"task_id": task_id, "record_id": record_id},
-        )        
+        )
 
     def get_record_scenario(self, task_id: int, record_id: int):
         """Get record scenario.
