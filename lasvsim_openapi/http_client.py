@@ -125,16 +125,13 @@ class HttpClient():
         """Close the underlying HTTP connection"""
         self.http.close()
 
-    def _handle_response(self, response: urllib3.HTTPResponse, out_type: Optional[Type[T]] = None) -> Optional[T]:
+    def _handle_response(self, response: urllib3.HTTPResponse) -> Optional[T]:
         if response.status != 200:
-            if response.status == 401:
-                raise APIError(
-                    status_code=response.status,
-                    message=f"Unauthorized,Message:{response.data}",
-                    reason=ErrorReason.CALL_GRPC_ERR,
-                )
-            
-            error_data = ujson.loads(response.data)
+            try:
+                error_data = ujson.loads(response.data)
+            except Exception as e:
+                error_data = {"message": f'client parse json error:{e},data:{response.data}'}
+
             reason = error_data.get('reason') if isinstance(error_data, dict) else None
             raise APIError(
                 status_code=response.status,
@@ -142,13 +139,12 @@ class HttpClient():
                 reason=reason,
             )
         
-        if out_type is None:
-            return None
-        
+        # if out_type is None:
+        #     return None
         response_data = ujson.loads(response.data)
-        return out_type.from_dict(response_data)
+        return response_data
     
-    def do(self, out_type: Optional[Type[T]],method, url, fields=None, headers=None, **urlopen_kw):
+    def do(self, method, url, fields=None, headers=None, **urlopen_kw):
         try:
             # path join
             url = self.config.endpoint + url
@@ -160,7 +156,7 @@ class HttpClient():
             else:
                 response = self.http.request(method, url, headers=headers, **urlopen_kw)
 
-            return self._handle_response(response, out_type)
+            return self._handle_response(response)
         except APIError as e:
             e.url = f"{method},{url}"
             raise e
@@ -170,18 +166,18 @@ class HttpClient():
                 url=f"{method},{url}"
             )
 
-    def get(self, path: str, params: Dict[str, str] = None, out_type: Optional[Type[T]] = None) -> T:
+    def get(self, path: str, params: Dict[str, str] = None):
         try:
-            return self.do(out_type,"GET", path, fields=params, headers=self.headers)
+            return self.do("GET", path, fields=params, headers=self.headers)
         except Exception as e:
             # 兜底打印
             print(f"http request error{e},method:GET,path:{path}")
             raise e
 
-    def post(self, path: str, data: Any = None, out_type: Optional[Type[T]] = None) -> T:
+    def post(self, path: str, data: Any = None):
         try:
             encoded_data = ujson.dumps(data) if data else None
-            return self.do(out_type,"POST", path, body=encoded_data, headers=self.headers)
+            return self.do("POST", path, body=encoded_data, headers=self.headers)
         except Exception as e:
             # 兜底打印
             print(f"http request error{e},method:POST,path:{path}")

@@ -6,24 +6,7 @@ from dataclasses import dataclass
 
 from lasvsim_openapi.http_client import HttpClient
 from lasvsim_openapi.qxmap import Qxmap
-
-
-@dataclass
-class GetHdMapReq:
-    """Request for getting HD map."""
-    scen_id: str = ""
-    scen_ver: str = ""
-    
-    def __init__(self, scen_id: str = "", scen_ver: str = ""):
-        self.scen_id = scen_id
-        self.scen_ver = scen_ver
-
-    @classmethod
-    def from_dict(cls, data: dict = None):
-        if data is None:
-            return None
-        return cls(**data)
-
+from lasvsim_openapi.resources_fast import ResourcesFast
 
 @dataclass
 class GetHdMapRes:
@@ -44,7 +27,7 @@ class GetHdMapRes:
 
 class Resources:
     """Resources client for the API."""
-    http_client: HttpClient = None
+    resources_fast: ResourcesFast
 
     def __init__(self, http_client: HttpClient):
         """Initialize resources client.
@@ -52,7 +35,7 @@ class Resources:
         Args:
             http_client: HTTP client instance
         """
-        self.http_client = http_client.clone()
+        self.resources_fast = ResourcesFast(http_client)
 
     def get_hd_map(self, scen_id: str, scen_ver: str) -> GetHdMapRes:
         """Get HD map for a scenario.
@@ -67,8 +50,5 @@ class Resources:
         Raises:
             APIError: If the request fails
         """
-        return self.http_client.post(
-            "/openapi/resource/v2/scenario/map/get",
-            {"scen_id": scen_id, "scen_ver": scen_ver},
-            GetHdMapRes
-        )
+        reply = self.resources_fast.get_hd_map(scen_id, scen_ver)
+        return GetHdMapRes.from_dict(reply)
