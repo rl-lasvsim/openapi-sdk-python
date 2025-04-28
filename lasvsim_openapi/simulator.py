@@ -225,8 +225,8 @@ class Simulator:
     def reset(
         self,
         reset_traffic_flow: bool = False,
-        reset_vehicle: ResetVehicleConfig = None,
-        reset_env_ptcs: ResetEnvPtcs = None,
+        reset_vehicle: List[ResetVehicleConfig] = None,
+        reset_env_ptcs: Optional[ResetEnvPtcs] = None,
     ) -> ResetRes:
         """Reset simulator.
 
