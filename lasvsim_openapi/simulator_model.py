@@ -528,15 +528,193 @@ class StepRes:
 
 
 @dataclass
+class ResetVehicleConfig:
+    vehicle_id: str = ""  # 测试车辆ID
+    link_path: List[str] = field(default_factory=list)  # 设置指定导航信息
+    s_range: List[float] = field(default_factory=list)  # 起始位置
+
+    def __init__(
+        self,
+        vehicle_id: str = "",
+        link_path: List[str] = None,
+        s_range: List[float] = None,
+    ):
+        self.vehicle_id = vehicle_id
+        self.link_path = link_path if link_path is not None else []
+        self.s_range = s_range if s_range is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            vehicle_id=data.get("vehicle_id", ""),
+            link_path=data.get("link_path", []),
+            s_range=data.get("s_range", []),
+        )
+
+
+@dataclass
+class VehicleDistribution:
+    density: float = 0.0  # 密度
+    min_target_speed: float = 0.0  # 最小目标速度
+    max_target_speed: float = 0.0  # 最大目标速度
+    size_ratio: List[float] = field(default_factory=list)
+    style_ratio: List[float] = field(default_factory=list)
+    skill_ratio: List[float] = field(default_factory=list)
+
+    def __init__(
+        self,
+        density: float = 0.0,
+        min_target_speed: float = 0.0,
+        max_target_speed: float = 0.0,
+        size_ratio: List[float] = None,
+        style_ratio: List[float] = None,
+        skill_ratio: List[float] = None,
+    ):
+        self.density = density
+        self.min_target_speed = min_target_speed
+        self.max_target_speed = max_target_speed
+        self.size_ratio = size_ratio if size_ratio is not None else []
+        self.style_ratio = style_ratio if style_ratio is not None else []
+        self.skill_ratio = skill_ratio if skill_ratio is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            density=data.get("density", 0.0),
+            min_target_speed=data.get("min_target_speed", 0.0),
+            max_target_speed=data.get("max_target_speed", 0.0),
+            size_ratio=data.get("size_ratio", []),
+            style_ratio=data.get("style_ratio", []),
+            skill_ratio=data.get("skill_ratio", []),
+        )
+
+
+@dataclass
+class PedestrianDistribution:
+    density: float = 0.0  # 密度
+    ages_ratio: List[float] = field(default_factory=list)
+    style_ratio: List[float] = field(default_factory=list)
+
+    def __init__(
+        self,
+        density: float = 0.0,
+        ages_ratio: List[float] = None,
+        style_ratio: List[float] = None,
+    ):
+        self.density = density
+        self.ages_ratio = ages_ratio if ages_ratio is not None else []
+        self.style_ratio = style_ratio if style_ratio is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            density=data.get("density", 0.0),
+            ages_ratio=data.get("ages_ratio", []),
+            style_ratio=data.get("style_ratio", []),
+        )
+
+
+@dataclass
+class NMVDistribution:
+    density: float = 0.0  # 密度
+    subtype_ratio: List[float] = field(default_factory=list)  # 车型比例
+    style_ratio: List[float] = field(default_factory=list)  # 车型比例
+    skill_ratio: List[float] = field(default_factory=list)  # 车型比例
+    min_target_speed: float = 0.0  # 最小目标速度
+    max_target_speed: float = 0.0  # 最大目标速度
+
+    def __init__(
+        self,
+        density: float = 0.0,
+        min_target_speed: float = 0.0,
+        max_target_speed: float = 0.0,
+        subtype_ratio: List[float] = None,
+        skill_ratio: List[float] = None,
+    ):
+        self.density = density
+        self.min_target_speed = min_target_speed
+        self.max_target_speed = max_target_speed
+        self.subtype_ratio = subtype_ratio if subtype_ratio is not None else []
+        self.skill_ratio = skill_ratio if skill_ratio is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            density=data.get("density", 0.0),
+            min_target_speed=data.get("min_target_speed", 0.0),
+            max_target_speed=data.get("max_target_speed", 0.0),
+            subtype_ratio=data.get("subtype_ratio", []),
+            skill_ratio=data.get("skill_ratio", []),
+        )
+
+
+@dataclass
+class ResetEnvPtcs:
+    vehicle_distribution: VehicleDistribution = field(
+        default_factory=VehicleDistribution
+    )  # 车辆分布
+    ped_conf: PedestrianDistribution = field(
+        default_factory=PedestrianDistribution
+    )  # 行人分布
+    nmv_conf: NMVDistribution = field(default_factory=NMVDistribution)  # NMV分布
+
+    def __init__(
+        self,
+        vehicle_distribution: VehicleDistribution = None,
+        ped_conf: PedestrianDistribution = None,
+        nmv_conf: NMVDistribution = None,
+    ):
+        self.vehicle_distribution = (
+            vehicle_distribution
+            if vehicle_distribution is not None
+            else VehicleDistribution()
+        )
+        self.ped_conf = ped_conf if ped_conf is not None else PedestrianDistribution()
+        self.nmv_conf = nmv_conf if nmv_conf is not None else NMVDistribution()
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            vehicle_distribution=VehicleDistribution.from_dict(
+                data.get("vehicle_conf")
+            ),
+            ped_conf=PedestrianDistribution.from_dict(data.get("ped_conf")),
+            nmv_conf=NMVDistribution.from_dict(data.get("nmv_conf")),
+        )
+
+
+@dataclass
 class ResetReq:
     """Request for resetting simulator."""
 
     simulation_id: str = ""
     reset_traffic_flow: bool = False
+    reset_vehicle: List[ResetVehicleConfig] = field(
+        default_factory=list
+    )  # 设定测试车辆重置时一些行为, reset_traffic_flow=true时生效。
+    reset_env_ptcs: Optional[ResetEnvPtcs] = None
 
-    def __init__(self, simulation_id: str = "", reset_traffic_flow: bool = False):
+    def __init__(
+        self,
+        simulation_id: str = "",
+        reset_traffic_flow: bool = False,
+        reset_vehicle: List[ResetVehicleConfig] = None,
+        reset_env_ptcs: Optional[ResetEnvPtcs] = None,
+    ):
         self.simulation_id = simulation_id
         self.reset_traffic_flow = reset_traffic_flow
+        self.reset_vehicle = reset_vehicle if reset_vehicle is not None else []
+        self.reset_env_ptcs = reset_env_ptcs if reset_env_ptcs is not None else None
 
     @classmethod
     def from_dict(cls, data: dict = None):
@@ -545,6 +723,10 @@ class ResetReq:
         return cls(
             simulation_id=data.get("simulation_id", ""),
             reset_traffic_flow=data.get("reset_traffic_flow", False),
+            reset_vehicle=[
+                ResetVehicleConfig.from_dict(v) for v in data.get("reset_vehicle", [])
+            ],
+            reset_env_ptcs=ResetEnvPtcs.from_dict(data.get("reset_env_ptcs")),
         )
 
 
