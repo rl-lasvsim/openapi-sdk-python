@@ -24,7 +24,10 @@ class Point:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
-        return cls(x=data.get("x", 0.0), y=data.get("y", 0.0), z=data.get("z", 0.0))
+        
+        instance = cls()
+        instance.__dict__ = data
+        return instance
 
 
 @dataclass
@@ -306,13 +309,14 @@ class ReferenceLine:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
-        return cls(
-            lane_ids=data.get("lane_ids", []),
-            lane_types=data.get("lane_types", []),
-            points=[Point.from_dict(p) for p in data.get("points", [])],
-            lane_idxes=data.get("lane_idxes", []),
-            opposite=data.get("opposite", False),
-        )
+        
+        point = data.pop("points", [])
+
+        instance = cls()
+        instance.__dict__ = data
+        instance.points = [Point.from_dict(p) for p in point]
+
+        return instance
 
 
 @dataclass
@@ -2892,4 +2896,24 @@ class GetIdcVehicleNavRes:
             next_junction_id=data.get("next_junction_id", ""),
             dis_to_next_junction=data.get("dis_to_next_junction", 0.0),
             next_movement_id=data.get("next_movement_id", ""),
+        )
+
+@dataclass
+class IdcStepRes:
+    position: Position
+    moving_info: ObjMovingInfo
+    perception_infos: List[GetVehiclePerceptionInfoRes_PerceptionObj] = field(default_factory=list)
+    reference_lines: List[ReferenceLine] = field(default_factory=list)
+    navigation_info: Optional[NavigationInfo] = None
+    step_res: StepRes = None
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        return cls(
+            position=Position.from_dict(data.get("position", {})),
+            moving_info=ObjMovingInfo.from_dict(data.get("moving_info", {})),
+            perception_infos=[GetVehiclePerceptionInfoRes_PerceptionObj.from_dict(obj) for obj in data.get("perception_infos", [])],
+            reference_lines=[ReferenceLine.from_dict(obj) for obj in data.get("reference_lines",[])],
+            navigation_info= NavigationInfo.from_dict(data.get("navigation_info", {})),
+            step_res = StepRes.from_dict(data.get("step_res", {}))
         )
