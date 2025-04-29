@@ -24,7 +24,7 @@ class Point:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
-        
+
         instance = cls()
         instance.__dict__ = data
         return instance
@@ -309,7 +309,7 @@ class ReferenceLine:
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
-        
+
         point = data.pop("points", [])
 
         instance = cls()
@@ -705,7 +705,7 @@ class ResetReq:
     reset_traffic_flow: bool = False
     reset_vehicle: List[ResetVehicleConfig] = field(
         default_factory=list
-    )  # 设定测试车辆重置时一些行为, reset_traffic_flow=true时生效。
+    )  # 重置车辆配置
     reset_env_ptcs: Optional[ResetEnvPtcs] = None
 
     def __init__(
@@ -2898,11 +2898,14 @@ class GetIdcVehicleNavRes:
             next_movement_id=data.get("next_movement_id", ""),
         )
 
+
 @dataclass
 class IdcStepRes:
     position: Position
     moving_info: ObjMovingInfo
-    perception_infos: List[GetVehiclePerceptionInfoRes_PerceptionObj] = field(default_factory=list)
+    perception_infos: List[GetVehiclePerceptionInfoRes_PerceptionObj] = field(
+        default_factory=list
+    )
     reference_lines: List[ReferenceLine] = field(default_factory=list)
     navigation_info: Optional[NavigationInfo] = None
     step_res: StepRes = None
@@ -2912,8 +2915,13 @@ class IdcStepRes:
         return cls(
             position=Position.from_dict(data.get("position", {})),
             moving_info=ObjMovingInfo.from_dict(data.get("moving_info", {})),
-            perception_infos=[GetVehiclePerceptionInfoRes_PerceptionObj.from_dict(obj) for obj in data.get("perception_infos", [])],
-            reference_lines=[ReferenceLine.from_dict(obj) for obj in data.get("reference_lines",[])],
-            navigation_info= NavigationInfo.from_dict(data.get("navigation_info", {})),
-            step_res = StepRes.from_dict(data.get("step_res", {}))
+            perception_infos=[
+                GetVehiclePerceptionInfoRes_PerceptionObj.from_dict(obj)
+                for obj in data.get("perception_infos", [])
+            ],
+            reference_lines=[
+                ReferenceLine.from_dict(obj) for obj in data.get("reference_lines", [])
+            ],
+            navigation_info=NavigationInfo.from_dict(data.get("navigation_info", {})),
+            step_res=StepRes.from_dict(data.get("step_res", {})),
         )
