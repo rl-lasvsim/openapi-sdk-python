@@ -19,7 +19,8 @@ def main():
     token = os.getenv("QX_TOKEN")  # 登录仿真平台后访问 https://qianxing.risenlighten.com/#/usecenter/personalCenter, 点击最下面按钮复制token
 
     # 登录训练平台, 选择训练任务
-    task_id = 128  # 替换为你的任务ID
+    train_id_str = os.getenv("QX_TRAIN_ID")
+    train_id = int(train_id_str)
 
     # 初始化客户端
     cli = Client(HttpConfig(
@@ -28,7 +29,7 @@ def main():
     ))
 
     # 访问千行平台，通过训练任务ID获取场景信息列表
-    scene_id_list = cli.train_task.get_scene_id_list(task_id)
+    scene_id_list = cli.train_task.get_scene_id_list(train_id)
 
     # 通过场景ID和场景Version初始化仿真器(此案例默认使用场景列表中的第一个场景)
     simulator = cli.init_simulator_from_config(SimulatorConfig(

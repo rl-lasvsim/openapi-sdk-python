@@ -767,13 +767,13 @@ class Junction:
                 setattr(cls, key, value)
                 
         cls.shape = None if shape is None else Polygon.from_dict(shape)
-        cls.movements = [Movement(m) for m in movements]
-        cls.connections = [Connection(c) for c in connections]
-        cls.crosswalks = [Crosswalk(c) for c in crosswalks]
-        cls.wait_areas = [Link(w) for w in wait_areas]
-        cls.roundabout = [Link(r) for r in roundabout]
-        cls.links = [Link(l) for l in links]
-        cls.signal_plan = None if signal_plan is None else SignalPlan(signal_plan)
+        cls.movements = [Movement.from_dict(m) for m in movements]
+        cls.connections = [Connection.from_dict(c) for c in connections]
+        cls.crosswalks = [Crosswalk.from_dict(c) for c in crosswalks]
+        cls.wait_areas = [Link.from_dict(w) for w in wait_areas]
+        cls.roundabout = [Link.from_dict(r) for r in roundabout]
+        cls.links = [Link.from_dict(l) for l in links]
+        cls.signal_plan = None if signal_plan is None else SignalPlan.from_dict(signal_plan)
         cls.center = None if center is None else Point.from_dict(center)
         cls.upstream_segment_ids = data.get("upstream_segment_ids", [])
         cls.downstream_segment_ids = data.get("downstream_segment_ids", [])

@@ -608,8 +608,8 @@ def test_set_vehicle_extra_metrics(simulator: Simulator):
 
     # Create test metrics
     metrics = {
-        "test_metric_1": 1.0,
-        "test_metric_2": 2.0
+        "test_metric_1": '1.0',
+        "test_metric_2": '2.0'
     }
 
     # Test setting vehicle extra metrics
