@@ -271,11 +271,14 @@ class Step:
     lat_acc: float = 0.0
     w: float = 0.0
     w_acc: float = 0.0
+    u: float = 0.0
+    u_acc: float = 0.0
     reference_speed: float = 0.0
     timestamp: int = 0
     position: Optional[Position] = None
+    distance_to_front: float = 0.0
 
-    def __init__(self, speed: float = 0.0, acc: float = 0.0, mileage: float = 0.0, ste_wheel: float = 0.0, turn_signal: str = "", v: float = 0.0, lat_acc: float = 0.0, w: float = 0.0, w_acc: float = 0.0, reference_speed: float = 0.0, timestamp: int = 0, position: Optional[Position] = None):
+    def __init__(self, speed: float = 0.0, acc: float = 0.0, mileage: float = 0.0, ste_wheel: float = 0.0, turn_signal: str = "", v: float = 0.0, lat_acc: float = 0.0, w: float = 0.0, w_acc: float = 0.0, reference_speed: float = 0.0, timestamp: int = 0, position: Optional[Position] = None,u: float = 0.0,u_acc: float = 0.0,distance_to_front: float = 0.0):
         self.speed = speed
         self.acc = acc
         self.mileage = mileage
@@ -288,13 +291,17 @@ class Step:
         self.reference_speed = reference_speed
         self.timestamp = timestamp
         self.position = position
+        self.u = u
+        self.u_acc = u_acc
+        self.distance_to_front = distance_to_front
 
     @classmethod
     def from_dict(cls, data: dict = None):
         if data is None:
             return None
         position = data.pop("position", None)
-        instance = cls(**data)
+        instance = cls()
+        instance.__dict__.update(data)
         instance.position = None if position is None else Position.from_dict(position)
         return instance
 

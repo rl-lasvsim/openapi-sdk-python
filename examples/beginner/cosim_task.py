@@ -29,8 +29,10 @@ def main():
     )  # 登录仿真平台后访问 https://qianxing.risenlighten.com/#/usecenter/personalCenter, 点击最下面按钮复制token
 
     # 登录仿真平台，选择想要进行联合仿真的任务及剧本
-    task_id = 0  # 替换为你的任务ID
-    record_id = 0  # 替换为你的剧本ID
+    task_id_str = os.getenv("QX_TASK_ID")
+    record_id_str = os.getenv("QX_RECORD_ID")
+    task_id = int(task_id_str)
+    record_id = int(record_id_str)
 
     # 1. 初始化客户端
     cli = Client(

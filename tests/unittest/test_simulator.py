@@ -5,7 +5,7 @@ import pytest
 
 from lasvsim_openapi.client import Client
 from lasvsim_openapi.simulator import Simulator
-from lasvsim_openapi.simulator_model import Point, ObjBaseInfo, DynamicInfo
+from lasvsim_openapi.simulator_model import Point, ObjBaseInfo, DynamicInfo,LocalMap,Obstacle,ObjMovingInfo,Position,LocalPath
 
 
 def test_simulator_initialization(simulator: Simulator):
@@ -203,6 +203,448 @@ def test_get_vehicle_navigation_info(simulator: Simulator):
     # Then test getting vehicle navigation info
     nav_res = simulator.get_vehicle_navigation_info(res.list[0])
     assert nav_res is not None
+
+
+def test_get_vehicle_collision_status(simulator: Simulator):
+    """Test getting vehicle collision status."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0
+
+    # Then test getting vehicle collision status
+    collision_res = simulator.get_vehicle_collision_status(res.list[0])
+    assert collision_res is not None
+
+
+def test_get_vehicle_target_speed(simulator: Simulator):
+    """Test getting vehicle target speed."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0
+
+    # Then test getting vehicle target speed
+    speed_res = simulator.get_vehicle_target_speed(res.list[0])
+    assert speed_res is not None
+
+
+def test_set_vehicle_planning_info(simulator: Simulator):
+    """Test setting vehicle planning info."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0, "not found vehicle id list"
+
+    # Create test planning path
+    planning_path = [
+        Point(x=0.0, y=0.0, z=0.0),
+        Point(x=1.0, y=1.0, z=0.0),
+        Point(x=2.0, y=2.0, z=0.0)
+    ]
+    
+    # Create test speeds
+    speeds = [10.0, 15.0, 20.0]  # Speed for each point in m/s
+
+    # Test setting vehicle planning info
+    planning_res = simulator.set_vehicle_planning_info(res.list[0], planning_path, speeds)
+    assert planning_res is not None, "planning response should not be None"
+
+
+def test_set_vehicle_control_info(simulator: Simulator):
+    """Test setting vehicle control info."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0
+
+    # Test setting vehicle control info
+    control_res = simulator.set_vehicle_control_info(res.list[0], ste_wheel=0.0, lon_acc=0.0)
+    assert control_res is not None
+
+
+def test_set_vehicle_position(simulator: Simulator):
+    """Test setting vehicle position."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0
+
+    # Test setting vehicle position
+    pos_res = simulator.set_vehicle_position(res.list[0], Point(x=0.0, y=0.0, z=0.0), phi=0.0)
+    assert pos_res is not None
+
+
+def test_set_vehicle_base_info(simulator: Simulator):
+    """Test setting vehicle base info."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0
+
+    # Create test base info
+    base_info = ObjBaseInfo(
+        length=4.5,
+        width=1.8,
+        height=1.5,
+        weight=2.7
+    )
+
+    # Create test dynamic info
+    dynamic_info = DynamicInfo(
+        front_wheel_stiffness=0.0,
+        rear_wheel_stiffness=0.0,
+        front_axle_to_center=0.0,
+        rear_axle_to_center=0.0,
+        yaw_moment_of_inertia=0.0
+    )
+
+    # Test setting vehicle base info
+    base_info_res = simulator.set_vehicle_base_info(res.list[0], base_info, dynamic_info)
+    assert base_info_res is not None
+
+
+def test_set_vehicle_destination(simulator: Simulator):
+    """Test setting vehicle destination."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0
+
+    # Get vehicle position
+    pos_res = simulator.get_vehicle_position([res.list[0]])
+    assert pos_res is not None
+
+    # Create destination point slightly offset from current position
+    current_pos = pos_res.position_dict[res.list[0]]
+    destination = Point(
+        x=current_pos.point.x + 10.0,
+        y=current_pos.point.y + 10.0,
+        z=current_pos.point.z
+    )
+
+    # Test setting vehicle destination
+    dest_res = simulator.set_vehicle_destination(res.list[0], destination)
+    assert dest_res is not None
+
+
+def test_get_ped_id_list(simulator: Simulator):
+    """Test getting pedestrian ID list."""
+    res = simulator.get_ped_id_list()
+    assert res is not None
+
+
+def test_get_ped_base_info(simulator: Simulator):
+    """Test getting pedestrian base info."""
+    res = simulator.get_ped_id_list()
+    if len(res.list) > 0:
+        base_info_res = simulator.get_ped_base_info([res.list[0]])
+        assert base_info_res is not None
+
+
+def test_set_ped_position(simulator: Simulator):
+    """Test setting pedestrian position."""
+    res = simulator.get_ped_id_list()
+    if len(res.list) > 0:
+        pos_res = simulator.set_ped_position(res.list[0], Point(x=0.0, y=0.0, z=0.0), phi=0.0)
+        assert pos_res is not None
+
+
+def test_get_nmv_id_list(simulator: Simulator):
+    """Test getting non-motor vehicle ID list."""
+    res = simulator.get_nmv_id_list()
+    assert res is not None
+
+
+def test_get_nmv_base_info(simulator: Simulator):
+    """Test getting non-motor vehicle base info."""
+    res = simulator.get_nmv_id_list()
+    if len(res.list) > 0:
+        base_info_res = simulator.get_nmv_base_info([res.list[0]])
+        assert base_info_res is not None
+
+
+def test_set_nmv_position(simulator: Simulator):
+    """Test setting non-motor vehicle position."""
+    res = simulator.get_nmv_id_list()
+    if len(res.list) > 0:
+        pos_res = simulator.set_nmv_position(res.list[0], Point(x=0.0, y=0.0, z=0.0), phi=0.0)
+        assert pos_res is not None
+
+
+def test_get_step_spawn_id_list(simulator: Simulator):
+    """Test getting step spawn ID list."""
+    res = simulator.get_step_spawn_id_list()
+    assert res is not None
+
+
+def test_get_participant_base_info(simulator: Simulator):
+    """Test getting participant base info."""
+    # First get vehicle ID list as participants
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0
+
+    # Then test getting participant base info
+    base_info_res = simulator.get_participant_base_info([res.list[0]])
+    assert base_info_res is not None
+
+
+def test_get_participant_moving_info(simulator: Simulator):
+    """Test getting participant moving info."""
+    # First get vehicle ID list as participants
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0
+
+    # Then test getting participant moving info
+    moving_info_res = simulator.get_participant_moving_info([res.list[0]])
+    assert moving_info_res is not None
+
+
+def test_get_participant_position(simulator: Simulator):
+    """Test getting participant position."""
+    # First get vehicle ID list as participants
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0
+
+    # Then test getting participant position
+    pos_res = simulator.get_participant_position([res.list[0]])
+    assert pos_res is not None
+
+
+def test_get_vehicle_moving_info_with_invalid_id(simulator: Simulator):
+    """Test getting vehicle moving info with invalid ID."""
+    res = simulator.get_vehicle_moving_info(["invalid_id"])
+    assert len(res.moving_info_dict) == 0
+
+
+def test_get_vehicle_moving_info_with_empty_list(simulator: Simulator):
+    """Test getting vehicle moving info with empty list."""
+    res = simulator.get_vehicle_moving_info([])
+    assert len(res.moving_info_dict) == 0
+
+
+def test_set_vehicle_moving_info_with_boundary_values(simulator: Simulator):
+    """Test setting vehicle moving info with boundary values."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0
+
+    # Test with zero values
+    simulator.set_vehicle_moving_info(res.list[0], u=0.0, v=0.0, w=0.0, u_acc=0.0, v_acc=0.0, w_acc=0.0)
+
+    # Test with large values
+    simulator.set_vehicle_moving_info(res.list[0], u=1000.0, v=1000.0, w=1000.0, u_acc=1000.0, v_acc=1000.0, w_acc=1000.0)
+
+    # Test with negative values
+    simulator.set_vehicle_moving_info(res.list[0], u=-1.0, v=-1.0, w=-1.0, u_acc=-1.0, v_acc=-1.0, w_acc=-1.0)
+
+
+def test_set_vehicle_position_with_boundary_values(simulator: Simulator):
+    """Test setting vehicle position with boundary values."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0
+
+    # Test with zero values
+    simulator.set_vehicle_position(res.list[0], Point(x=0.0, y=0.0, z=0.0), phi=0.0)
+
+    # Test with large values
+    simulator.set_vehicle_position(res.list[0], Point(x=1000.0, y=1000.0, z=1000.0), phi=3.14)
+
+    # Test with negative values
+    simulator.set_vehicle_position(res.list[0], Point(x=-1000.0, y=-1000.0, z=-1000.0), phi=-3.14)
+
+
+def test_set_vehicle_control_info_with_boundary_values(simulator: Simulator):
+    """Test setting vehicle control info with boundary values."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0
+
+    # Test with zero values
+    simulator.set_vehicle_control_info(res.list[0], ste_wheel=0.0, lon_acc=0.0)
+
+    # Test with large values
+    simulator.set_vehicle_control_info(res.list[0], ste_wheel=1.0, lon_acc=10.0)
+
+    # Test with negative values
+    simulator.set_vehicle_control_info(res.list[0], ste_wheel=-1.0, lon_acc=-10.0)
+
+
+def test_simulator_step_sequence(simulator: Simulator):
+    """Test simulator step sequence."""
+    # Step multiple times
+    for _ in range(5):
+        res = simulator.step()
+        assert res is not None
+
+
+def test_reset_after_multiple_steps(simulator: Simulator):
+    """Test resetting simulator after multiple steps."""
+    # Get initial vehicle positions
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0
+    initial_pos = simulator.get_vehicle_position([res.list[0]])
+
+    # Step multiple times
+    for _ in range(5):
+        simulator.step()
+
+    # Get positions after steps
+    after_steps_pos = simulator.get_vehicle_position([res.list[0]])
+
+    # Reset simulator
+    simulator.reset(True)
+
+    # Get positions after reset
+    after_reset_pos = simulator.get_vehicle_position([res.list[0]])
+
+    # Verify positions are different after steps but same after reset
+    assert initial_pos != after_steps_pos
+
+
+def test_ped_position_with_boundary_values(simulator: Simulator):
+    """Test setting pedestrian position with boundary values."""
+    res = simulator.get_ped_id_list()
+    if len(res.list) > 0:
+        # Test with zero values
+        simulator.set_ped_position(res.list[0], Point(x=0.0, y=0.0, z=0.0), phi=0.0)
+
+        # Test with large values
+        simulator.set_ped_position(res.list[0], Point(x=1000.0, y=1000.0, z=1000.0), phi=3.14)
+
+        # Test with negative values
+        simulator.set_ped_position(res.list[0], Point(x=-1000.0, y=-1000.0, z=-1000.0), phi=-3.14)
+
+
+def test_nmv_position_with_boundary_values(simulator: Simulator):
+    """Test setting non-motor vehicle position with boundary values."""
+    res = simulator.get_nmv_id_list()
+    if len(res.list) > 0:
+        # Test with zero values
+        simulator.set_nmv_position(res.list[0], Point(x=0.0, y=0.0, z=0.0), phi=0.0)
+
+        # Test with large values
+        simulator.set_nmv_position(res.list[0], Point(x=1000.0, y=1000.0, z=1000.0), phi=3.14)
+
+        # Test with negative values
+        simulator.set_nmv_position(res.list[0], Point(x=-1000.0, y=-1000.0, z=-1000.0), phi=-3.14)
+
+
+def test_participant_info_with_empty_lists(simulator: Simulator):
+    """Test getting participant info with empty lists."""
+    # Test base info
+    res = simulator.get_participant_base_info([])
+    assert len(res.base_info_dict) == 0
+
+    # Test moving info
+    res = simulator.get_participant_moving_info([])
+    assert len(res.moving_info_dict) == 0
+
+    # Test position
+    res = simulator.get_participant_position([])
+    assert len(res.position_dict) == 0
+
+
+def test_get_vehicle_sensor_config(simulator: Simulator):
+    """Test getting vehicle sensor configuration."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0, "not found vehicle id list"
+
+    # Then test getting vehicle sensor configuration
+    sensor_config_res = simulator.get_vehicle_sensor_config(res.list[0])
+    assert sensor_config_res is not None, "sensor config response should not be None"
+
+
+def test_set_vehicle_road_perception_info(simulator: Simulator):
+    """Test setting vehicle road perception info."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0, "not found vehicle id list"
+
+    # Create test local map data
+    local_map = LocalMap()
+    
+    # Test setting vehicle road perception info
+    road_perception_res = simulator.set_vehicle_road_perception_info(res.list[0], local_map)
+    assert road_perception_res is not None, "road perception response should not be None"
+
+
+def test_set_vehicle_obstacle_perception_info(simulator: Simulator):
+    """Test setting vehicle obstacle perception info."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0, "not found vehicle id list"
+
+    # Create test obstacles
+    obstacles = [
+        Obstacle(
+            id="test_obstacle",
+            type=1,
+            position=Position(
+                point = Point(
+                    x = 0,
+                    y = 0,
+                    z = 0
+                ),
+                heading=0,
+                dis_to_lane_end=1,
+                s=0,
+                t=0,
+            ),
+            base_info= ObjBaseInfo(
+                
+            ),
+            moving_info= ObjMovingInfo(
+                u=10.0,
+            )
+        )
+    ]
+
+    # Test setting vehicle obstacle perception info
+    obstacle_perception_res = simulator.set_vehicle_obstacle_perception_info(res.list[0], obstacles)
+    assert obstacle_perception_res is not None, "obstacle perception response should not be None"
+
+
+def test_set_vehicle_extra_metrics(simulator: Simulator):
+    """Test setting vehicle extra metrics."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0, "not found vehicle id list"
+
+    # Create test metrics
+    metrics = {
+        "test_metric_1": '1.0',
+        "test_metric_2": '2.0'
+    }
+
+    # Test setting vehicle extra metrics
+    metrics_res = simulator.set_vehicle_extra_metrics(res.list[0], metrics)
+    assert metrics_res is not None, "metrics response should not be None"
+
+
+def test_set_vehicle_local_paths(simulator: Simulator):
+    """Test setting vehicle local paths."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0, "not found vehicle id list"
+
+    # Create test local paths
+    local_paths = [
+        LocalPath(
+            points=[Point(x=0.0, y=0.0, z=0.0), Point(x=1.0, y=1.0, z=0.0)],
+            prob= 1.0,
+        )
+    ]
+
+    # Test setting vehicle local paths
+    paths_res = simulator.set_vehicle_local_paths(res.list[0], local_paths, 0)
+    assert paths_res is not None, "local paths response should not be None"
+
+
+def test_get_idc_vehicle_nav(simulator: Simulator):
+    """Test getting IDC vehicle navigation info."""
+    # First get vehicle ID list
+    res = simulator.get_vehicle_id_list()
+    assert len(res.list) > 0, "not found vehicle id list"
+
+    # Test getting IDC vehicle navigation info
+    nav_res = simulator.get_idc_vehicle_nav(res.list[0])
+    assert nav_res is not None, "IDC vehicle navigation response should not be None"
 
 
 def test_get_vehicle_collision_status(simulator: Simulator):

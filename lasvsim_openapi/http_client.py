@@ -2,8 +2,9 @@
 HTTP client module for the lasvsim API.
 """
 from typing import Any, Dict, Callable, Optional, Type, TypeVar,Tuple
-import requests
-
+import urllib3
+import ujson
+from urllib.parse import urlparse,urljoin
 
 class ErrorReason:
     """Error reason constants."""
@@ -20,7 +21,7 @@ class APIError(Exception):
     url: str = ""
     reason: str = ""
 
-    def __init__(self, status_code: int, message: Any, url: str, reason: str = ""):
+    def __init__(self, status_code: int = 0, message: Any = None, url: str = None, reason: str = ""):
         super().__init__(f"APIError {url} {status_code}: {message}")
         self.status_code = status_code
         self.message = message
@@ -90,7 +91,27 @@ class HttpClient():
         self.config = config
         self.headers = headers or {}
         self.headers["Authorization"] = f"Bearer {config.token}"
+        self.headers["Content-Type"] = "application/json"
+        self.headers["Connection"] = "keep-alive"
 
+        parsed_url = urlparse(config.endpoint)
+        host = parsed_url.hostname
+        port = parsed_url.port or (443 if parsed_url.scheme == "https" else 80)
+        
+        if parsed_url.scheme == "http":
+            self.http = urllib3.connectionpool.HTTPConnectionPool(
+                host=host,
+                port=port,
+                maxsize=500,
+                retries=urllib3.Retry(total=3, backoff_factor=0.5),
+            )
+        else:
+            self.http = urllib3.connectionpool.HTTPSConnectionPool(
+                host=host,
+                port=port,
+                maxsize=500,
+                retries=urllib3.Retry(total=3, backoff_factor=0.5),
+            )
     def clone(self) -> 'HttpClient':
         """Create a clone of this client.
         
@@ -100,73 +121,64 @@ class HttpClient():
 
         return HttpClient(self.config, dict(self.headers))
 
-    def _handle_response(self, response: requests.Response, out_type: Optional[Type[T]] = None) -> Optional[T]:
-        if response.status_code != 200:
+    def close(self):
+        """Close the underlying HTTP connection"""
+        self.http.close()
+
+    def _handle_response(self, response: urllib3.HTTPResponse) -> Optional[T]:
+        if response.status != 200:
             try:
-                error_data = response.json()
-                reason = error_data.get('reason') if isinstance(error_data, dict) else None
-                raise APIError(
-                    status_code=response.status_code,
-                    message=error_data,
-                    url=f"{response.request.method},{response.url}",
-                    reason=reason
-                )
-            except ValueError:
-                raise APIError(
-                    status_code=response.status_code,
-                    message=response.text,
-                    url=f"{response.request.method},{response.url}"
-                )
+                error_data = ujson.loads(response.data)
+            except Exception as e:
+                error_data = {"message": f'client parse json error:{e},data:{response.data}'}
 
-        if out_type is None:
-            return None
-            
-        try:
-            response_data = response.json()
-            return out_type.from_dict(response_data)
-        except ValueError as e:
+            reason = error_data.get('reason') if isinstance(error_data, dict) else None
             raise APIError(
-                message = f"Error parsing response: {e}",
-                url=f"{response.request.method},{response.url}"
+                status_code=response.status,
+                message=error_data.get('message'),
+                reason=reason,
             )
-    def get(self, path: str, params: Dict[str, str] = None, out_type: Optional[Type[T]] = None) -> T:
-        """Send GET request.
         
-        Args:
-            path: API endpoint path
-            params: Query parameters
-            out: Type to parse response into
-            
-        Returns:
-            Response data parsed into specified type
-            
-        Raises:
-            APIError: If the request fails
-        """
-        response = requests.get(
-            self.config.endpoint + path,
-            params=params,
-            headers=self.headers
-        )
-        return self._handle_response(response, out_type)
+        # if out_type is None:
+        #     return None
+        response_data = ujson.loads(response.data)
+        return response_data
+    
+    def do(self, method, url, fields=None, headers=None, **urlopen_kw):
+        try:
+            # path join
+            url = self.config.endpoint + url
+            if 'body' in urlopen_kw:
+                body = urlopen_kw.pop('body')
+                response = self.http.request(method, url, body=body, headers=headers, **urlopen_kw)
+            elif fields:
+                response = self.http.request(method, url, fields=fields, headers=headers, **urlopen_kw)
+            else:
+                response = self.http.request(method, url, headers=headers, **urlopen_kw)
 
-    def post(self, path: str, data: Any = None, out_type: Optional[Type[T]] = None) -> T:
-        """Send POST request.
-        
-        Args:
-            path: API endpoint path
-            data: Request data
-            out: Type to parse response into
-            
-        Returns:
-            Response data parsed into specified type
-            
-        Raises:
-            APIError: If the request fails
-        """
-        response = requests.post(
-            self.config.endpoint + path,
-            json=data,
-            headers=self.headers
-        )
-        return self._handle_response(response, out_type)
+            return self._handle_response(response)
+        except APIError as e:
+            e.url = f"{method},{url}"
+            raise e
+        except Exception as e:
+            raise APIError(
+                message=f"Failed to get response. Error: {e}",
+                url=f"{method},{url}"
+            )
+
+    def get(self, path: str, params: Dict[str, str] = None):
+        try:
+            return self.do("GET", path, fields=params, headers=self.headers)
+        except Exception as e:
+            # 兜底打印
+            print(f"http request error{e},method:GET,path:{path}")
+            raise e
+
+    def post(self, path: str, data: Any = None):
+        try:
+            encoded_data = ujson.dumps(data) if data else None
+            return self.do("POST", path, body=encoded_data, headers=self.headers)
+        except Exception as e:
+            # 兜底打印
+            print(f"http request error{e},method:POST,path:{path}")
+            raise e

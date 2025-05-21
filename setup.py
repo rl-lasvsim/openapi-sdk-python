@@ -15,7 +15,7 @@ def parse_requirements(filename):
 
 setup(
     name="lasvsim-openapi",
-    version="0.1.14",
+    version="0.1.15",
     description="Lasvsim OpenAPI SDK for Python - A client library for accessing Lasvsim's simulation platform",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -24,7 +24,8 @@ setup(
     url="https://github.com/rl-lasvsim/openapi-sdk-python",
     packages=find_packages(),
     install_requires=[
-        "requests>=2.25.0",
+        "urllib3>=2.3.0",
+        "ujson>=5.10.0",
     ],
     python_requires=">=3.0",
     keywords=["Qianxing", "Lasvsim", "自动驾驶",
