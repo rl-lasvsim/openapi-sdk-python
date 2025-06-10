@@ -26,6 +26,7 @@ class SimulatorFast:
                 "scen_id": sim_config.scen_id,
                 "scen_ver": sim_config.scen_ver,
                 "sim_record_id": sim_config.sim_record_id,
+                "max_step":  sim_config.max_step,
             },
         )
 
