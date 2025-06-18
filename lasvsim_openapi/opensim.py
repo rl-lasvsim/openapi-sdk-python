@@ -113,11 +113,11 @@ def run_opensim() -> OpensimRunConfig:
             config.dest_path.chmod(0o755)
         print(f"Opensim downloaded to {config.dest_path}. You can run it using:")
 
-    # 方式2：启动后不等待它结束
     process = subprocess.Popen([config.dest_path, 'run','--addr', f':{config.run_port}', '--local_resource'],
                             # stdout=subprocess.PIPE,
                             stderr=subprocess.STDOUT,text=True)
     atexit.register(lambda: process.terminate())
+    
     print(f"opensim started（PID: {process.pid}）, address: http://localhost:{config.run_port}")
     print(f"data dir: {os.getcwd()}/data/scenarios")
     return config
