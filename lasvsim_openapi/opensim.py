@@ -106,12 +106,12 @@ def run_opensim() -> OpensimRunConfig:
     # 检查是否已存在文件
     if not config.dest_path.exists():
         # 下载 OpenSim
-        print(f"Downloading OpenSim from {config.download_url} to {config.dest_path}")
+        print(f"Downloading Opensim from {config.download_url} to {config.dest_path}")
         download_file(config.download_url, config.dest_path)
         # 设置可执行权限（Linux/macOS）
         if platform.system() != "Windows":
             config.dest_path.chmod(0o755)
-        print(f"OpenSim downloaded to {config.dest_path}. You can run it using:")
+        print(f"Opensim downloaded to {config.dest_path}. You can run it using:")
 
     # 方式2：启动后不等待它结束
     process = subprocess.Popen([config.dest_path, 'run','--addr', f':{config.run_port}', '--local_resource'],
@@ -126,7 +126,7 @@ def upgrade_opensim():
     """更新 OpenSim"""
     config = OpensimRunConfig()
 
-    print(f"Downloading OpenSim from {config.download_url} to {config.dest_path}")
+    print(f"Downloading Opensim from {config.download_url} to {config.dest_path}")
     download_file(config.download_url, config.dest_path)
     # 设置可执行权限（Linux/macOS）
     if platform.system() != "Windows":
@@ -138,4 +138,4 @@ def upgrade_opensim():
 # run_opensim()
 # import time
 # time.sleep(3)  # 等待 OpenSim 启动
-# python -c "import lasvsim_openapi.simulator_model; print(lasvsim_openapi.simulator_model.SimulatorConfig()"
+# python -c "import lasvsim_openapi.opensim;lasvsim_openapi.opensim.upgrade_opensim()"
