@@ -25,10 +25,6 @@ def main():
 
     # 初始化客户端
     cli = Client(
-        config=HttpConfig(
-            endpoint=endpoint,  # 接口地址
-            token=token,  # 授权token
-        ),
         local_mode=True,
     )
 

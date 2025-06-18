@@ -89,6 +89,24 @@ finally:
     simulator.stop()
 ```
 
+## 本地仿真
+具体例子参考：examples/beginnr/local_sim.py
+创建本地仿真client：
+```python
+from lasvsim_openapi.client import Client
+
+# 初始化客户端
+cli = Client(
+    local_mode=True,
+)
+```
+
+### 升级opensim
+执行命令升级opensim：
+```bash
+python -c "import lasvsim_openapi.opensim;lasvsim_openapi.opensim.upgrade_opensim()"
+```
+
 ## 可用API
 
 ### 仿真器API
