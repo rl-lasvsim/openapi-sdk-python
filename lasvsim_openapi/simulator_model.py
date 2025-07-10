@@ -397,6 +397,7 @@ class SimulatorConfig:
     scen_id: str = ""
     scen_ver: str = ""
     sim_record_id: str = ""
+    max_step: int = 0
 
     def __init__(self, scen_id: str = "", scen_ver: str = "", sim_record_id: str = ""):
         self.scen_id = scen_id

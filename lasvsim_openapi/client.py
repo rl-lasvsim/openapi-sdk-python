@@ -1,15 +1,14 @@
 """
 Client module for the lasvsim API.
 """
-from typing import Optional
-
-from lasvsim_openapi.http_client import HttpConfig, HttpClient
+from lasvsim_openapi.http_client import HttpConfig
 from lasvsim_openapi.train_task import TrainTask
 from lasvsim_openapi.resources import Resources
 from lasvsim_openapi.process_task import ProcessTask
 from lasvsim_openapi.simulator import Simulator, SimulatorConfig
 from lasvsim_openapi.sim_record import SimRecord
 from lasvsim_openapi.client_fast import ClientFast
+from lasvsim_openapi.opensim import run_opensim
 
 class Client:
     """Main client for the API."""
@@ -20,12 +19,18 @@ class Client:
 
     client_fast: ClientFast = None
 
-    def __init__(self, config: HttpConfig):
+    def __init__(self, config: HttpConfig = None, local_mode: bool = False):
         """Initialize a new API client.
         
         Args:
             config: HTTP configuration for the client
         """
+        if config is None and not local_mode:
+            raise ValueError("HttpConfig is required unless local_mode is True")
+
+        if local_mode:
+            opensim_config = run_opensim()
+            config = HttpConfig(endpoint=f"http://localhost:{opensim_config.run_port}", token="")
 
         self.client_fast = ClientFast(config)
         self.init_common_client()
