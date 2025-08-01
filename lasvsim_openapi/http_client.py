@@ -130,7 +130,8 @@ class HttpClient():
             try:
                 error_data = ujson.loads(response.data)
             except Exception as e:
-                error_data = {"message": f'client parse json error:{e},data:{response.data}'}
+                data = response.data.decode('utf-8')
+                error_data = {"message": f'client parse json error:{e},data:{data}'}
 
             reason = error_data.get('reason') if isinstance(error_data, dict) else None
             raise APIError(
