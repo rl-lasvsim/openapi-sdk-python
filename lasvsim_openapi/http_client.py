@@ -125,8 +125,10 @@ class HttpClient():
         """Close the underlying HTTP connection"""
         self.http.close()
 
-    def _handle_response(self, response: urllib3.HTTPResponse) -> Optional[T]:
+    def _handle_response(self,headers, response: urllib3.HTTPResponse) -> Optional[T]:
         if response.status != 200:
+            if response.status == 401:
+                print("Unauthorized: Please check your authentication token. and headers:",headers)
             try:
                 error_data = ujson.loads(response.data)
             except Exception as e:
@@ -157,7 +159,7 @@ class HttpClient():
             else:
                 response = self.http.request(method, url, headers=headers, **urlopen_kw)
 
-            return self._handle_response(response)
+            return self._handle_response(headers,response)
         except APIError as e:
             e.url = f"{method},{url}"
             raise e
