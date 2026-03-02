@@ -585,6 +585,38 @@ class SimulatorFast:
             },
         )
 
+    def set_aeb_status(
+        self,
+        vehicle_id: str,
+        emergency_braking: bool = False,
+        first_collision_warning: bool = False,
+        second_collision_warning: bool = False,
+    ) -> dict:
+        """Set vehicle AEB (Automatic Emergency Braking) status.
+
+        Args:
+            vehicle_id: Vehicle ID
+            emergency_braking: Emergency braking status
+            first_collision_warning: First collision warning alert
+            second_collision_warning: Second collision warning alert
+
+        Returns:
+            Set AEB status response as dict
+
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/vehicle/aeb_status",
+            {
+                "simulation_id": self.simulation_id,
+                "vehicle_id": vehicle_id,
+                "emergency_braking": emergency_braking,
+                "first_collision_warning": first_collision_warning,
+                "second_collision_warning": second_collision_warning,
+            },
+        )
+
     def get_ped_id_list(self) -> dict:
         """Get pedestrian ID list.
 

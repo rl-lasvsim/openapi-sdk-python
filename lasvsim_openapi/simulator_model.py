@@ -2926,3 +2926,55 @@ class IdcStepRes:
             navigation_info=NavigationInfo.from_dict(data.get("navigation_info", {})),
             step_res=StepRes.from_dict(data.get("step_res", {})),
         )
+
+
+# --------- AEB 高级驾驶辅助 ---------
+@dataclass
+class SetAEBStatusReq:
+    """Request for setting vehicle AEB status."""
+
+    simulation_id: str = ""
+    vehicle_id: str = ""
+    emergency_braking: bool = False
+    first_collision_warning: bool = False
+    second_collision_warning: bool = False
+
+    def __init__(
+        self,
+        simulation_id: str = "",
+        vehicle_id: str = "",
+        emergency_braking: bool = False,
+        first_collision_warning: bool = False,
+        second_collision_warning: bool = False,
+    ):
+        self.simulation_id = simulation_id
+        self.vehicle_id = vehicle_id
+        self.emergency_braking = emergency_braking
+        self.first_collision_warning = first_collision_warning
+        self.second_collision_warning = second_collision_warning
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get("simulation_id", ""),
+            vehicle_id=data.get("vehicle_id", ""),
+            emergency_braking=data.get("emergency_braking", False),
+            first_collision_warning=data.get("first_collision_warning", False),
+            second_collision_warning=data.get("second_collision_warning", False),
+        )
+
+
+@dataclass
+class SetAEBStatusRes:
+    """Response for setting vehicle AEB status."""
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
