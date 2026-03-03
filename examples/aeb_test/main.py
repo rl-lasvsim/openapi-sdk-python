@@ -34,12 +34,12 @@ def main():
     # ========== 可配置的 AEB 状态范围 ==========
     # 格式：(起始步，结束步) - 左闭右开区间 [start, end)
     # 例如：(10, 20) 表示第 10-19 步触发该状态
+    # 修改这些变量以适配你的测试需求
     
-    FIRST_WARNING_RANGE = (10, 20)      # 第一次碰撞预警范围
-    SECOND_WARNING_RANGE = (20, 30)     # 第二次碰撞预警范围
-    EMERGENCY_BRAKING_RANGE = (30, 40)  # 紧急制动范围
-    
-    MAX_STEPS = 1000000  # 总仿真步数
+    FIRST_WARNING_RANGE = (251, 265)      # 第一次碰撞预警范围
+    SECOND_WARNING_RANGE = (251, 259)     # 第二次碰撞预警范围
+    EMERGENCY_BRAKING_RANGE = (260, 282)  # 紧急制动范围
+    MAX_STEPS = 1000000  # 总仿真步数（默认很大，让仿真运行到自然结束）
     # =========================================
 
     # 接口地址和授权 token
@@ -116,9 +116,9 @@ def main():
             # 根据仿真步数范围设置 AEB 状态
             if FIRST_WARNING_RANGE[0] <= step_count < FIRST_WARNING_RANGE[1]:
                 first_collision_warning = True
-            elif SECOND_WARNING_RANGE[0] <= step_count < SECOND_WARNING_RANGE[1]:
+            if SECOND_WARNING_RANGE[0] <= step_count < SECOND_WARNING_RANGE[1]:
                 second_collision_warning = True
-            elif EMERGENCY_BRAKING_RANGE[0] <= step_count < EMERGENCY_BRAKING_RANGE[1]:
+            if EMERGENCY_BRAKING_RANGE[0] <= step_count < EMERGENCY_BRAKING_RANGE[1]:
                 emergency_braking = True
             
             # 调用 AEB 接口设置状态
@@ -128,6 +128,7 @@ def main():
                 first_collision_warning=first_collision_warning,
                 second_collision_warning=second_collision_warning
             )
+            # print(f"[Step {step_count}] 设置车辆 AEB 状态：emergency_braking={emergency_braking}, first_collision_warning={first_collision_warning}, second_collision_warning={second_collision_warning}")  
             
             # 设置车辆控制信息（保持匀速行驶）
             ste_wheel = 0.0
