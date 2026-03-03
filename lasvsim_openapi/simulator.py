@@ -48,6 +48,8 @@ from lasvsim_openapi.simulator_model import (
     GetVehicleNavigationInfoRes,
     GetVehicleCollisionStatusReq,
     GetVehicleCollisionStatusRes,
+    SetAEBStatusReq,
+    SetAEBStatusRes,
     GetVehicleTargetSpeedReq,
     GetVehicleTargetSpeedRes,
     SetVehiclePlanningInfoReq,
@@ -598,6 +600,35 @@ class Simulator:
             vehicle_id=vehicle_id, destination=destination
         )
         return SetVehicleDestinationRes.from_dict(reply)
+
+    def set_aeb_status(
+        self,
+        vehicle_id: str,
+        emergency_braking: bool = False,
+        first_collision_warning: bool = False,
+        second_collision_warning: bool = False,
+    ) -> SetAEBStatusRes:
+        """Set vehicle AEB (Automatic Emergency Braking) status.
+
+        Args:
+            vehicle_id: Vehicle ID
+            emergency_braking: Emergency braking status
+            first_collision_warning: First collision warning alert
+            second_collision_warning: Second collision warning alert
+
+        Returns:
+            Set AEB status response
+
+        Raises:
+            APIError: If the request fails
+        """
+        reply = self.simulator_fast.set_aeb_status(
+            vehicle_id=vehicle_id,
+            emergency_braking=emergency_braking,
+            first_collision_warning=first_collision_warning,
+            second_collision_warning=second_collision_warning,
+        )
+        return SetAEBStatusRes.from_dict(reply)
 
     # --------- 行人部分 ---------
     def get_ped_id_list(self) -> GetPedIdListRes:
