@@ -8,10 +8,13 @@ from lasvsim_openapi.process_task_fast import ProcessTaskFast
 from lasvsim_openapi.process_task_model import (
     CopyRecordReq,
     CopyRecordRes,
+    CreateTaskReq,
+    CreateTaskRes,
     GetRecordScenarioReq,
     GetRecordScenarioRes,
     GetTaskRecordIdsReq,
     GetTaskRecordIdsRes,
+    ScenarioRef,
 )
 
 
@@ -73,3 +76,24 @@ class ProcessTask:
         """
         reply = self.process_task_fast.get_task_record_ids(task_id)
         return GetTaskRecordIdsRes.from_dict(reply)
+
+    def create_task(self, name: str, scene_v2_infos: list, folder_id: int = 0) -> CreateTaskRes:
+        """Create a simulation task.
+        
+        Args:
+            name: Task name
+            scene_v2_infos: List of ScenarioRef objects or dicts
+            folder_id: Folder ID (optional)
+            
+        Returns:
+            Create task response
+            
+        Raises:
+            APIError: If the request fails
+        """
+        reply = self.process_task_fast.create_task(
+            name=name,
+            scene_v2_infos=scene_v2_infos,
+            folder_id=folder_id,
+        )
+        return CreateTaskRes.from_dict(reply)

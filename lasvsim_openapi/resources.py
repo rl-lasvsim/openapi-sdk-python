@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from lasvsim_openapi.http_client import HttpClient
 from lasvsim_openapi.qxmap import Qxmap
 from lasvsim_openapi.resources_fast import ResourcesFast
+from lasvsim_openapi.resources_model import ListScenariosReq, ListScenariosRes, ScenarioItem, Pagination
 
 @dataclass
 class GetHdMapRes:
@@ -52,3 +53,20 @@ class Resources:
         """
         reply = self.resources_fast.get_hd_map(scen_id, scen_ver)
         return GetHdMapRes.from_dict(reply)
+
+    def list_scenarios(self, folder_id: int = 0, page_num: int = 1, page_size: int = 10) -> ListScenariosRes:
+        """List scenarios.
+        
+        Args:
+            folder_id: Folder ID (optional, default 0)
+            page_num: Page number (optional, default 1)
+            page_size: Page size (optional, default 10)
+            
+        Returns:
+            List of scenarios with pagination info
+            
+        Raises:
+            APIError: If the request fails
+        """
+        reply = self.resources_fast.list_scenarios(folder_id, page_num, page_size)
+        return ListScenariosRes.from_dict(reply)

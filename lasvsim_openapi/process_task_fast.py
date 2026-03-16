@@ -69,3 +69,36 @@ class ProcessTaskFast:
             "/openapi/process_task/v2/record/id_list",
             {"task_id": task_id},
         )
+
+    def create_task(self, name: str, scene_v2_infos: list, folder_id: int = 0):
+        """Create a simulation task.
+        
+        Args:
+            name: Task name
+            scene_v2_infos: List of scenario references (dict or ScenarioRef)
+            folder_id: Folder ID (optional)
+            
+        Returns:
+            Create task response (dict)
+            
+        Raises:
+            APIError: If the request fails
+        """
+        # Convert ScenarioRef objects to dict if needed
+        scene_infos = []
+        for info in scene_v2_infos:
+            if hasattr(info, 'to_dict'):
+                scene_infos.append(info.to_dict())
+            else:
+                scene_infos.append(info)
+        
+        payload = {
+            "name": name,
+            "folder_id": folder_id,
+            "scene_v2_infos": scene_infos,
+        }
+        
+        return self.http_client.post(
+            "/openapi/process_task/v2/task/create",
+            payload,
+        )

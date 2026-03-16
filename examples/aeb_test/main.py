@@ -36,8 +36,8 @@ def main():
     # 例如：(10, 20) 表示第 10-19 步触发该状态
     # 修改这些变量以适配你的测试需求
     
-    FIRST_WARNING_RANGE = (251, 265)      # 第一次碰撞预警范围
-    SECOND_WARNING_RANGE = (251, 259)     # 第二次碰撞预警范围
+    FIRST_WARNING_RANGE = (239, 253)      # 第一次碰撞预警范围
+    SECOND_WARNING_RANGE = (243, 254)     # 第二次碰撞预警范围
     EMERGENCY_BRAKING_RANGE = (260, 282)  # 紧急制动范围
     MAX_STEPS = 1000000  # 总仿真步数（默认很大，让仿真运行到自然结束）
     # =========================================
