@@ -54,3 +54,19 @@ class Client:
         simlator_v2 = self.client_fast.init_simulator_from_config(sim_config)
         simulator = Simulator(simlator_v2)
         return simulator
+
+    def init_simulator_from_sim(self, simulation_id: str, simulation_addr: str) -> Simulator:
+        """Reconnect to an existing simulator session.
+        
+        Args:
+            simulation_id: Existing simulation ID
+            simulation_addr: Existing simulation address
+            
+        Returns:
+            A simulator instance connected to the existing session
+        """
+        from lasvsim_openapi.simulator_fast import SimulatorFast
+        sim_fast = SimulatorFast.from_session(
+            self.client_fast.http_client, simulation_id, simulation_addr
+        )
+        return Simulator(sim_fast)

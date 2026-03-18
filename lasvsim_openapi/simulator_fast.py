@@ -11,6 +11,7 @@ class SimulatorFast:
 
     http_client: HttpClient = None
     simulation_id: str = ""
+    simulation_addr: str = ""
 
     def __init__(self, http_client: HttpClient, sim_config: SimulatorConfig):
         """Initialize simulator client.
@@ -33,6 +34,27 @@ class SimulatorFast:
         self.http_client.headers["x-md-simulation_id"] = reply["simulation_id"]
         self.http_client.headers["x-md-rl-direct-addr"] = reply["simulation_addr"]
         self.simulation_id = reply["simulation_id"]
+        self.simulation_addr = reply["simulation_addr"]
+
+    @classmethod
+    def from_session(cls, http_client: HttpClient, simulation_id: str, simulation_addr: str) -> 'SimulatorFast':
+        """Reconnect to an existing simulator session without calling init.
+
+        Args:
+            http_client: HTTP client instance
+            simulation_id: Existing simulation ID
+            simulation_addr: Existing simulation address
+
+        Returns:
+            A SimulatorFast instance connected to the existing session
+        """
+        instance = cls.__new__(cls)
+        instance.http_client = http_client.clone()
+        instance.http_client.headers["x-md-simulation_id"] = simulation_id
+        instance.http_client.headers["x-md-rl-direct-addr"] = simulation_addr
+        instance.simulation_id = simulation_id
+        instance.simulation_addr = simulation_addr
+        return instance
 
     def step(self):
         """Step the simulation forward.
