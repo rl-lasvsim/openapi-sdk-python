@@ -150,11 +150,13 @@ class CreateTaskReq:
     name: str = ""  # 任务名称
     folder_id: int = 0  # 文件夹 ID
     scene_v2_infos: List[ScenarioRef] = field(default_factory=list)  # 场景基础信息列表
+    sim_type: int = 0  # 仿真类型 (0:None; 1:TaskSim; 2:RealTimeSim; 3:CoSim; 4:HILSim)
     
-    def __init__(self, name: str = "", folder_id: int = 0, scene_v2_infos: List[ScenarioRef] = None):
+    def __init__(self, name: str = "", folder_id: int = 0, scene_v2_infos: List[ScenarioRef] = None, sim_type: int = 0):
         self.name = name
         self.folder_id = folder_id
         self.scene_v2_infos = scene_v2_infos or []
+        self.sim_type = sim_type
 
     @classmethod
     def from_dict(cls, data: dict = None):
@@ -165,6 +167,7 @@ class CreateTaskReq:
             name=data.get("name", ""),
             folder_id=data.get("folder_id", 0),
             scene_v2_infos=scene_v2_infos,
+            sim_type=data.get("sim_type", 0),
         )
     
     def to_dict(self) -> dict:
@@ -172,6 +175,7 @@ class CreateTaskReq:
             "name": self.name,
             "folder_id": self.folder_id,
             "scene_v2_infos": [info.to_dict() for info in self.scene_v2_infos],
+            "sim_type": self.sim_type,
         }
 
 

@@ -39,7 +39,7 @@ def main():
     FIRST_WARNING_RANGE = (239, 253)      # 第一次碰撞预警范围
     SECOND_WARNING_RANGE = (243, 254)     # 第二次碰撞预警范围
     EMERGENCY_BRAKING_RANGE = (260, 282)  # 紧急制动范围
-    MAX_STEPS = 1000000  # 总仿真步数（默认很大，让仿真运行到自然结束）
+    MAX_STEPS = 30  # 总仿真步数（默认很大，让仿真运行到自然结束）
     # =========================================
 
     # 接口地址和授权 token

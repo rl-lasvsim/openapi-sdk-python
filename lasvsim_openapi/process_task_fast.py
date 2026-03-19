@@ -70,13 +70,14 @@ class ProcessTaskFast:
             {"task_id": task_id},
         )
 
-    def create_task(self, name: str, scene_v2_infos: list, folder_id: int = 0):
+    def create_task(self, name: str, scene_v2_infos: list, folder_id: int = 0, sim_type: int = 0):
         """Create a simulation task.
         
         Args:
             name: Task name
             scene_v2_infos: List of scenario references (dict or ScenarioRef)
             folder_id: Folder ID (optional)
+            sim_type: Simulation type (0:None; 1:TaskSim; 2:RealTimeSim; 3:CoSim; 4:HILSim)
             
         Returns:
             Create task response (dict)
@@ -96,6 +97,7 @@ class ProcessTaskFast:
             "name": name,
             "folder_id": folder_id,
             "scene_v2_infos": scene_infos,
+            "sim_type": sim_type,
         }
         
         return self.http_client.post(

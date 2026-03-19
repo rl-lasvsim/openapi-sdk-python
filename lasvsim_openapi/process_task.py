@@ -77,13 +77,14 @@ class ProcessTask:
         reply = self.process_task_fast.get_task_record_ids(task_id)
         return GetTaskRecordIdsRes.from_dict(reply)
 
-    def create_task(self, name: str, scene_v2_infos: list, folder_id: int = 0) -> CreateTaskRes:
+    def create_task(self, name: str, scene_v2_infos: list, folder_id: int = 0, sim_type: int = 0) -> CreateTaskRes:
         """Create a simulation task.
         
         Args:
             name: Task name
             scene_v2_infos: List of ScenarioRef objects or dicts
             folder_id: Folder ID (optional)
+            sim_type: Simulation type (0:None; 1:TaskSim; 2:RealTimeSim; 3:CoSim; 4:HILSim)
             
         Returns:
             Create task response
@@ -95,5 +96,6 @@ class ProcessTask:
             name=name,
             scene_v2_infos=scene_v2_infos,
             folder_id=folder_id,
+            sim_type=sim_type,
         )
         return CreateTaskRes.from_dict(reply)
