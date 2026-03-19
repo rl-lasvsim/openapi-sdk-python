@@ -7,6 +7,7 @@ from lasvsim_openapi.resources import Resources
 from lasvsim_openapi.process_task import ProcessTask
 from lasvsim_openapi.simulator import Simulator, SimulatorConfig
 from lasvsim_openapi.sim_record import SimRecord
+from lasvsim_openapi.viewhelper import ViewHelper
 from lasvsim_openapi.client_fast import ClientFast
 from lasvsim_openapi.opensim import run_opensim
 
@@ -16,6 +17,7 @@ class Client:
     resources: Resources = None
     process_task: ProcessTask = None
     sim_record: SimRecord = None
+    viewhelper: ViewHelper = None
 
     client_fast: ClientFast = None
 
@@ -41,6 +43,7 @@ class Client:
         self.resources = Resources(self.client_fast.http_client)
         self.process_task = ProcessTask(self.client_fast.http_client)
         self.sim_record = SimRecord(self.client_fast.http_client)
+        self.viewhelper = ViewHelper(self.client_fast.http_client)
 
     def init_simulator_from_config(self, sim_config: SimulatorConfig) -> Simulator:
         """Initialize a simulator from the given configuration.

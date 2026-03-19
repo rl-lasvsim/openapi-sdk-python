@@ -8,6 +8,7 @@ from lasvsim_openapi.resources_fast import ResourcesFast
 from lasvsim_openapi.process_task_fast import ProcessTaskFast
 from lasvsim_openapi.simulator import SimulatorConfig
 from lasvsim_openapi.sim_record_fast import SimRecordFast
+from lasvsim_openapi.viewhelper_fast import ViewHelperFast
 
 class ClientFast:
     config: HttpConfig = None
@@ -17,6 +18,7 @@ class ClientFast:
     resources: ResourcesFast = None
     process_task: ProcessTaskFast = None
     sim_record: SimRecordFast = None
+    viewhelper: ViewHelperFast = None
 
     def __init__(self, config: HttpConfig):
         """Initialize a new API client.
@@ -34,6 +36,7 @@ class ClientFast:
         self.resources = ResourcesFast(self.http_client)
         self.process_task = ProcessTaskFast(self.http_client)
         self.sim_record = SimRecordFast(self.http_client)
+        self.viewhelper = ViewHelperFast(self.http_client)
 
     def init_simulator_from_config(self, sim_config: SimulatorConfig) -> SimulatorFast:
         """Initialize a simulator from the given configuration.
