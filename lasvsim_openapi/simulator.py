@@ -436,6 +436,12 @@ class Simulator:
         vehicle_id: str,
         ste_wheel: Optional[float] = None,
         lon_acc: Optional[float] = None,
+        drive_force_front_axle: float = 0.0,
+        drive_force_rear_axle: float = 0.0,
+        brake_force_fl: float = 0.0,
+        brake_force_fr: float = 0.0,
+        brake_force_rl: float = 0.0,
+        brake_force_rr: float = 0.0,
     ) -> SetVehicleControlInfoRes:
         """Set vehicle control information.
 
@@ -443,6 +449,12 @@ class Simulator:
             vehicle_id: Vehicle ID
             ste_wheel: Optional steering wheel angle
             lon_acc: Optional longitudinal acceleration
+            drive_force_front_axle: Front axle drive force [N], default 0.0
+            drive_force_rear_axle: Rear axle drive force [N], default 0.0
+            brake_force_fl: Front-left wheel brake force [N], default 0.0
+            brake_force_fr: Front-right wheel brake force [N], default 0.0
+            brake_force_rl: Rear-left wheel brake force [N], default 0.0
+            brake_force_rr: Rear-right wheel brake force [N], default 0.0
 
         Returns:
             Set vehicle control information response
@@ -451,7 +463,15 @@ class Simulator:
             APIError: If the request fails
         """
         reply = self.simulator_fast.set_vehicle_control_info(
-            vehicle_id=vehicle_id, ste_wheel=ste_wheel, lon_acc=lon_acc
+            vehicle_id=vehicle_id,
+            ste_wheel=ste_wheel,
+            lon_acc=lon_acc,
+            drive_force_front_axle=drive_force_front_axle,
+            drive_force_rear_axle=drive_force_rear_axle,
+            brake_force_fl=brake_force_fl,
+            brake_force_fr=brake_force_fr,
+            brake_force_rl=brake_force_rl,
+            brake_force_rr=brake_force_rr,
         )
         return SetVehicleControlInfoRes.from_dict(reply)
 
@@ -842,13 +862,25 @@ class Simulator:
         vehicle_id: str,
         ste_wheel: Optional[float] = None,
         lon_acc: Optional[float] = None,
+        drive_force_front_axle: float = 0.0,
+        drive_force_rear_axle: float = 0.0,
+        brake_force_fl: float = 0.0,
+        brake_force_fr: float = 0.0,
+        brake_force_rl: float = 0.0,
+        brake_force_rr: float = 0.0,
         ref_limit: Optional[float] = None,
-    ):
+    ) -> IdcStepRes:
 
         reply = self.simulator_fast.idc_step(
             vehicle_id,
             ste_wheel,
             lon_acc,
+            drive_force_front_axle,
+            drive_force_rear_axle,
+            brake_force_fl,
+            brake_force_fr,
+            brake_force_rl,
+            brake_force_rr,
             ref_limit,
         )
         return IdcStepRes.from_dict(reply)
