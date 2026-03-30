@@ -132,7 +132,92 @@ python -c "import lasvsim_openapi.opensim;lasvsim_openapi.opensim.upgrade_opensi
 - `get_vehicle_collision_status(vehicle_id)`: 检查车辆碰撞状态
 - `get_vehicle_target_speed(vehicle_id)`: 获取车辆目标速度
 - `set_vehicle_position(vehicle_id, point, phi)`: 设置车辆位置和航向角
-- `set_vehicle_control_info(vehicle_id, ste_wheel, lon_acc)`: 设置车辆控制参数
+- `set_vehicle_control_info(vehicle_id, ste_wheel, lon_acc, drive_force_front_axle, drive_force_rear_axle, brake_force_fl, brake_force_fr, brake_force_rl, brake_force_rr)`: 设置车辆控制参数
 - `set_vehicle_planning_info(vehicle_id, planning_path)`: 设置车辆规划路径
 - `set_vehicle_moving_info(vehicle_id, u, v, w, u_acc, v_acc, w_acc)`: 设置车辆运动参数
 - `set_vehicle_base_info(vehicle_id, base_info)`: 设置车辆基本信息
+
+---
+
+## set_vehicle_control_info 接口使用说明
+
+### 概述
+
+`set_vehicle_control_info` 用于设置测试车辆的控制参数，支持**运动学控制**和**动力学控制**两种模式。
+
+### 函数签名
+
+```python
+simulator.set_vehicle_control_info(
+    vehicle_id: str,
+    ste_wheel: Optional[float] = None,
+    lon_acc: Optional[float] = None,
+    drive_force_front_axle: float = 0.0,
+    drive_force_rear_axle: float = 0.0,
+    brake_force_fl: float = 0.0,
+    brake_force_fr: float = 0.0,
+    brake_force_rl: float = 0.0,
+    brake_force_rr: float = 0.0,
+) -> SetVehicleControlInfoRes
+```
+
+### 参数说明
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `vehicle_id` | str | - | 车辆 ID |
+| `ste_wheel` | float | None | 方向盘转角 [度] |
+| `lon_acc` | float | None | 纵向加速度 [m/s²] |
+| `drive_force_front_axle` | float | 0.0 | 前轴驱动力 [N] |
+| `drive_force_rear_axle` | float | 0.0 | 后轴驱动力 [N] |
+| `brake_force_fl` | float | 0.0 | 左前轮制动力 [N] |
+| `brake_force_fr` | float | 0.0 | 右前轮制动力 [N] |
+| `brake_force_rl` | float | 0.0 | 左后轮制动力 [N] |
+| `brake_force_rr` | float | 0.0 | 右后轮制动力 [N] |
+
+### 控制模式
+
+#### 1. 运动学控制（推荐用于简单场景）
+
+```python
+# 方向盘转角 5 度，纵向加速度 0.1 m/s²
+simulator.set_vehicle_control_info(
+    vehicle_id="vehicle_1",
+    ste_wheel=5.0,
+    lon_acc=0.1,
+)
+```
+
+#### 2. 动力学控制（高保真仿真）
+
+```python
+# 后轮驱动，前轮制动
+simulator.set_vehicle_control_info(
+    vehicle_id="vehicle_1",
+    drive_force_rear_axle=500.0,  # 后轴驱动力 500N
+    brake_force_fl=100.0,         # 左前轮制动力 100N
+    brake_force_fr=100.0,         # 右前轮制动力 100N
+)
+```
+
+#### 3. 组合控制
+
+```python
+# 转向 + 后轴驱动
+simulator.set_vehicle_control_info(
+    vehicle_id="vehicle_1",
+    ste_wheel=3.0,
+    drive_force_rear_axle=400.0,
+)
+```
+
+### 注意事项
+
+1. **参数优先级**：当同时设置 `lon_acc` 和驱动力/制动力时，动力学参数优先
+2. **单位**：角度单位为度 [°]，力单位为牛顿 [N]，加速度单位为 m/s²
+3. **默认值**：未指定的参数使用默认值 0.0
+4. **四轮独立制动**：可分别控制每个车轮的制动力，实现差动制动效果
+
+### 测试脚本
+
+参考 `tests/test_cosim_task.py`，包含 7 个测试用例覆盖所有控制参数组合。
