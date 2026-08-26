@@ -241,6 +241,110 @@ class ObjMovingInfo:
 
 
 @dataclass
+class TireState:
+    """Tire state information, per wheel (front-left/front-right/rear-left/rear-right)."""
+
+    fl_slip: float = 0.0  # 滑移率, 无量纲
+    fr_slip: float = 0.0
+    rl_slip: float = 0.0
+    rr_slip: float = 0.0
+
+    fl_alpha: float = 0.0  # 侧偏角, rad
+    fr_alpha: float = 0.0
+    rl_alpha: float = 0.0
+    rr_alpha: float = 0.0
+
+    fl_fz: float = 0.0  # 垂向载荷, N
+    fr_fz: float = 0.0
+    rl_fz: float = 0.0
+    rr_fz: float = 0.0
+
+    def __init__(
+        self,
+        fl_slip: float = 0.0,
+        fr_slip: float = 0.0,
+        rl_slip: float = 0.0,
+        rr_slip: float = 0.0,
+        fl_alpha: float = 0.0,
+        fr_alpha: float = 0.0,
+        rl_alpha: float = 0.0,
+        rr_alpha: float = 0.0,
+        fl_fz: float = 0.0,
+        fr_fz: float = 0.0,
+        rl_fz: float = 0.0,
+        rr_fz: float = 0.0,
+    ):
+        self.fl_slip = fl_slip
+        self.fr_slip = fr_slip
+        self.rl_slip = rl_slip
+        self.rr_slip = rr_slip
+        self.fl_alpha = fl_alpha
+        self.fr_alpha = fr_alpha
+        self.rl_alpha = rl_alpha
+        self.rr_alpha = rr_alpha
+        self.fl_fz = fl_fz
+        self.fr_fz = fr_fz
+        self.rl_fz = rl_fz
+        self.rr_fz = rr_fz
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            fl_slip=data.get("fl_slip", 0.0),
+            fr_slip=data.get("fr_slip", 0.0),
+            rl_slip=data.get("rl_slip", 0.0),
+            rr_slip=data.get("rr_slip", 0.0),
+            fl_alpha=data.get("fl_alpha", 0.0),
+            fr_alpha=data.get("fr_alpha", 0.0),
+            rl_alpha=data.get("rl_alpha", 0.0),
+            rr_alpha=data.get("rr_alpha", 0.0),
+            fl_fz=data.get("fl_fz", 0.0),
+            fr_fz=data.get("fr_fz", 0.0),
+            rl_fz=data.get("rl_fz", 0.0),
+            rr_fz=data.get("rr_fz", 0.0),
+        )
+
+
+@dataclass
+class VehicleDynamicState:
+    """Vehicle body attitude and tire state. Only populated for CarMaker co-simulation."""
+
+    roll: float = 0.0  # 横滚角, rad
+    pitch: float = 0.0  # 俯仰角, rad
+    roll_rate: float = 0.0  # 横滚角速度, rad/s
+    pitch_rate: float = 0.0  # 俯仰角速度, rad/s
+    tire_state: Optional[TireState] = None
+
+    def __init__(
+        self,
+        roll: float = 0.0,
+        pitch: float = 0.0,
+        roll_rate: float = 0.0,
+        pitch_rate: float = 0.0,
+        tire_state: Optional[TireState] = None,
+    ):
+        self.roll = roll
+        self.pitch = pitch
+        self.roll_rate = roll_rate
+        self.pitch_rate = pitch_rate
+        self.tire_state = tire_state
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            roll=data.get("roll", 0.0),
+            pitch=data.get("pitch", 0.0),
+            roll_rate=data.get("roll_rate", 0.0),
+            pitch_rate=data.get("pitch_rate", 0.0),
+            tire_state=TireState.from_dict(data.get("tire_state")),
+        )
+
+
+@dataclass
 class ControlInfo:
     """Control information."""
 
@@ -1129,9 +1233,19 @@ class GetVehicleMovingInfoRes:
     """Response for getting vehicle moving information."""
 
     moving_info_dict: Dict[str, ObjMovingInfo] = field(default_factory=dict)
+    # 车身姿态与轮胎状态, 仅 CarMaker 联仿场景有数据; 按同一 vehicle id 与
+    # moving_info_dict 关联查询
+    dynamic_state_dict: Dict[str, VehicleDynamicState] = field(default_factory=dict)
 
-    def __init__(self, moving_info_dict: Dict[str, ObjMovingInfo] = None):
+    def __init__(
+        self,
+        moving_info_dict: Dict[str, ObjMovingInfo] = None,
+        dynamic_state_dict: Dict[str, VehicleDynamicState] = None,
+    ):
         self.moving_info_dict = moving_info_dict if moving_info_dict is not None else {}
+        self.dynamic_state_dict = (
+            dynamic_state_dict if dynamic_state_dict is not None else {}
+        )
 
     @classmethod
     def from_dict(cls, data: dict = None):
@@ -1140,8 +1254,12 @@ class GetVehicleMovingInfoRes:
         return cls(
             moving_info_dict={
                 k: ObjMovingInfo.from_dict(v)
-                for k, v in data.get("moving_info_dict", {}).items()
-            }
+                for k, v in (data.get("moving_info_dict") or {}).items()
+            },
+            dynamic_state_dict={
+                k: VehicleDynamicState.from_dict(v)
+                for k, v in (data.get("dynamic_state_dict") or {}).items()
+            },
         )
 
 

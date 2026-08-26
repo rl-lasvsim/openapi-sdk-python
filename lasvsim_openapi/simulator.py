@@ -290,7 +290,9 @@ class Simulator:
             vehicle_id_list: List of vehicle IDs
 
         Returns:
-            Vehicle moving information response
+            Vehicle moving information response. Besides `moving_info_dict`, CarMaker
+            co-simulation also fills `dynamic_state_dict` (roll/pitch rates and tire
+            state), keyed by the same vehicle ID.
 
         Raises:
             APIError: If the request fails
