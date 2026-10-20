@@ -114,12 +114,12 @@ class ScenarioRef:
     scenario_asset_id: str = ""
     scenario_asset_version: str = ""
     scenario_name: str = ""
-    scenario_id: str = ""
+    scenario_id: int = 0
     source_record_id: int = 0
     
     def __init__(self, map_name: str = "", scenario_asset_id: str = "", 
                  scenario_asset_version: str = "", scenario_name: str = "",
-                 scenario_id: str = "", source_record_id: int = 0):
+                 scenario_id: int = 0, source_record_id: int = 0):
         self.map_name = map_name
         self.scenario_asset_id = scenario_asset_id
         self.scenario_asset_version = scenario_asset_version

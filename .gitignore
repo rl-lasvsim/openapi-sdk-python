@@ -4,3 +4,9 @@ build/
 dist/
 /*.egg-info
 ./xlk.py
+
+# 环境变量和敏感配置
+.env
+.env.local
+.env.*.local
+*.env
