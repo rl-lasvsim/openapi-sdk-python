@@ -2978,3 +2978,365 @@ class SetAEBStatusRes:
         if data is None:
             return None
         return cls()
+
+
+# ==================== 感知查询（Perception） ====================
+
+@dataclass
+class CameraPerceptionFrame:
+    """相机感知帧。
+
+    data 为原始 JPEG 载荷的 base64 字符串（服务端 []byte 按标准 JSON 编码）。
+    用 decode_jpeg() 取回字节。
+    """
+
+    sensor_id: str = ""
+    format: str = ""
+    data: str = ""
+
+    def __init__(self, sensor_id: str = "", format: str = "", data: str = ""):
+        self.sensor_id = sensor_id
+        self.format = format
+        self.data = data
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            sensor_id=data.get("sensor_id", ""),
+            format=data.get("format", ""),
+            data=data.get("data", "") or "",
+        )
+
+    def decode_jpeg(self) -> bytes:
+        """解码 data 字段，返回原始 JPEG 字节。"""
+        import base64
+
+        if not self.data:
+            return b""
+        if isinstance(self.data, bytes):
+            return self.data
+        return base64.b64decode(self.data)
+
+
+@dataclass
+class LidarPerceptionFrame:
+    """激光雷达感知帧（PCD v0.7 二进制布局）。
+
+    data 为 base64 字符串，解码后每点 20 字节：x, y, z, intensity, ring（均为 float32）。
+    points = width × height。
+    """
+
+    sensor_id: str = ""
+    width: int = 0
+    height: int = 0
+    points: int = 0
+    data: str = ""
+
+    def __init__(
+        self,
+        sensor_id: str = "",
+        width: int = 0,
+        height: int = 0,
+        points: int = 0,
+        data: str = "",
+    ):
+        self.sensor_id = sensor_id
+        self.width = width
+        self.height = height
+        self.points = points
+        self.data = data
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            sensor_id=data.get("sensor_id", ""),
+            width=data.get("width", 0),
+            height=data.get("height", 0),
+            points=data.get("points", 0),
+            data=data.get("data", "") or "",
+        )
+
+    def decode_points(self) -> List[tuple]:
+        """解码点云，返回 [(x, y, z, intensity, ring), ...]。"""
+        import base64
+        import struct
+
+        if not self.data:
+            return []
+        raw = self.data if isinstance(self.data, bytes) else base64.b64decode(self.data)
+        avail = len(raw) // 20
+        n = min(self.points or avail, avail)  # points 元数据与实际字节数不一致时以字节数为准
+        return list(struct.iter_unpack("<5f", raw[: n * 20]))
+
+
+@dataclass
+class EnuPose:
+    """ENU 定位姿态（角度单位 deg）。"""
+
+    enu_e: float = 0.0
+    enu_n: float = 0.0
+    enu_u: float = 0.0
+    heading: float = 0.0
+    pitch: float = 0.0
+    roll: float = 0.0
+    velocity: float = 0.0
+    timestamp: int = 0
+
+    def __init__(
+        self,
+        enu_e: float = 0.0,
+        enu_n: float = 0.0,
+        enu_u: float = 0.0,
+        heading: float = 0.0,
+        pitch: float = 0.0,
+        roll: float = 0.0,
+        velocity: float = 0.0,
+        timestamp: int = 0,
+    ):
+        self.enu_e = enu_e
+        self.enu_n = enu_n
+        self.enu_u = enu_u
+        self.heading = heading
+        self.pitch = pitch
+        self.roll = roll
+        self.velocity = velocity
+        self.timestamp = timestamp
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            enu_e=data.get("enu_e", 0.0),
+            enu_n=data.get("enu_n", 0.0),
+            enu_u=data.get("enu_u", 0.0),
+            heading=data.get("heading", 0.0),
+            pitch=data.get("pitch", 0.0),
+            roll=data.get("roll", 0.0),
+            velocity=data.get("velocity", 0.0),
+            timestamp=data.get("timestamp", 0),
+        )
+
+
+@dataclass
+class ImuSample:
+    """IMU 采样。加速度 m/s²，角速度 rad/s，姿态角 rad。"""
+
+    timestamp: int = 0
+    acc_x: float = 0.0
+    acc_y: float = 0.0
+    acc_z: float = 0.0
+    gyro_x: float = 0.0
+    gyro_y: float = 0.0
+    gyro_z: float = 0.0
+    roll: float = 0.0
+    pitch: float = 0.0
+    yaw: float = 0.0
+
+    def __init__(
+        self,
+        timestamp: int = 0,
+        acc_x: float = 0.0,
+        acc_y: float = 0.0,
+        acc_z: float = 0.0,
+        gyro_x: float = 0.0,
+        gyro_y: float = 0.0,
+        gyro_z: float = 0.0,
+        roll: float = 0.0,
+        pitch: float = 0.0,
+        yaw: float = 0.0,
+    ):
+        self.timestamp = timestamp
+        self.acc_x = acc_x
+        self.acc_y = acc_y
+        self.acc_z = acc_z
+        self.gyro_x = gyro_x
+        self.gyro_y = gyro_y
+        self.gyro_z = gyro_z
+        self.roll = roll
+        self.pitch = pitch
+        self.yaw = yaw
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            timestamp=data.get("timestamp", 0),
+            acc_x=data.get("acc_x", 0.0),
+            acc_y=data.get("acc_y", 0.0),
+            acc_z=data.get("acc_z", 0.0),
+            gyro_x=data.get("gyro_x", 0.0),
+            gyro_y=data.get("gyro_y", 0.0),
+            gyro_z=data.get("gyro_z", 0.0),
+            roll=data.get("roll", 0.0),
+            pitch=data.get("pitch", 0.0),
+            yaw=data.get("yaw", 0.0),
+        )
+
+
+@dataclass
+class RadarBBox2D:
+    """雷达目标地面二维包围盒。"""
+
+    center: Optional[Point] = None
+    length: float = 0.0
+    width: float = 0.0
+    yaw: float = 0.0
+
+    def __init__(
+        self,
+        center: Optional[Point] = None,
+        length: float = 0.0,
+        width: float = 0.0,
+        yaw: float = 0.0,
+    ):
+        self.center = center
+        self.length = length
+        self.width = width
+        self.yaw = yaw
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            center=Point.from_dict(data.get("center")),
+            length=data.get("length", 0.0),
+            width=data.get("width", 0.0),
+            yaw=data.get("yaw", 0.0),
+        )
+
+
+@dataclass
+class RadarObject:
+    """毫米波雷达目标。
+
+    obj_type 取 ClassificationType：0=未知 / 10000=机动车 / 20000=行人 / 30000=非机动车。
+    """
+
+    frame_id: int = 0
+    timestamp: int = 0
+    range: float = 0.0
+    azimuth: float = 0.0
+    elevation: float = 0.0
+    radial_vel: float = 0.0
+    radial_vel_std: float = 0.0
+    rcs: float = 0.0
+    snr: float = 0.0
+    exist_prob: float = 0.0
+    is_static: bool = False
+    occlusion: int = 0
+    doppler_state: int = 0
+    height: float = 0.0
+    acceleration: float = 0.0
+    obj_type: int = 0
+    type_confidence: float = 0.0
+    radar_track_id: int = 0
+    global_track_id: int = 0
+    bbox2d: Optional[RadarBBox2D] = None
+    world_coord_pos: Optional[Point] = None
+    world_vel: Optional[Point] = None
+
+    def __init__(
+        self,
+        frame_id: int = 0,
+        timestamp: int = 0,
+        range: float = 0.0,
+        azimuth: float = 0.0,
+        elevation: float = 0.0,
+        radial_vel: float = 0.0,
+        radial_vel_std: float = 0.0,
+        rcs: float = 0.0,
+        snr: float = 0.0,
+        exist_prob: float = 0.0,
+        is_static: bool = False,
+        occlusion: int = 0,
+        doppler_state: int = 0,
+        height: float = 0.0,
+        acceleration: float = 0.0,
+        obj_type: int = 0,
+        type_confidence: float = 0.0,
+        radar_track_id: int = 0,
+        global_track_id: int = 0,
+        bbox2d: Optional[RadarBBox2D] = None,
+        world_coord_pos: Optional[Point] = None,
+        world_vel: Optional[Point] = None,
+    ):
+        self.frame_id = frame_id
+        self.timestamp = timestamp
+        self.range = range
+        self.azimuth = azimuth
+        self.elevation = elevation
+        self.radial_vel = radial_vel
+        self.radial_vel_std = radial_vel_std
+        self.rcs = rcs
+        self.snr = snr
+        self.exist_prob = exist_prob
+        self.is_static = is_static
+        self.occlusion = occlusion
+        self.doppler_state = doppler_state
+        self.height = height
+        self.acceleration = acceleration
+        self.obj_type = obj_type
+        self.type_confidence = type_confidence
+        self.radar_track_id = radar_track_id
+        self.global_track_id = global_track_id
+        self.bbox2d = bbox2d
+        self.world_coord_pos = world_coord_pos
+        self.world_vel = world_vel
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            frame_id=data.get("frame_id", 0),
+            timestamp=data.get("timestamp", 0),
+            range=data.get("range", 0.0),
+            azimuth=data.get("azimuth", 0.0),
+            elevation=data.get("elevation", 0.0),
+            radial_vel=data.get("radial_vel", 0.0),
+            radial_vel_std=data.get("radial_vel_std", 0.0),
+            rcs=data.get("rcs", 0.0),
+            snr=data.get("snr", 0.0),
+            exist_prob=data.get("exist_prob", 0.0),
+            is_static=data.get("is_static", False),
+            occlusion=data.get("occlusion", 0),
+            doppler_state=data.get("doppler_state", 0),
+            height=data.get("height", 0.0),
+            acceleration=data.get("acceleration", 0.0),
+            obj_type=data.get("obj_type", 0),
+            type_confidence=data.get("type_confidence", 0.0),
+            radar_track_id=data.get("radar_track_id", 0),
+            global_track_id=data.get("global_track_id", 0),
+            bbox2d=RadarBBox2D.from_dict(data.get("bbox2d")),
+            world_coord_pos=Point.from_dict(data.get("world_coord_pos")),
+            world_vel=Point.from_dict(data.get("world_vel")),
+        )
+
+
+@dataclass
+class RadarSensorData:
+    """毫米波雷达感知结果。"""
+
+    sensor_id: str = ""
+    objects: List[RadarObject] = field(default_factory=list)
+
+    def __init__(self, sensor_id: str = "", objects: List[RadarObject] = None):
+        self.sensor_id = sensor_id
+        self.objects = objects if objects is not None else []
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            sensor_id=data.get("sensor_id", ""),
+            objects=[RadarObject.from_dict(x) for x in (data.get("objects") or [])],
+        )
+

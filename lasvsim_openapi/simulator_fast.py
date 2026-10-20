@@ -1002,3 +1002,94 @@ class SimulatorFast:
                 "ref_limit": ref_limit,
             },
         )
+
+    # ── 感知查询接口 ──────────────────────────────────────────────
+
+    def get_camera_perception(self, vehicle_id: str, sensor_id: str) -> dict:
+        """Get camera perception result.
+
+        Args:
+            vehicle_id: Vehicle ID
+            sensor_id: Camera sensor ID
+
+        Returns:
+            Camera perception result as dict (fields: sensor_id, format, data, timestamp)
+
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/vehicle/camera_perception/get",
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "sensor_id": sensor_id},
+        )
+
+    def get_lidar_perception(self, vehicle_id: str, sensor_id: str) -> dict:
+        """Get lidar perception result.
+
+        Args:
+            vehicle_id: Vehicle ID
+            sensor_id: Lidar sensor ID
+
+        Returns:
+            Lidar perception result as dict (fields: sensor_id, width, height, points, timestamp)
+
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/vehicle/lidar_perception/get",
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "sensor_id": sensor_id},
+        )
+
+    def get_radar_perception(self, vehicle_id: str, sensor_id: str) -> dict:
+        """Get vehicle radar perception result.
+
+        Args:
+            vehicle_id: Vehicle ID
+            sensor_id: Radar sensor ID
+
+        Returns:
+            Radar perception result as dict (fields: sensor_id, objects[])
+
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/vehicle/radar_perception/get",
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id, "sensor_id": sensor_id},
+        )
+
+    def get_enu_perception(self, vehicle_id: str) -> dict:
+        """Get ENU pose.
+
+        Args:
+            vehicle_id: Vehicle ID
+
+        Returns:
+            ENU pose as dict (fields: enu_e, enu_n, enu_u, heading, pitch, roll, velocity, timestamp)
+
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/vehicle/enu_perception/get",
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id},
+        )
+
+    def get_imu_sample(self, vehicle_id: str) -> dict:
+        """Get IMU sample.
+
+        Args:
+            vehicle_id: Vehicle ID
+
+        Returns:
+            IMU sample as dict (fields: timestamp, acc_x/y/z, gyro_x/y/z, pitch, roll, yaw)
+
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/vehicle/imu_sample/get",
+            {"simulation_id": self.simulation_id, "vehicle_id": vehicle_id},
+        )
+

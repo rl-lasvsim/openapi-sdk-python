@@ -103,6 +103,11 @@ from lasvsim_openapi.simulator_model import (
     ResetVehicleConfig,
     ResetEnvPtcs,
     IdcStepRes,
+    CameraPerceptionFrame,
+    LidarPerceptionFrame,
+    RadarSensorData,
+    EnuPose,
+    ImuSample,
 )
 
 
@@ -883,3 +888,76 @@ class Simulator:
             ref_limit,
         )
         return IdcStepRes.from_dict(reply)
+
+    # ── 感知查询接口 ──────────────────────────────────────────────
+
+    def get_camera_perception(
+        self, vehicle_id: str, sensor_id: str
+    ) -> CameraPerceptionFrame:
+        """获取相机感知结果。
+
+        Args:
+            vehicle_id: 车辆 ID
+            sensor_id: 相机传感器 ID
+
+        Returns:
+            CameraPerceptionFrame: 含 sensor_id / format / data（base64 JPEG），
+            可用 ``.decode_jpeg()`` 取原始字节
+        """
+        reply = self.simulator_fast.get_camera_perception(vehicle_id, sensor_id)
+        return CameraPerceptionFrame.from_dict(reply)
+
+    def get_lidar_perception(
+        self, vehicle_id: str, sensor_id: str
+    ) -> LidarPerceptionFrame:
+        """获取激光雷达感知结果。
+
+        Args:
+            vehicle_id: 车辆 ID
+            sensor_id: 激光雷达传感器 ID
+
+        Returns:
+            LidarPerceptionFrame: 含 sensor_id / width / height / points / data（base64），
+            可用 ``.decode_points()`` 取 [(x, y, z, intensity, ring), ...]
+        """
+        reply = self.simulator_fast.get_lidar_perception(vehicle_id, sensor_id)
+        return LidarPerceptionFrame.from_dict(reply)
+
+    def get_radar_perception(
+        self, vehicle_id: str, sensor_id: str
+    ) -> List[RadarSensorData]:
+        """获取毫米波雷达感知结果。
+
+        Args:
+            vehicle_id: 车辆 ID
+            sensor_id: 毫米波雷达传感器 ID
+
+        Returns:
+            List[RadarSensorData]: 每个雷达传感器一项（sensor_id + objects）
+        """
+        reply = self.simulator_fast.get_radar_perception(vehicle_id, sensor_id)
+        return [RadarSensorData.from_dict(item) for item in reply]
+
+    def get_enu_perception(self, vehicle_id: str) -> EnuPose:
+        """获取 ENU 定位姿态。
+
+        Args:
+            vehicle_id: 车辆 ID
+
+        Returns:
+            EnuPose: ENU 坐标 + heading/pitch/roll（deg）+ velocity + timestamp
+        """
+        reply = self.simulator_fast.get_enu_perception(vehicle_id)
+        return EnuPose.from_dict(reply)
+
+    def get_imu_sample(self, vehicle_id: str) -> ImuSample:
+        """获取 IMU 采样。
+
+        Args:
+            vehicle_id: 车辆 ID
+
+        Returns:
+            ImuSample: 加速度/角速度 + roll/pitch/yaw（rad）+ timestamp
+        """
+        reply = self.simulator_fast.get_imu_sample(vehicle_id)
+        return ImuSample.from_dict(reply)
