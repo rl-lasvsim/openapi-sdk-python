@@ -1217,6 +1217,18 @@ class GetVehiclePerceptionInfoRes_PerceptionObj:
     base_info: Optional[ObjBaseInfo] = None
     moving_info: Optional[ObjMovingInfo] = None
     position: Optional[Position] = None
+    # 感知到的对象类型
+    #   vehicle     机动车
+    #   pedestrian  行人
+    #   nmv         非机动车
+    #   deadVehicle 静止机动车（永远不会移动的机动车）
+    #   pole        灯杆
+    #   streetLamp  路灯
+    #   building    建筑
+    #   tree        树木
+    #   obstacle    路障
+    #   unknown     未知
+    type: str = ""
 
     def __init__(
         self,
@@ -1224,11 +1236,13 @@ class GetVehiclePerceptionInfoRes_PerceptionObj:
         base_info: Optional[ObjBaseInfo] = None,
         moving_info: Optional[ObjMovingInfo] = None,
         position: Optional[Position] = None,
+        type: str = "",
     ):
         self.obj_id = obj_id
         self.base_info = base_info
         self.moving_info = moving_info
         self.position = position
+        self.type = type
 
     @classmethod
     def from_dict(cls, data: dict = None):
@@ -1239,6 +1253,7 @@ class GetVehiclePerceptionInfoRes_PerceptionObj:
             base_info=ObjBaseInfo.from_dict(data.get("base_info")),
             moving_info=ObjMovingInfo.from_dict(data.get("moving_info")),
             position=Position.from_dict(data.get("position")),
+            type=data.get("type", ""),
         )
 
 
