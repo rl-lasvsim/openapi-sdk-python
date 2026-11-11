@@ -3,7 +3,13 @@ from lasvsim_openapi.simulator_model import SimulatorConfig
 from typing import Dict, List, Optional
 from dataclasses import asdict
 
-from lasvsim_openapi.simulator_model import ObjBaseInfo, DynamicInfo, Point
+from lasvsim_openapi.simulator_model import (
+    DynamicInfo,
+    ObjBaseInfo,
+    Point,
+    SchedulingStatusReq,
+    InitV2Req,
+)
 
 
 class SimulatorFast:
@@ -12,9 +18,14 @@ class SimulatorFast:
     http_client: HttpClient = None
     simulation_id: str = ""
     simulation_addr: str = ""
+    task_id: int = 0
 
     def __init__(self, http_client: HttpClient, sim_config: SimulatorConfig):
         """Initialize simulator client.
+
+        .. deprecated::
+            这里走的是 init 接口（已废弃）。新的用法是「提交仿真任务 → 查调度状态」：
+            :meth:`init_v2` → :meth:`status` → :meth:`from_session`。
 
         Args:
             http_client: HTTP client instance
@@ -37,13 +48,76 @@ class SimulatorFast:
         self.simulation_addr = reply["simulation_addr"]
 
     @classmethod
-    def from_session(cls, http_client: HttpClient, simulation_id: str, simulation_addr: str) -> 'SimulatorFast':
+    def init_v2(cls, http_client: HttpClient, req: InitV2Req) -> dict:
+        """提交仿真任务：提交即返回，不等待调度结果。
+
+        Args:
+            http_client: HTTP client instance
+            req: 提交请求（场景、仿真记录、最大步数、控制类型）
+
+        Returns:
+            提交结果（含任务号与实例信息）
+
+        Raises:
+            APIError: If the request fails
+        """
+        return http_client.post(
+            "/openapi/cosim/v2/simulation/initv2",
+            req.to_dict(),
+        )
+
+    def status(self, task_id: int = 0, simulation_id: str = "") -> dict:
+        """查询本实例对应仿真任务的调度状态。
+
+        Args:
+            task_id: 仿真任务号
+            simulation_id: 仿真实例标识；直连部署可省略
+
+        Returns:
+            dict
+
+        Raises:
+            APIError: If the request fails
+        """
+        return self.scheduling_status(
+            self.http_client,
+            SchedulingStatusReq(task_id=task_id, simulation_id=simulation_id),
+        )
+
+    @classmethod
+    def scheduling_status(cls, http_client: HttpClient, req: SchedulingStatusReq) -> dict:
+        """查询仿真任务的调度状态。
+
+        Args:
+            http_client: HTTP client instance
+            req: 查询请求（任务号；直连部署传 0 即可）
+
+        Returns:
+            调度状态（含状态、实例标识与访问地址）
+
+        Raises:
+            APIError: If the request fails
+        """
+        return http_client.post(
+            "/openapi/cosim/v2/simulation/sched/status",
+            req.to_dict(),
+        )
+
+    @classmethod
+    def from_session(
+        cls,
+        http_client: HttpClient,
+        simulation_id: str,
+        simulation_addr: str,
+        task_id: int = 0,
+    ) -> 'SimulatorFast':
         """Reconnect to an existing simulator session without calling init.
 
         Args:
             http_client: HTTP client instance
             simulation_id: Existing simulation ID
             simulation_addr: Existing simulation address
+            task_id: 仿真任务号，便于后续查调度状态
 
         Returns:
             A SimulatorFast instance connected to the existing session
@@ -54,6 +128,7 @@ class SimulatorFast:
         instance.http_client.headers["x-md-rl-direct-addr"] = simulation_addr
         instance.simulation_id = simulation_id
         instance.simulation_addr = simulation_addr
+        instance.task_id = task_id
         return instance
 
     def step(self):
@@ -73,15 +148,23 @@ class SimulatorFast:
     def stop(self) -> dict:
         """Stop the simulation.
 
+        实例已经起来就按实例停；实例还没起来（还在排队）时按任务号撤单。
+        两者至少有其一，否则服务端会返回参数错误。
+
         Returns:
             dict
 
         Raises:
             APIError: If the request fails
         """
+        payload = {}
+        if self.simulation_id:
+            payload["simulation_id"] = self.simulation_id
+        if self.task_id:
+            payload["task_id"] = self.task_id
         return self.http_client.post(
             "/openapi/cosim/v2/simulation/stop",
-            {"simulation_id": self.simulation_id},
+            payload,
         )
 
     def reset(

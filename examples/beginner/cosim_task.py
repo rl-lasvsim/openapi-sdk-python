@@ -54,6 +54,7 @@ def main():
             sim_record_id=new_record.sim_record_id,
         )
     )
+    print(f"调度任务号: {simulator.task_id}")
 
     try:
         # 获取测试车辆列表

@@ -36,6 +36,7 @@ def main():
         scen_id=scene_id_list.scene_id_list[0],
         scen_ver=scene_id_list.scene_version_list[0],
     ))
+    print(f"调度任务号: {simulator.task_id}")
 
     try:
         # 运行仿真100步

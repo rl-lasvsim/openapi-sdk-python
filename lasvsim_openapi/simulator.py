@@ -2,10 +2,11 @@
 Simulator module for the lasvsim API.
 """
 
-from typing import Dict, List, Optional
+import time
+from typing import Callable, Dict, List, Optional
 from dataclasses import asdict
 
-from lasvsim_openapi.http_client import HttpClient
+from lasvsim_openapi.http_client import APIError, HttpClient
 from lasvsim_openapi.simulator_fast import SimulatorFast
 from lasvsim_openapi.simulator_model import (
     Point,
@@ -18,6 +19,9 @@ from lasvsim_openapi.simulator_model import (
     StopRes,
     StepReq,
     StepRes,
+    SchedulingStatusReq,
+    SchedulingStatusRes,
+    SchedulingState,
     GetCurrentStageReq,
     GetCurrentStageRes,
     GetMovementSignalReq,
@@ -123,6 +127,31 @@ class Simulator:
             http_client: HTTP client instance
         """
         self.simulator_fast = simulator_v2
+
+    @property
+    def task_id(self) -> int:
+        """仿真任务号：可用于查调度状态（直连部署恒为 0）。"""
+        return self.simulator_fast.task_id
+
+    @property
+    def ready(self) -> bool:
+        """实例是否已就绪（可以开始驱动仿真）。"""
+        return bool(self.simulator_fast.simulation_id)
+
+    def scheduling_status(self) -> SchedulingStatusRes:
+        """查询本仿真任务的调度状态。
+
+        Returns:
+            调度状态
+
+        Raises:
+            APIError: If the request fails
+        """
+        reply = self.simulator_fast.status(
+            self.simulator_fast.task_id,
+            self.simulator_fast.simulation_id,
+        )
+        return SchedulingStatusRes.from_dict(reply)
 
     def step(self) -> StepRes:
         """Step the simulation forward.
@@ -961,3 +990,83 @@ class Simulator:
         """
         reply = self.simulator_fast.get_imu_sample(vehicle_id)
         return ImuSample.from_dict(reply)
+
+
+class SimulationScheduling:
+    """仿真任务的调度：查状态、等就绪。
+
+    只管提交之后的调度阶段，提交本身在 ClientFast.init_simulator_from_config
+    里完成。一般不用直接用，推荐用：
+
+        simulator = client.init_simulator_from_config(config)
+        simulator.step()
+    """
+
+    def __init__(self, http_client: HttpClient):
+        """Initialize the scheduling client.
+
+        Args:
+            http_client: HTTP client instance
+        """
+        self.http_client = http_client
+
+    def status(self, task_id: int = 0, simulation_id: str = "") -> SchedulingStatusRes:
+        """查询仿真任务的调度状态。
+
+        Args:
+            task_id: 仿真任务号；直连部署的任务号恒为 0，传 0 即可
+            simulation_id: 仿真实例标识；直连部署可省略
+
+        Returns:
+            调度状态
+
+        Raises:
+            APIError: If the request fails
+        """
+        reply = SimulatorFast.scheduling_status(
+            self.http_client,
+            SchedulingStatusReq(task_id=task_id, simulation_id=simulation_id),
+        )
+        return SchedulingStatusRes.from_dict(reply)
+
+    def wait_ready(
+        self,
+        task_id: int = 0,
+        simulation_id: str = "",
+        timeout: float = 60.0,
+        interval: float = 1.0,
+        on_status: Optional[Callable[[SchedulingStatusRes], None]] = None,
+    ) -> SchedulingStatusRes:
+        """轮询调度状态直到实例就绪。
+
+        一般用 client.init_simulator_from_config，它内部就会等到就绪。
+
+        等待过程中每次查询到的状态都会回调给 on_status，调用方可以据此
+        打印排队进度、驱动进度条，或者在状态变成已结束时提前退出。
+        回调抛出的异常会中断等待。
+
+        Args:
+            task_id: 仿真任务号；直连部署的任务号恒为 0，传 0 即可
+            simulation_id: 仿真实例标识；直连部署可省略
+            timeout: 最长等待秒数
+            interval: 轮询间隔秒数
+            on_status: 每次轮询到状态时的回调，参数是本次查询到的调度状态
+
+        Returns:
+            就绪时的状态（状态为运行中，带实例标识与访问地址）
+
+        Raises:
+            APIError: 任务已结束或等待超时
+        """
+        deadline = time.monotonic() + timeout
+        while True:
+            status = self.status(task_id, simulation_id)
+            if on_status is not None:
+                on_status(status)
+            if status.ready:
+                return status
+            if status.state == SchedulingState.FINISHED:
+                raise APIError(reason="仿真任务已结束，未能启动仿真")
+            if time.monotonic() >= deadline:
+                raise APIError(reason="等待仿真就绪超时")
+            time.sleep(interval)

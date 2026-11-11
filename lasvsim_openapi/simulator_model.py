@@ -398,11 +398,21 @@ class SimulatorConfig:
     scen_ver: str = ""
     sim_record_id: str = ""
     max_step: int = 0
+    ctrl_type: int = 0
 
-    def __init__(self, scen_id: str = "", scen_ver: str = "", sim_record_id: str = ""):
+    def __init__(
+        self,
+        scen_id: str = "",
+        scen_ver: str = "",
+        sim_record_id: str = "",
+        max_step: int = 0,
+        ctrl_type: int = 0,
+    ):
         self.scen_id = scen_id
         self.scen_ver = scen_ver
         self.sim_record_id = sim_record_id
+        self.max_step = max_step
+        self.ctrl_type = ctrl_type
 
 
 @dataclass
@@ -3340,3 +3350,161 @@ class RadarSensorData:
             objects=[RadarObject.from_dict(x) for x in (data.get("objects") or [])],
         )
 
+
+
+class SchedulingState:
+    """仿真任务在调度阶段的状态。"""
+
+    # PENDING 排队中：任务已提交，调度还没把它跑起来
+    PENDING = "pending"
+    # RUNNING 运行中：实例已就绪，可以开始驱动仿真
+    RUNNING = "running"
+    # FINISHED 已结束：任务进入终态
+    FINISHED = "finished"
+
+
+# 兼容旧名：TaskState → SchedulingState
+TaskState = SchedulingState
+
+
+class InitV2Req:
+    """提交仿真任务的请求。"""
+
+    scen_id: str = ""
+    scen_ver: str = ""
+    sim_record_id: str = ""
+    record_id: str = ""
+    max_step: int = 0
+    ctrl_type: int = 0
+
+    def __init__(
+        self,
+        scen_id: str = "",
+        scen_ver: str = "",
+        sim_record_id: str = "",
+        record_id: str = "",
+        max_step: int = 0,
+        ctrl_type: int = 0,
+    ):
+        self.scen_id = scen_id
+        self.scen_ver = scen_ver
+        self.sim_record_id = sim_record_id
+        self.record_id = record_id
+        self.max_step = max_step
+        self.ctrl_type = ctrl_type
+
+    def to_dict(self) -> dict:
+        return {
+            "scen_id": self.scen_id,
+            "scen_ver": self.scen_ver,
+            "sim_record_id": self.sim_record_id,
+            "record_id": self.record_id,
+            "max_step": self.max_step,
+            "ctrl_type": self.ctrl_type,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            scen_id=data.get("scen_id", ""),
+            scen_ver=data.get("scen_ver", ""),
+            sim_record_id=data.get("sim_record_id", ""),
+            record_id=data.get("record_id", ""),
+            max_step=data.get("max_step", 0),
+            ctrl_type=data.get("ctrl_type", 0),
+        )
+
+
+class InitV2Res:
+    """提交仿真任务的响应。
+
+    调度部署只返回任务号，实例信息要靠调度状态查询拿；
+    直连部署没有调度阶段，任务号恒为 0，实例信息直接在响应里。
+    """
+
+    task_id: int = 0
+    simulation_id: str = ""
+    simulation_addr: str = ""
+
+    def __init__(self, task_id: int = 0, simulation_id: str = "", simulation_addr: str = ""):
+        self.task_id = task_id
+        self.simulation_id = simulation_id
+        self.simulation_addr = simulation_addr
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            task_id=data.get("task_id", 0),
+            simulation_id=data.get("simulation_id", ""),
+            simulation_addr=data.get("simulation_addr", ""),
+        )
+
+
+class SchedulingStatusReq:
+    """查询仿真任务调度状态的请求。
+
+    调度部署用 task_id 查；直连部署的任务号恒为 0，传 0 即可。
+    """
+
+    task_id: int = 0
+    simulation_id: str = ""
+
+    def __init__(self, task_id: int = 0, simulation_id: str = ""):
+        self.task_id = task_id
+        self.simulation_id = simulation_id
+
+    def to_dict(self) -> dict:
+        return {
+            "task_id": self.task_id,
+            "simulation_id": self.simulation_id,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            task_id=data.get("task_id", 0),
+            simulation_id=data.get("simulation_id", ""),
+        )
+
+
+class SchedulingStatusRes:
+    """查询仿真任务调度状态的响应。"""
+
+    task_id: int = 0
+    state: str = ""
+    simulation_id: str = ""
+    simulation_addr: str = ""
+
+    def __init__(
+        self,
+        task_id: int = 0,
+        state: str = "",
+        simulation_id: str = "",
+        simulation_addr: str = "",
+    ):
+        self.task_id = task_id
+        self.state = state
+        self.simulation_id = simulation_id
+        self.simulation_addr = simulation_addr
+
+    @property
+    def ready(self) -> bool:
+        """实例是否已就绪（可以开始驱动仿真）。"""
+        return self.state == SchedulingState.RUNNING
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            task_id=data.get("task_id", 0),
+            state=data.get("state", ""),
+            simulation_id=data.get("simulation_id", ""),
+            simulation_addr=data.get("simulation_addr", ""),
+        )

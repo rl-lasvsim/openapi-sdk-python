@@ -42,14 +42,18 @@ new_record = cli.process_task.copy_record(task_id, record_id)
 print("拷贝剧本成功")
 
 # 3. 通过拷贝的场景Id、Version和SimRecordId初始化仿真器
+# 内部会提交仿真任务并等调度就绪，返回时实例已经可以驱动
 simulator = cli.init_simulator_from_config(
     SimulatorConfig(
         scen_id=new_record.scen_id,
         scen_ver=new_record.scen_ver,
         sim_record_id=new_record.sim_record_id,
-    )
+    ),
+    timeout=120.0,   # 最长等待就绪秒数（可选）
+    interval=1.0,    # 轮询调度状态的间隔秒数（可选）
+    on_status=None,  # 每次轮询到调度状态时的回调，可用于打印排队进度（可选）
 )
-print("初始化仿真器成功")
+print(f"初始化仿真器成功，仿真任务号: {simulator.task_id}")
 
 try:
     # 获取测试车辆列表
@@ -112,8 +116,11 @@ python -c "import lasvsim_openapi.opensim;lasvsim_openapi.opensim.upgrade_opensi
 ### 仿真器API
 
 #### 仿真控制
-- `init_simulator_from_config(sim_config)`: 从配置初始化仿真器
+- `init_simulator_from_config(sim_config, timeout, interval, on_status)`: 从配置初始化仿真器；提交仿真任务后等调度就绪再返回
 - `init_simulator_from_sim(simulation_id, addr)`: 从现有仿真初始化仿真器
+- `task_id`: 仿真任务号（只读属性）
+- `ready`: 实例是否已就绪（只读属性）
+- `scheduling_status()`: 查一次本任务的调度状态
 - `step()`: 仿真前进一步
 - `stop()`: 停止仿真
 - `reset(reset_traffic_flow)`: 重置仿真器到初始状态，可选择是否重置交通流
