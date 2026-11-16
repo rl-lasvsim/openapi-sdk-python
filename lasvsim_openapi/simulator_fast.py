@@ -948,3 +948,37 @@ class SimulatorFast:
                 "ref_limit": ref_limit,
             },
         )
+
+    def get_seed(self) -> dict:
+        """Get the random seed currently in effect of the simulator.
+
+        Returns:
+            Current seed response as dict
+
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/seed/get",
+            {"simulation_id": self.simulation_id},
+        )
+
+    def set_seed(self, seed: int) -> dict:
+        """Set the random seed of the simulator, takes effect on the next Reset.
+
+        Args:
+            seed: The seed to apply
+
+        Returns:
+            Response as dict
+
+        Raises:
+            APIError: If the request fails
+        """
+        return self.http_client.post(
+            "/openapi/cosim/v2/simulation/seed/set",
+            {
+                "simulation_id": self.simulation_id,
+                "seed": seed,
+            },
+        )

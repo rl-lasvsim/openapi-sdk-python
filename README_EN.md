@@ -76,6 +76,8 @@ simulator.stop()
 - `step()`: Advance simulation by one step
 - `stop()`: Stop the simulation
 - `reset(reset_traffic_flow)`: Reset the simulation to initial state, optionally reset traffic flow
+- `get_seed()`: Get the random seed currently in effect of the simulator
+- `set_seed(seed)`: Set the random seed of the simulator, takes effect on the next Reset
 
 #### Vehicle APIs
 - `get_vehicle_id_list()`: Get all vehicle IDs

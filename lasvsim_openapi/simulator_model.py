@@ -2941,3 +2941,74 @@ class IdcStepRes:
             navigation_info=NavigationInfo.from_dict(data.get("navigation_info", {})),
             step_res=StepRes.from_dict(data.get("step_res", {})),
         )
+
+
+@dataclass
+class GetSeedReq:
+    """Request for getting simulator random seed."""
+
+    simulation_id: str = ""  # 仿真ID
+
+    def __init__(self, simulation_id: str = ""):
+        self.simulation_id = simulation_id
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get("simulation_id", ""),
+        )
+
+
+@dataclass
+class GetSeedRes:
+    """Response for getting simulator random seed."""
+
+    seed: int = 0  # 引擎当前生效的随机种子
+
+    def __init__(self, seed: int = 0):
+        self.seed = seed
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            seed=data.get("seed", 0),
+        )
+
+
+@dataclass
+class SetSeedReq:
+    """Request for setting simulator random seed."""
+
+    simulation_id: str = ""  # 仿真ID
+    seed: int = 0  # 待生效的随机种子，在下次 Reset 时生效
+
+    def __init__(self, simulation_id: str = "", seed: int = 0):
+        self.simulation_id = simulation_id
+        self.seed = seed
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls(
+            simulation_id=data.get("simulation_id", ""),
+            seed=data.get("seed", 0),
+        )
+
+
+@dataclass
+class SetSeedRes:
+    """Response for setting simulator random seed."""
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict = None):
+        if data is None:
+            return None
+        return cls()
