@@ -117,6 +117,8 @@ python -c "import lasvsim_openapi.opensim;lasvsim_openapi.opensim.upgrade_opensi
 - `step()`: 仿真前进一步
 - `stop()`: 停止仿真
 - `reset(reset_traffic_flow)`: 重置仿真器到初始状态，可选择是否重置交通流
+- `get_seed()`: 获取仿真器当前生效的随机种子
+- `set_seed(seed)`: 设置仿真器随机种子，在下次 Reset 时生效
 
 #### 车辆API
 - `get_vehicle_id_list()`: 获取所有车辆ID

@@ -101,6 +101,10 @@ from lasvsim_openapi.simulator_model import (
     ResetVehicleConfig,
     ResetEnvPtcs,
     IdcStepRes,
+    GetSeedReq,
+    GetSeedRes,
+    SetSeedReq,
+    SetSeedRes,
 )
 
 
@@ -852,3 +856,31 @@ class Simulator:
             ref_limit,
         )
         return IdcStepRes.from_dict(reply)
+
+    # --------- 随机种子 ---------
+    def get_seed(self) -> GetSeedRes:
+        """Get the random seed currently in effect of the simulator.
+
+        Returns:
+            Current seed response
+
+        Raises:
+            APIError: If the request fails
+        """
+        reply = self.simulator_fast.get_seed()
+        return GetSeedRes.from_dict(reply)
+
+    def set_seed(self, seed: int) -> SetSeedRes:
+        """Set the random seed of the simulator, takes effect on the next Reset.
+
+        Args:
+            seed: The seed to apply
+
+        Returns:
+            Set seed response
+
+        Raises:
+            APIError: If the request fails
+        """
+        reply = self.simulator_fast.set_seed(seed)
+        return SetSeedRes.from_dict(reply)
